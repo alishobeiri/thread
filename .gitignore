@@ -49,3 +49,6 @@ next-env.d.ts
 
 */jupyter_server.log*/jupyter_server.log
 jupyter_server.log
+
+*/build
+*/dist
