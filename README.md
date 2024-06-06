@@ -10,7 +10,7 @@
  <br />
 </h1>
 <p align="center">
-🧵 AI-native Jupyter Notebook built in React 🧵
+🧵 AI-powered Jupyter Notebook built using React 🧵
 </p>
 <p align="center">
   <a href="https://www.thread.dev/"><img src="https://img.shields.io/badge/Website-blue?logo=googlechrome&logoColor=black"/></a>
