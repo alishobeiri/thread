@@ -1,5 +1,4 @@
 import Papa from "papaparse";
-import * as XLSX from "xlsx";
 import { MAX_SPREADSHEET_SIZE_TO_PREVIEW } from "../../utils/constants/constants";
 import { ExcelPreviewState, PreviewData, TransformData } from "./renderers";
 import {
@@ -86,33 +85,7 @@ export const getXLSXPreview = (
 	file: File,
 ): Promise<{ [sheetName: string]: XLSXPreviewResult }> => {
 	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.onload = (e: ProgressEvent<FileReader>) => {
-			const data = e.target?.result;
-			const workbook = XLSX.read(data, { type: "binary" });
-			const results: { [sheetName: string]: XLSXPreviewResult } = {};
-
-			workbook.SheetNames.forEach((sheetName) => {
-				const worksheet = workbook.Sheets[sheetName];
-				const jsonData = XLSX.utils.sheet_to_json(worksheet, {
-					header: 1,
-					defval: "",
-				}) as string[][];
-
-				if (jsonData.length > 0) {
-					const columns = jsonData[0];
-					const previewRows = jsonData.slice(1, PREVIEW_SIZE); // Adjust the slice to control preview size
-					results[sheetName] = { columns, rows: previewRows };
-				} else {
-					results[sheetName] = { columns: [], rows: [] };
-				}
-			});
-
-			resolve(results);
-		};
-
-		reader.onerror = (error) => reject(error);
-		reader.readAsBinaryString(file);
+		resolve({});
 	});
 };
 
