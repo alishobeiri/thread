@@ -1,7 +1,6 @@
 import { ICell, IMarkdownCell, IOutput } from "@jupyterlab/nbformat";
 import { PartialJSONObject } from "@lumino/coreutils/types";
 import { captureException } from "@sentry/nextjs";
-import { FileObject } from "@supabase/storage-js";
 import { NextRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 import { temporal } from "zundo";
@@ -18,12 +17,7 @@ import {
 } from "../../../types/file.types";
 import { magicQuery } from "../../../utils/magic/magicQuery";
 import { trackEventData } from "../../../utils/posthog";
-import {
-	getFileId,
-	getNoterousCellMetadata,
-	multilineStringToString,
-	newUuid,
-} from "../../../utils/utils";
+import { newUuid } from "../../../utils/utils";
 import { enableCommandMode } from "../../cell/actions/actions";
 import { refresh } from "../../sidebar/filesystem/FileSystemToolbarUtils";
 export type ICellTypes = "markdown" | "code" | "rawNB";

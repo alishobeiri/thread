@@ -9,14 +9,6 @@ const nextConfig = {
     unoptimized: true,
   },
   reactStrictMode: false,
-  async rewrites() {
-    return [
-      {
-        source: "/ingest/:path*",
-        destination: "https://app.posthog.com/:path*",
-      },
-    ];
-  },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.module.rules.push({
@@ -37,11 +29,8 @@ module.exports = nextConfig;
 // Injected content via Sentry wizard below
 const { withSentryConfig } = require("@sentry/nextjs");
 
-const withTM = require('next-transpile-modules')(['react-chart-editor']);
-
-
 module.exports = withSentryConfig(
-  withTM(module.exports),
+  module.exports,
   {
     // For all available options, see:
     // https://github.com/getsentry/sentry-webpack-plugin#options
