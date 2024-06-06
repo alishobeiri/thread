@@ -24,26 +24,24 @@ class StaticIndexHandler(StaticFileHandler):
                 raise e
 
 
-class HecksApp(ExtensionApp):
+class ThreadApp(ExtensionApp):
     version = app_version
-    extension_url = "/hecks"
-    name = "hecks"
-    app_name = "Hecks"
+    extension_url = "/thread"
+    name = "thread"
+    app_name = "Thread"
     app_version = app_version
     load_other_extensions = False
 
     load_other_extensions = True
-    description = "Hello!"
-    examples = "We are here!"
 
-    default_url = Unicode("/hecks", config=True,
+    default_url = Unicode("/thread", config=True,
                           help="The default URL redirecting to `/`")
     app_dir = Unicode(None, config=True,
                       help="The app directory to launch the app from.")
     static_dir = Unicode(
         None, config=True, help="Directory with static files for this extension.")
     static_url_prefix = Unicode(
-        "/static/hecks/", config=True, help="URL prefix for static files.")
+        "/static/thread/", config=True, help="URL prefix for static files.")
     templates_dir = Unicode(
         None, config=True, help="Templates directory for the extension.")
 
@@ -71,16 +69,16 @@ class HecksApp(ExtensionApp):
         self.log.info(f"Static path: {static_path}")
 
         handlers = [
-            (url_path_join(self.serverapp.base_url, "/hecks/?(.*)"),
+            (url_path_join(self.serverapp.base_url, "/thread/?(.*)"),
              StaticIndexHandler, {"path": static_path}),
             (url_path_join(self.serverapp.base_url, "/favicon.ico"),
-             RedirectHandler, {"url": self.serverapp.base_url + "hecks/favicon.ico"})
+             RedirectHandler, {"url": self.serverapp.base_url + "thread/favicon.ico"})
         ]
         self.handlers.extend(handlers)
 
 
 # Entry point to launch the extension app
-main = HecksApp.launch_instance
+main = ThreadApp.launch_instance
 
 if __name__ == "__main__":
     main()

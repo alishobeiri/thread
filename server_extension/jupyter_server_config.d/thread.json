@@ -1,7 +1,7 @@
 {
 	"ServerApp": {
 		"jpserver_extensions": {
-			"hecks": true
+			"thread": true
 		}
 	}
 }

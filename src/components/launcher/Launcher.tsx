@@ -158,7 +158,7 @@ const Launcher = () => {
 					icon: <GithubIcon boxSize={"36px"} />,
 					actionHandler: () =>
 						window.open(
-							"https://github.com/squaredtechnologies/vizly-notebook/issues",
+							"https://github.com/squaredtechnologies/thread/issues",
 							"_blank",
 						),
 				},

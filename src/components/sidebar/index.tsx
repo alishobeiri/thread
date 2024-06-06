@@ -176,7 +176,7 @@ export default function Sidebar() {
 							label={"GitHub Issues"}
 							onClick={() =>
 								window.open(
-									"https://github.com/squaredtechnologies/vizly-notebook/issues",
+									"https://github.com/squaredtechnologies/thread/issues",
 									"_blank",
 								)
 							}

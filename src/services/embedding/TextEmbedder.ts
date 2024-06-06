@@ -21,7 +21,7 @@ export default class TextEmbeddingModel {
 
 	private async createEmbedder() {
 		const textFiles = await FilesetResolver.forTextTasks(
-			"./hecks/mediapipe/tasks-text/",
+			"./thread/mediapipe/tasks-text/",
 		);
 		this.textEmbedder = await TextEmbedder.createFromOptions(textFiles, {
 			baseOptions: {

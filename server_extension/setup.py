@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="hecks",
+    name="thread-dev",
     version="0.0.1",
     packages=find_packages(),
     include_package_data=True,
@@ -11,8 +11,8 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "jupyter-hecks = hecks:launch_instance",
-            "hecks = hecks:launch_instance",
+            "jupyter-thread = thread:launch_instance",
+            "thread = thread:launch_instance",
         ]
     },
 )

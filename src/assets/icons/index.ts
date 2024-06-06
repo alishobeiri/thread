@@ -74,7 +74,6 @@ import {
 	TrashCanIcon,
 	TwitterXIcon,
 	UploadIcon,
-	VizlyIcon,
 	WandIcon,
 	WritingIcon,
 } from "./svgs";
@@ -154,7 +153,6 @@ export {
 	TrashCanIcon,
 	TwitterXIcon,
 	UploadIcon,
-	VizlyIcon,
 	WandIcon,
 	WritingIcon,
 };

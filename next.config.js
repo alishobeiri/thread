@@ -2,8 +2,8 @@
 const path = require('path');
 
 const nextConfig = {
-  basePath: '/hecks',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/hecks/' : '',
+  basePath: '/thread',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/thread/' : '',
   output: "export",
   images: {
     unoptimized: true,

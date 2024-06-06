@@ -32,7 +32,6 @@ import {
 import { isInViewport, isPlatformMac } from "../../utils/utils";
 import useCellStore, { CellStatus } from "../cell/store/CellStore";
 import { enableCommandMode } from "../cell/actions/actions";
-import { useCellHeaderHotkeys } from "../cell/actions/useCellHeaderHotkeys";
 import { useChatStore } from "../sidebar/chat/store/ChatStore";
 
 const goToActiveCell = (mainPanelRef: React.RefObject<HTMLDivElement>) => {
