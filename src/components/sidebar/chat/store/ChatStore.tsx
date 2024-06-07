@@ -1,17 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
 import { create } from "zustand";
+import useApiCallStore, {
+	MAX_AI_API_CALLS,
+} from "../../../../hooks/useApiCallStore";
 import ConnectionManager from "../../../../services/connection/connectionManager";
-import {
-	CHAT_PANEL_ID,
-	CONTEXT_WINDOW_SIZE,
-} from "../../../../utils/constants/constants";
-import { mostRelevantCellsForQuery } from "../../../../utils/embeddings";
-import {
-	multilineStringToString,
-	noterousFetch,
-} from "../../../../utils/utils";
-import { useNotebookStore } from "../../../notebook/store/NotebookStore";
+import { CHAT_PANEL_ID } from "../../../../utils/constants/constants";
 import { makeStreamingRequest } from "../../../../utils/streaming";
+import { useQueryLimitModalStore } from "../../../modals/query-limit/QueryLimitModalStore";
+import { useNotebookStore } from "../../../notebook/store/NotebookStore";
 import { useSidebarStore } from "../../store/SidebarStore";
 export type UserType = "assistant" | "user";
 
@@ -126,6 +122,15 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
 		addMessage(query, "user");
 
+		// increment AI API call count
+		if (useApiCallStore.getState().apiCallCount > MAX_AI_API_CALLS) {
+			useQueryLimitModalStore.getState().setShowQueryLimitModal(true);
+			return;
+		} else {
+			// increment AI API call count
+			useApiCallStore.getState().incrementApiCallCount();
+		}
+
 		const { activeCellIndex, cells } = useNotebookStore.getState();
 		const activeCellSource = cells[activeCellIndex]?.source as string;
 		const currentChatNamespace =
@@ -134,10 +139,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 		// send message to the chat assistant
 		try {
 			// TODO find the most relevant cells
-			const mostRelevantCells = await mostRelevantCellsForQuery(
-				query,
-				CONTEXT_WINDOW_SIZE,
-			);
+			// const mostRelevantCells = await mostRelevantCellsForQuery(
+			// 	query,
+			// 	CONTEXT_WINDOW_SIZE,
+			// );
 
 			let assistantMessageId;
 
