@@ -5,6 +5,9 @@ import { NextRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 import { temporal } from "zundo";
 import { create } from "zustand";
+import useApiCallStore, {
+	MAX_AI_API_CALLS,
+} from "../../../hooks/useApiCallStore";
 import ConnectionManager, {
 	useConnectionManagerStore,
 } from "../../../services/connection/connectionManager";
@@ -19,6 +22,7 @@ import { magicQuery } from "../../../utils/magic/magicQuery";
 import { trackEventData } from "../../../utils/posthog";
 import { newUuid } from "../../../utils/utils";
 import { enableCommandMode } from "../../cell/actions/actions";
+import { useQueryLimitModalStore } from "../../modals/query-limit/QueryLimitModalStore";
 import { refresh } from "../../sidebar/filesystem/FileSystemToolbarUtils";
 export type ICellTypes = "markdown" | "code" | "rawNB";
 export type NotebookMode = "command" | "edit";
@@ -477,6 +481,19 @@ export const useNotebookStore = create<INotebookStore>()(
 						prompt: prompt.trim(),
 						promptLength: prompt.trim().length,
 					});
+
+					if (
+						useApiCallStore.getState().apiCallCount >
+						MAX_AI_API_CALLS
+					) {
+						useQueryLimitModalStore
+							.getState()
+							.setShowQueryLimitModal(true);
+						return;
+					} else {
+						// increment AI API call count
+						useApiCallStore.getState().incrementApiCallCount();
+					}
 
 					try {
 						await magicQuery(prompt);
