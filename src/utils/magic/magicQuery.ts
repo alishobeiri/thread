@@ -18,8 +18,6 @@ import {
 import { getAction, getActionInfo } from "./actionUtils";
 import { codeAction } from "./actions/code";
 import { fixErrorAction } from "./actions/fixError";
-import { markdownAction } from "./actions/markdown";
-import { summaryAction } from "./actions/summary";
 import { editCell } from "./edit";
 import {
 	NoterousMessage,
@@ -59,8 +57,6 @@ type Actions = {
 };
 
 const actions: Actions = {
-	markdown: markdownAction,
-	summary: summaryAction,
 	code: codeAction,
 	fixError: fixErrorAction,
 };
