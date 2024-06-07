@@ -56,10 +56,10 @@ const QueryLimitModal = () => {
 							{MAX_AI_API_CALLS} API calls. Please reach out to{" "}
 							<Text
 								as={Link}
-								href="mailto:ali@threads.dev"
+								href="mailto:ali@vizlylabs.com"
 								color="orange.400"
 							>
-								ali@threads.dev
+								ali@vizlylabs.com
 							</Text>{" "}
 							to increase your limit.
 						</Text>
