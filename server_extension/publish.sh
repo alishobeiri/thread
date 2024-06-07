@@ -8,6 +8,10 @@ export NODE_ENV=production
 yarn build:prod
 
 # Check if ./server_extension/thread/static exists, create it if not
+if [ -d "./thread/static" ]; then
+    rm -r ./thread/static
+fi
+
 if [ ! -d "./thread/static" ]; then
     mkdir -p ./thread/static
 fi

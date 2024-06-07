@@ -17,6 +17,8 @@ export const initializePosthog = () => {
 			api_host: window.location.origin + "/ingest",
 			ui_host: "https://app.posthog.com",
 			bootstrap: middlewareBootstrapData,
+			// Do not record any session, just use PostHog to capture events
+			disable_session_recording: true,
 		});
 	}
 };

@@ -2,6 +2,7 @@ import { captureException } from "@sentry/nextjs";
 import { v4 as uuidv4 } from "uuid";
 import { ThreadCell } from "../types/code.types";
 import { ThreadFile } from "../types/file.types";
+import { trackEventData } from "./posthog";
 
 export function getTimePartition(date: string): string {
 	const updatedDate = new Date(date);
@@ -137,6 +138,7 @@ export async function threadFetch(
 	body: any,
 	signal?: AbortSignal,
 ) {
+	trackEventData("threadFetch", { url });
 	const response: any = await fetch(url, { ...body, signal }).then((res) => {
 		return res;
 	});

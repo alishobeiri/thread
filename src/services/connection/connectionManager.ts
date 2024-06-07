@@ -8,6 +8,7 @@ import {
 import { IModel, Status } from "@jupyterlab/services/lib/kernel/kernel";
 import { captureException } from "@sentry/nextjs";
 import { Extension } from "@uiw/react-codemirror";
+import posthog from "posthog-js";
 import { create } from "zustand";
 import { languageServer } from "../../components/cell/input/extensions/languageServer";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
@@ -123,6 +124,7 @@ class ConnectionManager {
 		}
 
 		try {
+			// Generate a unique ID for the user
 			const response = await fetch(
 				`${serverUrl}/thread/uniqueId?token=${token}`,
 				{
@@ -131,6 +133,10 @@ class ConnectionManager {
 			);
 			const uniqueId = await response.text();
 			this.uniqueId = uniqueId;
+			if (uniqueId) {
+				// Identify the user based on the unique ID
+				posthog.identify(uniqueId);
+			}
 		} catch (e) {
 			console.error(e);
 		}
