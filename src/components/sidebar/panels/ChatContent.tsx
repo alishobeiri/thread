@@ -337,17 +337,18 @@ export default function ChatContent({
 							label={`The chat is context-aware, with information about your current notebook. You can add specific context by selecting code in the notebook.`}
 						>
 							<InfoIcon
-								ml={1}
+								ml={2}
 								fontSize={"xs"}
 								cursor={"pointer"}
 							/>
 						</Tooltip>
 					</Heading>
 					<SidebarIcon
-						label={`Close Sidebar (${
+						label={`Close sidebar (${
 							isPlatformMac() ? "⌘ + B" : "Ctrl + B"
 						})`}
 						icon={<ToggleSidebar />}
+						size="sm"
 						onClick={handleCloseSidebar}
 					/>
 				</HStack>

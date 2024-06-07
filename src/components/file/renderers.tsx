@@ -10,15 +10,14 @@ import {
 	useColorModeValue,
 } from "@chakra-ui/react";
 import { JSONTree } from "react-json-tree";
-import Spinner from "../misc/Spinner";
-import CrazyTable from "../modals/file-view/CrazyTable";
 import {
 	APPLICATION_JSON,
-	APPLICATION_PDF,
 	EXCEL_MIME_TYPE,
 	SPREADHSEET_MIME_TYPE,
 	TEXT_CSV,
 } from "../cell/output/mimeTypes";
+import Spinner from "../misc/Spinner";
+import CrazyTable from "../modals/file-view/CrazyTable";
 
 export interface TransformData {
 	columns: string[];
@@ -138,8 +137,8 @@ export const FilePreview = ({ previewData }: { previewData: PreviewData }) => {
 	}
 
 	const couldNotGeneratePreview = (
-		<Text fontStyle="italic" color="orange.400">
-			Could not generate preview for this file
+		<Text fontFamily={"Space Grotesk"} color="orange.400">
+			Could not generate a preview for this file
 		</Text>
 	);
 

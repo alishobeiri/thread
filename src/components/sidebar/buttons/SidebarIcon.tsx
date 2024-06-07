@@ -46,11 +46,12 @@ const SidebarIcon = React.forwardRef(
 			? "orange.500"
 			: "var(--chakra-colors-chakra-body-text)";
 		const bgColor = isSelected ? selectedBgColor : "unset";
+
 		return (
 			<SidebarTooltip label={label}>
 				<IconButton
 					icon={icon}
-					borderRadius={"full"}
+					colorScheme="orange"
 					fill={color}
 					color={color}
 					aria-label={label}

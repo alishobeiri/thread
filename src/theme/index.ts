@@ -110,6 +110,11 @@ const components = {
 	Menu: menuTheme,
 	Modal: modalTheme,
 	Popover: popoverTheme,
+	Tooltip: {
+		baseStyle: {
+			fontFamily: "Space Grotesk",
+		},
+	},
 };
 
 const customGreen = {

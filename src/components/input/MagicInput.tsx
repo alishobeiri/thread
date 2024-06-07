@@ -1,4 +1,11 @@
 import {
+	ArrowDownIcon,
+	ArrowUpIcon,
+	ChevronUpIcon,
+	CloseIcon,
+} from "@chakra-ui/icons";
+import {
+	Box,
 	Button,
 	HStack,
 	IconButton,
@@ -6,11 +13,10 @@ import {
 	MenuButton,
 	MenuItem,
 	MenuList,
-	Textarea,
-	VStack,
 	Text,
-	Box,
+	Textarea,
 	Tooltip,
+	VStack,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import ResizeTextarea from "react-textarea-autosize";
@@ -20,19 +26,13 @@ import {
 	CELL_MINIMUM_HEIGHT,
 } from "../../utils/constants/constants";
 import { trackClickEvent } from "../../utils/posthog";
+import { isInViewport, isPlatformMac } from "../../utils/utils";
+import { enableCommandMode } from "../cell/actions/actions";
+import useCellStore, { CellStatus } from "../cell/store/CellStore";
 import SpinnerWithStopButton from "../misc/SpinnerWithStopButton";
 import { useNotebookStore } from "../notebook/store/NotebookStore";
-import { MagicInputSelections, useMagicInputStore } from "./MagicInputStore";
-import {
-	ArrowDownIcon,
-	ArrowUpIcon,
-	ChevronUpIcon,
-	CloseIcon,
-} from "@chakra-ui/icons";
-import { isInViewport, isPlatformMac } from "../../utils/utils";
-import useCellStore, { CellStatus } from "../cell/store/CellStore";
-import { enableCommandMode } from "../cell/actions/actions";
 import { useChatStore } from "../sidebar/chat/store/ChatStore";
+import { MagicInputSelections, useMagicInputStore } from "./MagicInputStore";
 
 const goToActiveCell = (mainPanelRef: React.RefObject<HTMLDivElement>) => {
 	const activeCell = document.querySelector(".active-cell");
@@ -96,25 +96,27 @@ export function GoToActiveCell({
 	}, []);
 
 	return (
-		<Box
-			as="span"
-			display="flex"
-			width={`${CELL_GUTTER_WIDTH - 5}px`}
-			justifyContent={"flex-end"}
-			visibility={showGoToActiveCell ? "visible" : "hidden"}
-		>
-			<IconButton
-				aria-label="Go to active cell"
-				size="sm"
-				variant="outline"
-				borderRadius={"full"}
-				icon={isAbove ? <ArrowUpIcon /> : <ArrowDownIcon />}
-				backgroundColor="var(--jp-layout-color1)"
-				onClick={() => {
-					goToActiveCell(mainPanelRef);
-				}}
-			/>
-		</Box>
+		<Tooltip label="Go to active cell" placement="left">
+			<Box
+				as="span"
+				display="flex"
+				width={`${CELL_GUTTER_WIDTH - 5}px`}
+				justifyContent={"flex-end"}
+				visibility={showGoToActiveCell ? "visible" : "hidden"}
+			>
+				<IconButton
+					aria-label="Go to active cell"
+					size="sm"
+					variant="outline"
+					borderRadius={"full"}
+					icon={isAbove ? <ArrowUpIcon /> : <ArrowDownIcon />}
+					backgroundColor="var(--jp-layout-color1)"
+					onClick={() => {
+						goToActiveCell(mainPanelRef);
+					}}
+				/>
+			</Box>
+		</Tooltip>
 	);
 }
 

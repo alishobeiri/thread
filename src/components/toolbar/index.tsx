@@ -58,17 +58,23 @@ const RunModeSelector = () => {
 					Interrupt kernel
 				</Button>
 			) : (
-				<Button
-					size="sm"
-					leftIcon={<PlayIcon />}
-					variant="outline"
-					onClick={handleRunClick}
-					backgroundColor="var(--chakra-colors-chakra-body-bg)"
-					colorScheme="orange"
-					fontFamily={"Space Grotesk"}
+				<Tooltip
+					label="Execute all cells in this notebook"
+					hasArrow
+					borderRadius={"md"}
 				>
-					Run all cells
-				</Button>
+					<Button
+						size="sm"
+						leftIcon={<PlayIcon />}
+						variant="outline"
+						onClick={handleRunClick}
+						backgroundColor="var(--chakra-colors-chakra-body-bg)"
+						colorScheme="orange"
+						fontFamily={"Space Grotesk"}
+					>
+						Run all cells
+					</Button>
+				</Tooltip>
 			)}
 		</ButtonGroup>
 	);

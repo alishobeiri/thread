@@ -58,7 +58,7 @@ export const SettingsContent = ({
 						Settings
 					</Heading>
 					<SidebarIcon
-						label={`Close Sidebar (${
+						label={`Close sidebar (${
 							isPlatformMac() ? "⌘ + B" : "Ctrl + B"
 						})`}
 						icon={<ToggleSidebar />}
