@@ -1,23 +1,24 @@
-import React, { useState, useEffect } from "react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
+	Box,
 	Button,
-	Modal,
-	ModalOverlay,
-	ModalContent,
-	ModalHeader,
-	ModalFooter,
-	ModalBody,
-	ModalCloseButton,
 	Menu,
 	MenuButton,
-	MenuList,
 	MenuItem,
+	MenuList,
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	ModalOverlay,
 	Text,
-	Box,
 } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { useConnectionManagerStore } from "../../../services/connection/connectionManager";
-import ConnectionManager from "../../../services/connection/connectionManager";
+import { useEffect, useState } from "react";
+import ConnectionManager, {
+	useConnectionManagerStore,
+} from "../../../services/connection/connectionManager";
 import { useNotebookStore } from "../../notebook/store/NotebookStore";
 
 const NO_KERNEL = "No kernel";
@@ -86,10 +87,12 @@ const KernelSelectionModal = () => {
 		<Modal isOpen={isModalOpen} onClose={closeModal}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Select Kernel</ModalHeader>
+				<ModalHeader fontFamily={"Space Grotesk"}>
+					Select Kernel
+				</ModalHeader>
 				<ModalCloseButton />
-				<ModalBody>
-					<Text size={"xs"} mb={0} pl={1}>
+				<ModalBody fontFamily={"Space Grotesk"} pb={6}>
+					<Text size={"xs"} mb={1} pl={1}>
 						{`Select kernel for: "${useNotebookStore
 							.getState()
 							.getNotebookPath()}"`}
@@ -147,6 +150,7 @@ const KernelSelectionModal = () => {
 						colorScheme="gray"
 						mr={3}
 						onClick={closeModal}
+						fontFamily={"Space Grotesk"}
 					>
 						No Kernel
 					</Button>
@@ -156,6 +160,7 @@ const KernelSelectionModal = () => {
 						loadingText="Connecting"
 						isLoading={isLoading}
 						onClick={handleSelectClick}
+						fontFamily={"Space Grotesk"}
 					>
 						Select
 					</Button>

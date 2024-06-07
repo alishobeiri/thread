@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { HStack, Button, IconButton } from "@chakra-ui/react";
 import {
-	ArrowUpIcon,
 	ArrowDownIcon,
-	DeleteIcon,
+	ArrowUpIcon,
 	CheckIcon,
 	CopyIcon,
+	DeleteIcon,
 } from "@chakra-ui/icons";
+import { HStack, IconButton, Tooltip } from "@chakra-ui/react";
 import { captureException } from "@sentry/nextjs";
+import React, { useState } from "react";
 import { useNotebookStore } from "../../notebook/store/NotebookStore";
 
 interface InputAreaToolbarProps {
@@ -63,8 +63,13 @@ const InputAreaToolbar: React.FC<InputAreaToolbarProps> = ({
 
 	return (
 		active && (
-			<HStack position="absolute" top={0} right={0} spacing={0}>
-				<>
+			<HStack mt="0.5px" mr={"1px"} gap={1}>
+				<Tooltip
+					label="Move cell up"
+					size="sm"
+					fontSize={"small"}
+					hasArrow
+				>
 					<IconButton
 						size="xs"
 						aria-label="Move cell up"
@@ -75,8 +80,16 @@ const InputAreaToolbar: React.FC<InputAreaToolbarProps> = ({
 							event.stopPropagation();
 						}}
 						variant="ghost"
+						colorScheme="orange"
 						isDisabled={index === 0}
 					/>
+				</Tooltip>
+				<Tooltip
+					label="Move cell down"
+					size="sm"
+					fontSize={"small"}
+					hasArrow
+				>
 					<IconButton
 						size="xs"
 						aria-label="Move cell down"
@@ -87,21 +100,38 @@ const InputAreaToolbar: React.FC<InputAreaToolbarProps> = ({
 							event.stopPropagation();
 						}}
 						variant="ghost"
+						colorScheme="orange"
 						isDisabled={
 							index ===
 							useNotebookStore.getState().cells.length - 1
 						}
 					/>
+				</Tooltip>
+				<Tooltip
+					label="Copy code"
+					size="sm"
+					fontSize={"small"}
+					hasArrow
+				>
 					<IconButton
 						size="xs"
 						aria-label="Copy code"
 						icon={copyButtonProps.icon}
 						onClick={copyCodeToClipboard}
 						variant="ghost"
+						colorScheme="orange"
 						isDisabled={!source}
 					/>
+				</Tooltip>
+				<Tooltip
+					label="Delete cell"
+					size="sm"
+					fontSize={"small"}
+					hasArrow
+				>
 					<IconButton
 						size="xs"
+						colorScheme="orange"
 						aria-label="Delete cell"
 						icon={<DeleteIcon />}
 						onClick={(event) => {
@@ -111,7 +141,7 @@ const InputAreaToolbar: React.FC<InputAreaToolbarProps> = ({
 						}}
 						variant="ghost"
 					/>
-				</>
+				</Tooltip>
 			</HStack>
 		)
 	);

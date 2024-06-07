@@ -1,18 +1,18 @@
 import {
 	Box,
-	HStack,
-	VStack,
-	Text,
-	Tooltip,
 	Button,
+	ButtonGroup,
+	Divider,
+	Flex,
+	HStack,
+	IconButton,
 	Popover,
 	PopoverArrow,
 	PopoverContent,
 	PopoverTrigger,
-	ButtonGroup,
-	Divider,
-	Flex,
-	IconButton,
+	Text,
+	Tooltip,
+	VStack,
 } from "@chakra-ui/react";
 
 import { ICell, IUnrecognizedCell } from "@jupyterlab/nbformat";
@@ -29,24 +29,24 @@ import { default as PythonCellContainer } from "../cell/PythonCell";
 import { useNotebookHotkeys } from "./actions/useNotebookHotkeys";
 import { MarkdownCell, useNotebookStore } from "./store/NotebookStore";
 
+import { AddIcon } from "@chakra-ui/icons";
 import { captureException } from "@sentry/nextjs";
 import React from "react";
 import { useScrollToBottom } from "../../hooks/useScroll";
-import MarkdownCellContainer from "../cell/MarkdownCell";
-import { enableCommandMode } from "../cell/actions/actions";
-import { MagicInput } from "../input/MagicInput";
-import Toolbar from "../toolbar";
-import { isInViewport } from "../../utils/utils";
-import EditableTitle from "../editable/EditableTitle";
-import StatusBar from "../statusbar";
-import { triggerCellActionFailureToast } from "../toasts";
 import { getCellTypesWithHandlers } from "../../utils/cellOptions";
-import { AddIcon } from "@chakra-ui/icons";
 import { CELL_GUTTER_WIDTH } from "../../utils/constants/constants";
 import { trackEventData } from "../../utils/posthog";
-import Spinner from "../misc/Spinner";
+import { isInViewport } from "../../utils/utils";
 import CellPadding from "../cell/CellPadding";
+import MarkdownCellContainer from "../cell/MarkdownCell";
+import { enableCommandMode } from "../cell/actions/actions";
+import EditableTitle from "../editable/EditableTitle";
+import { MagicInput } from "../input/MagicInput";
 import Launcher from "../launcher/Launcher";
+import Spinner from "../misc/Spinner";
+import StatusBar from "../statusbar";
+import { triggerCellActionFailureToast } from "../toasts";
+import Toolbar from "../toolbar";
 
 export const initializeServerConnection = async () => {
 	const isKernelUnknown =
@@ -393,7 +393,7 @@ const Cells = () => {
 	const notebookMode = useNotebookStore((state) => state.notebookMode);
 
 	return (
-		<VStack gap={1} pt={8} pb={"56"} width="100%">
+		<VStack gap={2} pt={8} pb={"56"} width="100%">
 			{cells.map((cell, i) => {
 				const cellId = cell.id as string;
 				const active = i == activeCellIndex;

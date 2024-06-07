@@ -158,7 +158,7 @@ export default function Sidebar() {
 					<VStack>
 						<SidebarIcon
 							icon={<DiscordIcon boxSize="18px" />}
-							label={"Discord Community"}
+							label={"Join the Discord"}
 							onClick={() =>
 								window.open(
 									"https://discord.gg/gkB2sWu8",
@@ -168,7 +168,7 @@ export default function Sidebar() {
 						/>
 						<SidebarIcon
 							icon={<GithubIcon boxSize="18px" />}
-							label={"GitHub Issues"}
+							label={"Raise an issue on GitHub"}
 							onClick={() =>
 								window.open(
 									"https://github.com/squaredtechnologies/thread/issues",
