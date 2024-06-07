@@ -13,15 +13,13 @@ import {
 	Tooltip,
 } from "@chakra-ui/react";
 import capitalize from "lodash/capitalize";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { PlayIcon } from "../../assets/icons";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { PlayIcon, SquareIcon } from "../../assets/icons";
 import ConnectionManager from "../../services/connection/connectionManager";
-import React from "react";
-import { SquareIcon } from "../../assets/icons";
 import { getCellTypesWithHandlers } from "../../utils/cellOptions";
+import { CELL_GUTTER_WIDTH } from "../../utils/constants/constants";
 import { ICellTypes, useNotebookStore } from "../notebook/store/NotebookStore";
 import { triggerCellActionFailureToast } from "../toasts";
-import { CELL_GUTTER_WIDTH } from "../../utils/constants/constants";
 
 const RunModeSelector = () => {
 	const { executeSelectedCells, executeAllCells } =
@@ -54,6 +52,8 @@ const RunModeSelector = () => {
 					variant="outline"
 					onClick={handleInterruptClick}
 					backgroundColor="var(--chakra-colors-chakra-body-bg)"
+					fontFamily={"Space Grotesk"}
+					colorScheme="orange"
 				>
 					Interrupt kernel
 				</Button>
@@ -65,6 +65,7 @@ const RunModeSelector = () => {
 					onClick={handleRunClick}
 					backgroundColor="var(--chakra-colors-chakra-body-bg)"
 					colorScheme="orange"
+					fontFamily={"Space Grotesk"}
 				>
 					Run all cells
 				</Button>
@@ -109,10 +110,9 @@ const CellTypeMenu: React.FC<{
 						backgroundColor="var(--chakra-colors-chakra-body-bg)"
 						colorScheme="orange"
 						rightIcon={<ChevronDownIcon />}
+						fontFamily={"Space Grotesk"}
 					>
-						<Flex align="items-center">
-							<Text width="72px">{formattedType}</Text>
-						</Flex>
+						{formattedType}
 					</MenuButton>
 				</Tooltip>
 
@@ -123,6 +123,7 @@ const CellTypeMenu: React.FC<{
 								key={`menu-item-${label}`}
 								icon={icon}
 								onClick={handler}
+								fontFamily={"Space Grotesk"}
 							>
 								<Text fontSize="small">{label}</Text>
 							</MenuItem>
@@ -215,6 +216,7 @@ export default function Toolbar({
 								backgroundColor="var(--chakra-colors-chakra-body-bg)"
 								onClick={getHandler("code")}
 								colorScheme="orange"
+								fontFamily={"Space Grotesk"}
 							>
 								Python
 							</Button>
@@ -234,6 +236,7 @@ export default function Toolbar({
 								backgroundColor="var(--chakra-colors-chakra-body-bg)"
 								onClick={getHandler("markdown")}
 								colorScheme="orange"
+								fontFamily={"Space Grotesk"}
 							>
 								Markdown
 							</Button>

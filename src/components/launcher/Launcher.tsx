@@ -160,11 +160,11 @@ const Launcher = () => {
 		...(existingNotebooks && existingNotebooks.length > 0
 			? [
 					{
-						title: "Existing notebooks",
+						title: "Notebooks in directory",
 						icon: <JupyterIcon boxSize={"18px"} />,
 						items: existingNotebooks.map((notebook) => ({
 							label: notebook.name,
-							icon: <JupyterIcon boxSize={"18px"} />,
+							icon: <JupyterIcon boxSize={"36px"} />,
 							actionHandler: () => {
 								useNotebookStore
 									.getState()
