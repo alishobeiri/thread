@@ -2,29 +2,18 @@ import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import {
 	Box,
 	Button,
-	Center,
-	Divider,
-	Flex,
 	HStack,
 	Heading,
 	IconButton,
-	Text,
 	Tooltip,
 	VStack,
-	background,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
-import {
-	DoubleChevronLeftIcon,
-	InfoIcon,
-	StopCircleIcon,
-	ToggleSidebar,
-	WandIcon,
-} from "../../../assets/icons";
+import { InfoIcon, ToggleSidebar } from "../../../assets/icons";
 import { useScrollToBottom } from "../../../hooks/useScroll";
 import { standaloneToast } from "../../../theme";
 import { BasicCodeMirrorEditor } from "../../../utils/codemirror";
@@ -34,12 +23,13 @@ import {
 	SIDEPANEL_WIDTH,
 } from "../../../utils/constants/constants";
 import { getCustomMarkdownComponents } from "../../../utils/markdown";
+import { isPlatformMac } from "../../../utils/utils";
 import { DynamicTextArea } from "../chat/TextInput";
 import { ChatMessage, useChatStore } from "../chat/store/ChatStore";
 import { useSidebarStore } from "../store/SidebarStore";
-import { isPlatformMac } from "../../../utils/utils";
-import SidebarIcon from "../buttons/SidebarIcon";
+
 import { useHotkeys } from "react-hotkeys-hook";
+import SidebarIcon from "../buttons/SidebarIcon";
 
 // If the context is in a user message, then color differently and don't allow for deletion
 const ContextContainer = ({

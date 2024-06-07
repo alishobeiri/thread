@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
 import { Box, Divider, HStack, Heading, Text, VStack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import {
 	DiscordIcon,
 	GithubIcon,
 	InfoIcon,
 	JupyterIcon,
+	PlusIcon,
 } from "../../assets/icons";
-import { useNotebookStore } from "../notebook/store/NotebookStore";
 import ConnectionManager from "../../services/connection/connectionManager";
+import { useNotebookStore } from "../notebook/store/NotebookStore";
 
 const { createNewNotebook } = useNotebookStore.getState();
 
@@ -15,10 +16,12 @@ const Section = ({
 	title,
 	icon: SectionIcon,
 	items,
+	fallbackMessage,
 }: {
 	title: string;
 	icon: any;
 	items: { label: string; icon: any; actionHandler: () => void }[];
+	fallbackMessage?: string;
 }) => {
 	return (
 		<Box width="100%">
@@ -29,59 +32,70 @@ const Section = ({
 				</Heading>
 			</HStack>
 			<Divider my={2} />
-			<HStack direction="row" gap={4} wrap="wrap">
-				{items.map((item, index) => (
-					<VStack
-						gap={0}
-						key={index}
-						cursor={"pointer"}
-						tabIndex={0}
-						border="1px"
-						_light={{ borderColor: "gray.200" }}
-						_dark={{
-							borderColor: "gray.600",
-							_hover: {
-								borderColor: "gray.300",
-							},
-						}}
-						transition={"all 0.2s"}
-						borderRadius="md"
-						width="128px"
-						height="128px"
-						display="flex"
-						flexDirection="column"
-						alignItems="center"
-						boxShadow="sm"
-						_hover={{ boxShadow: "md" }}
-						onClick={item.actionHandler}
-					>
-						<Box
-							width="100%"
-							flexGrow={1}
+			{items.length > 0 ? (
+				<HStack direction="row" gap={4} wrap="wrap">
+					{items.map((item, index) => (
+						<VStack
+							gap={0}
+							key={index}
+							cursor={"pointer"}
+							tabIndex={0}
+							border="1px"
+							_light={{ borderColor: "gray.200" }}
+							_dark={{
+								borderColor: "gray.600",
+								_hover: {
+									borderColor: "gray.300",
+								},
+							}}
+							transition={"all 0.2s"}
+							borderRadius="md"
+							width="128px"
+							height="128px"
 							display="flex"
+							flexDirection="column"
 							alignItems="center"
-							justifyContent="center"
+							boxShadow="sm"
+							_hover={{ boxShadow: "md" }}
+							onClick={item.actionHandler}
 						>
-							{item.icon}
-						</Box>
-						<Box
-							title={item.label}
-							width="100%"
-							height="36px"
-							display="flex"
-							alignItems="center"
-							justifyContent="center"
-							overflow="hidden"
-							px={2}
-							fontWeight={"semibold"}
-							fontFamily={"Space Grotesk"}
-							fontSize={"small"}
-						>
-							<Text isTruncated>{item.label}</Text>
-						</Box>
-					</VStack>
-				))}
-			</HStack>
+							<Box
+								width="100%"
+								flexGrow={1}
+								display="flex"
+								alignItems="center"
+								justifyContent="center"
+							>
+								{item.icon}
+							</Box>
+							<Box
+								title={item.label}
+								width="100%"
+								height="36px"
+								display="flex"
+								alignItems="center"
+								justifyContent="center"
+								overflow="hidden"
+								px={2}
+								fontWeight={"semibold"}
+								fontFamily={"Space Grotesk"}
+								fontSize={"small"}
+							>
+								<Text isTruncated>{item.label}</Text>
+							</Box>
+						</VStack>
+					))}
+				</HStack>
+			) : (
+				<Heading
+					py={3}
+					fontSize="lg"
+					fontFamily={"Space Grotesk"}
+					color={"orange.500"}
+				>
+					{fallbackMessage}
+				</Heading>
+			)}
 		</Box>
 	);
 };
@@ -90,6 +104,8 @@ const Launcher = () => {
 	const [notebookItems, setNotebookItems] = useState<
 		{ label: string; icon: JSX.Element; actionHandler: () => void }[]
 	>([]);
+	const files = useNotebookStore((state) => state.files);
+	const existingNotebooks = files.filter((file) => file.type === "notebook");
 
 	useEffect(() => {
 		const fetchKernelSpecs = async () => {
@@ -136,19 +152,28 @@ const Launcher = () => {
 
 	const sections = [
 		{
-			title: "Notebook",
-			icon: <JupyterIcon boxSize={"18px"} />,
-			items:
-				notebookItems.length > 0
-					? notebookItems
-					: [
-							{
-								label: "No kernels could be found.",
-								icon: null,
-								actionHandler: () => {},
-							},
-					  ],
+			title: "New notebook",
+			icon: <PlusIcon boxSize={"18px"} />,
+			items: notebookItems,
+			fallbackMessage: "No kernels could be found",
 		},
+		...(existingNotebooks && existingNotebooks.length > 0
+			? [
+					{
+						title: "Existing notebooks",
+						icon: <JupyterIcon boxSize={"18px"} />,
+						items: existingNotebooks.map((notebook) => ({
+							label: notebook.name,
+							icon: <JupyterIcon boxSize={"18px"} />,
+							actionHandler: () => {
+								useNotebookStore
+									.getState()
+									.handleNotebookClick(notebook);
+							},
+						})),
+					},
+			  ]
+			: []),
 		{
 			title: "Join the community",
 			icon: <InfoIcon />,
@@ -180,6 +205,7 @@ const Launcher = () => {
 					title={section.title}
 					icon={section.icon}
 					items={section.items}
+					fallbackMessage={section.fallbackMessage}
 				/>
 			))}
 		</VStack>

@@ -1,22 +1,17 @@
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
 	Box,
-	Divider,
 	HStack,
 	Heading,
 	IconButton,
 	VStack,
 	useColorMode,
 } from "@chakra-ui/react";
-import {
-	DoubleChevronLeftIcon,
-	KeyboardIcon,
-	ToggleSidebar,
-} from "../../../assets/icons";
-import { useShortcutsModalStore } from "../../modals/cheat-sheet/ShortcutsModalStore";
-import SidebarIcon from "../buttons/SidebarIcon";
+import { KeyboardIcon, ToggleSidebar } from "../../../assets/icons";
 import { SIDEPANEL_WIDTH } from "../../../utils/constants/constants";
 import { isPlatformMac } from "../../../utils/utils";
+import { useShortcutsModalStore } from "../../modals/cheat-sheet/ShortcutsModalStore";
+import SidebarIcon from "../buttons/SidebarIcon";
 
 export const ThemeToggle = () => {
 	const { colorMode, toggleColorMode } = useColorMode();

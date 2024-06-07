@@ -12,7 +12,7 @@ import {
 	Tooltip,
 	VStack,
 } from "@chakra-ui/react";
-import React from "react";
+import { useRouter } from "next/router";
 import {
 	FolderIcon,
 	RefreshIcon,
@@ -20,13 +20,13 @@ import {
 } from "../../../../assets/icons";
 import ConnectionManager from "../../../../services/connection/connectionManager";
 import { NoterousFile } from "../../../../types/file.types";
+import { SIDEPANEL_WIDTH } from "../../../../utils/constants/constants";
 import { isPlatformMac } from "../../../../utils/utils";
 import Spinner from "../../../misc/Spinner";
 import { useNotebookStore } from "../../../notebook/store/NotebookStore";
-import { FileRow } from "./FileRow";
-import { SIDEPANEL_WIDTH } from "../../../../utils/constants/constants";
+
 import SidebarIcon from "../../buttons/SidebarIcon";
-import { useRouter } from "next/router";
+import { FileRow } from "./FileRow";
 
 const FilesPanel = ({
 	handleDeleteItem,

@@ -44,26 +44,21 @@ const SidebarTooltip: React.FC<{ label: string; children: ReactNode }> = ({
 		</Tooltip>
 	);
 };
-const SidebarIcon = React.forwardRef(
+export const SidebarIcon = React.forwardRef(
 	(
 		{ icon, onClick, isSelected = false, label = "" }: SidebarIconProps,
 		ref: React.Ref<HTMLButtonElement>,
 	) => {
+		const color = isSelected
+			? "orange.500"
+			: "var(--chakra-colors-chakra-body-text)";
 		const selectedBgColor = useColorModeValue("gray.50", "");
 		return (
 			<SidebarTooltip label={label}>
 				<IconButton
 					icon={icon}
-					fill={
-						isSelected
-							? "orange.400"
-							: "var(--chakra-colors-chakra-body-text)"
-					}
-					color={
-						isSelected
-							? "orange.200"
-							: "var(--chakra-colors-chakra-body-text)"
-					}
+					fill={color}
+					color={color}
 					width="36px"
 					height="36px"
 					aria-label={label}
