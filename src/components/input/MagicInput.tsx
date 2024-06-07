@@ -304,7 +304,6 @@ export const MagicInput = ({
 				position="relative"
 				minHeight={`${CELL_MINIMUM_HEIGHT}px`}
 				flex="1"
-				overflow="hidden"
 				tabIndex={0}
 				borderWidth={"2px"}
 				backgroundColor={textareaBackgroundColor}
