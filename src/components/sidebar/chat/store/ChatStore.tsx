@@ -1,19 +1,17 @@
 import { v4 as uuidv4 } from "uuid";
 import { create } from "zustand";
-import useApiCallStore, {
-	MAX_AI_API_CALLS,
-} from "../../../../hooks/useApiCallStore";
+import useApiCallStore from "../../../../hooks/useApiCallStore";
 import ConnectionManager from "../../../../services/connection/connectionManager";
 import {
 	API_URL,
 	CHAT_PANEL_ID,
 	CONTEXT_WINDOW_SIZE,
 } from "../../../../utils/constants/constants";
+import { mostRelevantCellsForQuery } from "../../../../utils/embeddings";
 import { makeStreamingRequest } from "../../../../utils/streaming";
-import { useQueryLimitModalStore } from "../../../modals/query-limit/QueryLimitModalStore";
+import { useOpenAISettingsModalStore } from "../../../modals/openai-settings/OpenAISettingsModalStore";
 import { useNotebookStore } from "../../../notebook/store/NotebookStore";
 import { useSidebarStore } from "../../store/SidebarStore";
-import { mostRelevantCellsForQuery } from "../../../../utils/embeddings";
 export type UserType = "assistant" | "user";
 
 export interface ChatMessage {
@@ -127,13 +125,12 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
 		addMessage(query, "user");
 
-		// increment AI API call count
-		if (useApiCallStore.getState().apiCallCount > MAX_AI_API_CALLS) {
-			useQueryLimitModalStore.getState().setShowQueryLimitModal(true);
+		const shouldContinue = useApiCallStore
+			.getState()
+			.checkAndIncrementApiCallCount();
+
+		if (!shouldContinue) {
 			return;
-		} else {
-			// increment AI API call count
-			useApiCallStore.getState().incrementApiCallCount();
 		}
 
 		const { activeCellIndex, cells } = useNotebookStore.getState();
@@ -160,6 +157,8 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 					activeCellSource,
 					mostRelevantContextualCellsForQuery: mostRelevantCells,
 					uniqueId: ConnectionManager.getInstance().uniqueId,
+					openaiApiKey:
+						useOpenAISettingsModalStore.getState().openAIKey,
 				},
 				shouldCancel: () => {
 					const aborted = abortController.signal.aborted;

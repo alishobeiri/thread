@@ -3,7 +3,7 @@ import { create } from "zustand";
 interface OpenAISettingsModalState {
 	showOpenAISettingsModal: boolean;
 	setShowOpenAISettingsModal: (show: boolean) => void;
-	openAIKey: string | null;
+	openAIKey: string | undefined;
 	setOpenAIKey: (key: string) => void;
 }
 
@@ -15,8 +15,8 @@ export const useOpenAISettingsModalStore = create<OpenAISettingsModalState>(
 		},
 		openAIKey:
 			typeof window !== "undefined"
-				? localStorage.getItem("openaiApiKey")
-				: null,
+				? localStorage.getItem("openaiApiKey") || undefined
+				: undefined,
 		setOpenAIKey: (key) => {
 			if (typeof window !== "undefined") {
 				localStorage.setItem("openaiApiKey", key);

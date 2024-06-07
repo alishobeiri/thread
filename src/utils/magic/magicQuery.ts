@@ -4,6 +4,7 @@ import {
 	MagicInputSelections,
 	useMagicInputStore,
 } from "../../components/input/MagicInputStore";
+import { useOpenAISettingsModalStore } from "../../components/modals/openai-settings/OpenAISettingsModalStore";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
 import { useChatStore } from "../../components/sidebar/chat/store/ChatStore";
 import ConnectionManager from "../../services/connection/connectionManager";
@@ -341,6 +342,8 @@ const generateCells = async (query: string, followUpRetries: number) => {
 				},
 				body: JSON.stringify({
 					actionState: actionState,
+					openaiApiKey:
+						useOpenAISettingsModalStore.getState().openAIKey,
 					uniqueId: ConnectionManager.getInstance().uniqueId,
 				}),
 			},

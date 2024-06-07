@@ -1,6 +1,7 @@
 import useCellStore, {
 	CellStatus,
 } from "../../components/cell/store/CellStore";
+import { useOpenAISettingsModalStore } from "../../components/modals/openai-settings/OpenAISettingsModalStore";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
 import ConnectionManager from "../../services/connection/connectionManager";
 import { ThreadCell } from "../../types/code.types";
@@ -22,6 +23,7 @@ export const editCell = async (cell: ThreadCell, query: string) => {
 			currentNamespace: ConnectionManager.getInstance().currentNamespace,
 			theme: getAppTheme(),
 			uniqueId: ConnectionManager.getInstance().uniqueId,
+			openaiApiKey: useOpenAISettingsModalStore.getState().openAIKey,
 		},
 		shouldCancel: () =>
 			useNotebookStore.getState().userAbortedMagicQueryController.signal
@@ -29,7 +31,6 @@ export const editCell = async (cell: ThreadCell, query: string) => {
 	});
 
 	for await (const data of stream) {
-		console.log(data);
 		if (!data || !("source" in data)) {
 			continue;
 		}
