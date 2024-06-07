@@ -138,7 +138,7 @@ const RightIcon = ({
 		<IconButton
 			p={1}
 			borderRadius="md"
-			colorScheme="purple"
+			colorScheme="orange"
 			isDisabled={false}
 			icon={<ChatSubmitIcon />}
 			onClick={() => handleQuery(value)}
@@ -405,7 +405,7 @@ export const MagicInput = ({
 					<Menu>
 						<MenuButton
 							as={Button}
-							colorScheme="purple"
+							colorScheme="orange"
 							size="md"
 							rightIcon={<ChevronUpIcon />}
 							variant="ghost"

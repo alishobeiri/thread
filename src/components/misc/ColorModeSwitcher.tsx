@@ -12,7 +12,7 @@ export const ThemeToggle = ({ size = "sm" }: { size?: "sm" | "md" | "lg" }) => {
 			fontFamily={"Space Grotesk"}
 		>
 			<IconButton
-				colorScheme="purple"
+				colorScheme="orange"
 				icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
 				onClick={toggleColorMode}
 				variant="ghost"

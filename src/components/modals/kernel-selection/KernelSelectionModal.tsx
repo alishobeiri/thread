@@ -152,7 +152,7 @@ const KernelSelectionModal = () => {
 					</Button>
 					<Button
 						size="sm"
-						colorScheme="purple"
+						colorScheme="orange"
 						loadingText="Connecting"
 						isLoading={isLoading}
 						onClick={handleSelectClick}

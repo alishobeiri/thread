@@ -4,7 +4,7 @@ import { newUuid } from "../utils";
 // TODO add real PostHog Project
 export const PH_PROJECT_API_KEY = "123";
 
-export const CELL_ACTIVE_COLOR = "var(--chakra-colors-purple-500)";
+export const CELL_ACTIVE_COLOR = "var(--chakra-colors-orange-500)";
 
 export const SIDEPANEL_WIDTH = 350;
 export const SCROLL_TO_BOTTOM_THRESHOLD = 100;
@@ -54,7 +54,7 @@ export const SCROLL_CSS = {
 		width: "6px",
 	},
 	"&::-webkit-scrollbar-thumb": {
-		background: "var(--chakra-colors-purple-300)",
+		background: "var(--chakra-colors-orange-300)",
 		borderRadius: "24px",
 	},
 };

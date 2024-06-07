@@ -96,7 +96,7 @@ export function DynamicTextArea({
 				m={0}
 			>
 				<Button
-					colorScheme="purple"
+					colorScheme="orange"
 					size="xs"
 					onClick={() => handleQuery(value)}
 					disabled={isDisabled || value.length == 0}

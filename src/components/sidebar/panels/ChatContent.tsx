@@ -54,9 +54,9 @@ const ContextContainer = ({
 	return (
 		<Box
 			width="100%"
-			backgroundColor="purple.500"
+			backgroundColor="orange.500"
 			padding="2px"
-			borderColor={isInMessage ? "white" : "purple.500"}
+			borderColor={isInMessage ? "white" : "orange.500"}
 			borderWidth="1px"
 			borderRadius={"md"}
 			overflow={"hidden"}
@@ -67,7 +67,7 @@ const ContextContainer = ({
 					_hover={{ backgroundColor: "red.600" }}
 					zIndex="1"
 					size="xxs"
-					colorScheme="purple"
+					colorScheme="orange"
 					position="absolute"
 					top="2"
 					right="2"
@@ -94,7 +94,7 @@ const Message = ({
 }) => {
 	const isResponding = useChatStore((state) => state.isResponding);
 	const { user, text } = message;
-	const [animationColor, setAnimationColor] = useState("var(--purple.500)");
+	const [animationColor, setAnimationColor] = useState("var(--orange.500)");
 
 	useEffect(() => {
 		let intervalId: NodeJS.Timeout;

@@ -57,7 +57,7 @@ export function GoToBottomButton({
 				aria-label="Go to bottom"
 				pos={"absolute"}
 				top={"-80px"}
-				colorScheme="purple"
+				colorScheme="orange"
 				boxShadow={"lg"}
 				right={"50%"}
 				zIndex={10000}

@@ -109,7 +109,7 @@ const CodeComponent = (props: CodeComponentProps) => {
 							fontFamily="body"
 							fontSize="small"
 							variant={"ghost"}
-							color="purple.200"
+							color="orange.200"
 							leftIcon={cellButtonIcon}
 							onClick={() => {
 								const { addCellAtIndex, activeCellIndex } =

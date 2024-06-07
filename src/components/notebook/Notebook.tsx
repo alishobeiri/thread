@@ -184,7 +184,7 @@ export const MainPanel = () => {
 				overflowY="auto"
 				minWidth="0"
 			>
-				<Spinner size="xl" isSpinning={true} color="purple.500" />
+				<Spinner size="xl" isSpinning={true} color="orange.500" />
 			</Box>
 		);
 	}

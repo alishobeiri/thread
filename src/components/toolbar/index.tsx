@@ -64,7 +64,7 @@ const RunModeSelector = () => {
 					variant="outline"
 					onClick={handleRunClick}
 					backgroundColor="var(--chakra-colors-chakra-body-bg)"
-					colorScheme="purple"
+					colorScheme="orange"
 				>
 					Run all cells
 				</Button>
@@ -107,7 +107,7 @@ const CellTypeMenu: React.FC<{
 						size="sm"
 						variant="outline"
 						backgroundColor="var(--chakra-colors-chakra-body-bg)"
-						colorScheme="purple"
+						colorScheme="orange"
 						rightIcon={<ChevronDownIcon />}
 					>
 						<Flex align="items-center">
@@ -214,7 +214,7 @@ export default function Toolbar({
 								variant="outline"
 								backgroundColor="var(--chakra-colors-chakra-body-bg)"
 								onClick={getHandler("code")}
-								colorScheme="purple"
+								colorScheme="orange"
 							>
 								Python
 							</Button>
@@ -233,7 +233,7 @@ export default function Toolbar({
 								variant="outline"
 								backgroundColor="var(--chakra-colors-chakra-body-bg)"
 								onClick={getHandler("markdown")}
-								colorScheme="purple"
+								colorScheme="orange"
 							>
 								Markdown
 							</Button>

@@ -66,7 +66,7 @@ const FilesPanel = ({
 								size="xs"
 								variant={"ghost"}
 								leftIcon={<AddIcon />}
-								colorScheme="purple"
+								colorScheme="orange"
 								onClick={() => {
 									// Clearing the file contents will go to the launcher
 									useNotebookStore
@@ -92,7 +92,7 @@ const FilesPanel = ({
 						>
 							<Button
 								size="xs"
-								colorScheme="purple"
+								colorScheme="orange"
 								variant={"ghost"}
 								leftIcon={<RefreshIcon />}
 								onClick={() => {
@@ -116,7 +116,7 @@ const FilesPanel = ({
 								as={IconButton}
 								onClick={() => navigateToPath("/")}
 								icon={<FolderIcon />}
-								color={"purple.400"}
+								color={"orange.400"}
 							/>
 						</BreadcrumbItem>
 						{path
@@ -150,7 +150,7 @@ const FilesPanel = ({
 				{isFetchingFiles && files.length === 0 ? (
 					<Spinner
 						isSpinning={true}
-						color="purple.500"
+						color="orange.500"
 						size="md"
 						mt="4"
 					/>

@@ -167,7 +167,7 @@ all of MD as it is not optimized for dense, information rich UIs.
 	--jp-content-font-color2: rgba(255, 255, 255, 0.7);
 	--jp-content-font-color3: rgba(255, 255, 255, 0.5);
 	--jp-content-link-color: var(--md-blue-300);
-	--jp-content-link-visited-color: var(--md-purple-300);
+	--jp-content-link-visited-color: var(--md-orange-300);
 	--jp-content-link-hover-color: var(--md-blue-400);
 	--jp-content-font-family: system-ui, -apple-system, blinkmacsystemfont,
 		"Segoe UI", helvetica, arial, sans-serif, "Apple Color Emoji",
@@ -349,7 +349,7 @@ all of MD as it is not optimized for dense, information rich UIs.
 	--jp-mirror-editor-operator-color: #a2f;
 	--jp-mirror-editor-comment-color: #408080;
 	--jp-mirror-editor-string-color: #ff7070;
-	--jp-mirror-editor-string-2-color: var(--md-purple-300);
+	--jp-mirror-editor-string-2-color: var(--md-orange-300);
 	--jp-mirror-editor-meta-color: #a2f;
 	--jp-mirror-editor-qualifier-color: #555;
 	--jp-mirror-editor-builtin-color: var(--md-green-600);
@@ -410,7 +410,7 @@ all of MD as it is not optimized for dense, information rich UIs.
 	--jp-scrollbar-thumb-radius: 9px; /* set to a large-ish value for rounded endcaps on the thumb */
 
 	/* Icon colors that work well with light or dark backgrounds */
-	--jp-icon-contrast-color0: var(--md-purple-600);
+	--jp-icon-contrast-color0: var(--md-orange-600);
 	--jp-icon-contrast-color1: var(--md-green-600);
 	--jp-icon-contrast-color2: var(--md-pink-600);
 	--jp-icon-contrast-color3: var(--md-blue-600);

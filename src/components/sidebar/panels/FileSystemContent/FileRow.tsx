@@ -34,18 +34,18 @@ export const FileRow = ({
 }) => {
 	const router = useRouter();
 	const { navigateToPath } = useNotebookStore.getState();
-	const selectedFileBgColor = useColorModeValue("purple.100", "purple.800");
+	const selectedFileBgColor = useColorModeValue("orange.100", "orange.800");
 
 	const fileName = getFileName(file);
 	const fileSelected = fileName == router.query.path;
 
 	const fetchIcon = (file: NoterousFile) => {
 		if (file.type === "directory") {
-			return <Icon as={FolderIcon} color="purple.300" />;
+			return <Icon as={FolderIcon} color="orange.300" />;
 		} else if (file.type === "notebook") {
-			return <Icon as={JupyterIcon} color="purple.300" />;
+			return <Icon as={JupyterIcon} color="orange.300" />;
 		}
-		return <Icon as={FileIcon} color="purple.300" />;
+		return <Icon as={FileIcon} color="orange.300" />;
 	};
 
 	const onClick = () => {
@@ -109,7 +109,7 @@ const MoreOptionsMenu = ({
 			<MenuButton
 				as={Button}
 				variant="ghost"
-				colorScheme="purple"
+				colorScheme="orange"
 				size="xs"
 				m={0}
 				p={0}

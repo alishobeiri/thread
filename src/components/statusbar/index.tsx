@@ -147,7 +147,7 @@ export const KernelStatus = () => {
 				setIndicatorMessage("Kernel is restarting");
 				break;
 			case "restarting":
-				setIndicatorColor("var(--chakra-colors-purple-500)");
+				setIndicatorColor("var(--chakra-colors-orange-500)");
 				setIndicatorMessage("Kernel is restarting");
 				break;
 			case "autorestarting":

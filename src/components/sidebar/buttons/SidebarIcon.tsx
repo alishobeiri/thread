@@ -43,7 +43,7 @@ const SidebarIcon = React.forwardRef(
 		const expanded = useSidebarStore((state) => state.isExpanded);
 		const selectedBgColor = useColorModeValue("gray.50", "");
 		const color = isSelected
-			? "purple.500"
+			? "orange.500"
 			: "var(--chakra-colors-chakra-body-text)";
 		const bgColor = isSelected ? selectedBgColor : "unset";
 		return (

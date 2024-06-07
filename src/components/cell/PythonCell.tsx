@@ -193,7 +193,7 @@ const CellExecutionContainer = ({
 	const [hasExecuted, setHasExecuted] = useState(false);
 	const [isHovering, setIsHovering] = useState(false);
 	const hoverRef = useRef<HTMLDivElement>(null);
-	const actionColor = useColorModeValue("purple.500", "purple.400");
+	const actionColor = useColorModeValue("orange.500", "orange.400");
 	const stopColor = useColorModeValue("red.300", "red.400");
 
 	executionCount = executionCount ?? null;

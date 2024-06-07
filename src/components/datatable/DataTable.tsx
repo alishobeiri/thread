@@ -77,7 +77,7 @@ const CellWithPopover = ({
 				isLeftmost ? "1px solid var(--jp-layout-color3)" : "none"
 			}
 			_hover={{
-				boxShadow: "inset 0 0 0 1.5px var(--chakra-colors-purple-500)",
+				boxShadow: "inset 0 0 0 1.5px var(--chakra-colors-orange-500)",
 			}}
 			cursor={"pointer"}
 		>
@@ -176,7 +176,7 @@ export function DataTable({
 				width={"100%"}
 				fontFamily={"Space Grotesk"}
 			>
-				<Table as="table" colorScheme="purple">
+				<Table as="table" colorScheme="orange">
 					{data.caption && ( // Check if caption exists and render it
 						<caption
 							style={{

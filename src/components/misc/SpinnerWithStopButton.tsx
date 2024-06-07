@@ -19,7 +19,7 @@ const SpinnerWithStopButton: React.FC<{
 					thickness="4px"
 					speed="0.65s"
 					emptyColor="gray.300"
-					color="purple.500"
+					color="orange.500"
 					zIndex={1}
 					top="10%"
 					left="10%"
@@ -28,7 +28,7 @@ const SpinnerWithStopButton: React.FC<{
 			<IconButton
 				p={2}
 				variant="ghost"
-				icon={<StopCircleIcon color="purple.200" boxSize={"1.5em"} />}
+				icon={<StopCircleIcon color="orange.200" boxSize={"1.5em"} />}
 				aria-label="Loading response"
 				zIndex={2}
 				position="relative"

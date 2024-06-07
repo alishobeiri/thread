@@ -56,12 +56,12 @@ const SidebarIcon = React.forwardRef(
 					icon={icon}
 					fill={
 						isSelected
-							? "purple.400"
+							? "orange.400"
 							: "var(--chakra-colors-chakra-body-text)"
 					}
 					color={
 						isSelected
-							? "purple.200"
+							? "orange.200"
 							: "var(--chakra-colors-chakra-body-text)"
 					}
 					width="36px"

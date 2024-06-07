@@ -91,7 +91,7 @@ const RenderExcelData = ({
 	return (
 		<Tabs
 			variant="enclosed-colored"
-			colorScheme="purple"
+			colorScheme="orange"
 			isLazy
 			align="start"
 			orientation="horizontal"
@@ -131,7 +131,7 @@ export const FilePreview = ({ previewData }: { previewData: PreviewData }) => {
 	if (!previewData) {
 		return (
 			<HStack gap={3}>
-				<Spinner isSpinning color="purple.400" />
+				<Spinner isSpinning color="orange.400" />
 				<Text fontFamily={"Space Grotesk"}>Loading file...</Text>
 			</HStack>
 		);

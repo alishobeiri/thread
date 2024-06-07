@@ -31,7 +31,7 @@ const FixButton = ({ onClick }: { onClick: () => void }) => {
 		<Button
 			leftIcon={<WandIcon />}
 			size="sm"
-			colorScheme="purple"
+			colorScheme="orange"
 			variant="solid"
 			onClick={(e) => {
 				e.stopPropagation();

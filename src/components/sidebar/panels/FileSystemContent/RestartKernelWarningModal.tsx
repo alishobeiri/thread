@@ -53,7 +53,7 @@ export const KernelWarningModal = ({
 							</Button>
 
 							<Button
-								colorScheme="purple"
+								colorScheme="orange"
 								onClick={onContinue}
 								ml={3}
 							>
