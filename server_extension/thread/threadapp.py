@@ -1,3 +1,4 @@
+from email.mime import application
 import os
 from jupyter_server.extension.application import ExtensionApp
 from jupyter_server.utils import url_path_join
@@ -6,11 +7,13 @@ from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPResponse
 from traitlets import Unicode, default
 import uuid
 import json
+import logging
 
 # Constants
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 HERE = os.path.join(BASE_DIR, 'static')
 app_version = "0.0.1"
+app_log = logging.getLogger("tornado.application")
 
 
 class StaticIndexHandler(StaticFileHandler):
@@ -28,6 +31,11 @@ class StaticIndexHandler(StaticFileHandler):
 
 
 class ProxyHandler(RequestHandler):
+    def initialize(self, display_url: str) -> None:
+        app_log.info("Initializing ProxyHandler")
+        app_log.log("display_url: ", display_url)
+        self.display_url = display_url
+
     def check_xsrf_cookie(self):
         pass
 
@@ -46,24 +54,25 @@ class ProxyHandler(RequestHandler):
     async def patch(self, path):
         await self.forward_request()
 
-    async def options(self, path):
-        self.set_status(204)
-        self.set_header('Access-Control-Allow-Origin', '*')
+    def get_mac_address(self):
+        mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
+        return ":".join(mac[i:i+2] for i in range(0, 12, 2))
+
+    def set_cors_headers(self):
+        app_log.info(self)
+        self.set_header('Access-Control-Allow-Origin', "*")
+        self.set_header('Access-Control-Allow-Origin', 'null')
         self.set_header('Access-Control-Allow-Methods',
                         'POST, GET, OPTIONS, PUT, DELETE, PATCH')
         self.set_header('Access-Control-Allow-Headers',
                         'Content-Type, Authorization')
-        self.finish()
-
-    def get_mac_address(self):
-        mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
-        return ":".join(mac[i:i+2] for i in range(0, 12, 2))
 
     async def forward_request(self):
         client = AsyncHTTPClient()
 
         # Determine the external API base URL based on the node environment
         environment = os.getenv("NODE_ENV", "development")
+        app_log.info(f"Node Environment: {environment}")
         if environment == "production":
             external_api_base_url = "http://production.url"
         else:
@@ -112,7 +121,7 @@ class ProxyHandler(RequestHandler):
         pass
 
     def set_default_headers(self):
-        pass
+        self.set_cors_headers()
 
 
 class ThreadApp(ExtensionApp):
@@ -153,12 +162,15 @@ class ThreadApp(ExtensionApp):
 
     def initialize_handlers(self):
         self.log.info("Initializing HecksApp handlers")
+        self.log.info(
+            f"self.display_url: {str(self.serverapp.display_url)}")
 
         static_path = self.static_dir
         self.log.info(f"Static path: {static_path}")
 
         handlers = [
-            (url_path_join(self.serverapp.base_url, "/thread/api/(.*)"), ProxyHandler),
+            (url_path_join(self.serverapp.base_url, "/thread/api/(.*)"),
+             ProxyHandler, {'display_url': self.serverapp.display_url}),
             (url_path_join(self.serverapp.base_url, "/favicon.ico"), RedirectHandler,
              {"url": self.serverapp.base_url + "thread/favicon.ico"}),
             (url_path_join(self.serverapp.base_url, "/thread/?(.*)"),

@@ -13,7 +13,7 @@ jupyter server extension enable thread
 # Start the Jupyter server with specified configurations
 jupyter thread --ServerApp.allow_origin_pat="^(http?://localhost:3000|https?://.*\\.noterous\\.com|https?://noterous\\.onrender\\.com|https?://(.*\\.)?vizly\\.fyi|https?://(.*\\.)?vizlylabs\\.com)$" \
                --ServerApp.allow_credentials=True \
-               --ServerApp.token="123" \
+               --ServerApp.token="" \
                --ServerApp.password="" \
                --Application.log_level=0 \
                --debug

@@ -8,6 +8,7 @@ export default function Document() {
 			<Head>
 				{/* The require.js dependency required for some visualization embeds. */}
 				<script src="/thread/require.2.3.4.min.js" async />
+				<script src="/thread/plotly.js" async />
 			</Head>
 			<body>
 				<Main />
