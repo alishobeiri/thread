@@ -1,4 +1,4 @@
-export class NoterousLockManager {
+export class ThreadLockManager {
 	private promises: Map<string, Promise<void>>;
 	private resolvers: Map<string, () => void>;
 

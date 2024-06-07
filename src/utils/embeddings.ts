@@ -6,10 +6,10 @@ import TextEmbeddingModel from "../services/embedding/TextEmbedder";
 export const getCellEmbedding = (cell: ICell) => {
 	if (
 		cell.metadata &&
-		cell.metadata["noterous"] &&
-		(cell.metadata["noterous"] as PartialJSONObject)["embedding"]
+		cell.metadata["thread"] &&
+		(cell.metadata["thread"] as PartialJSONObject)["embedding"]
 	) {
-		return (cell.metadata["noterous"] as PartialJSONObject)[
+		return (cell.metadata["thread"] as PartialJSONObject)[
 			"embedding"
 		] as PartialJSONArray;
 	}

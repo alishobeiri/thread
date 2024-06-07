@@ -12,11 +12,11 @@ import ConnectionManager, {
 	useConnectionManagerStore,
 } from "../../../services/connection/connectionManager";
 import { standaloneToast } from "../../../theme";
-import { NoterousCell } from "../../../types/code.types";
+import { ThreadCell } from "../../../types/code.types";
 import {
 	NotebookFile,
 	NotebookMetadata,
-	NoterousFile,
+	ThreadFile,
 } from "../../../types/file.types";
 import { magicQuery } from "../../../utils/magic/magicQuery";
 import { trackEventData } from "../../../utils/posthog";
@@ -43,7 +43,7 @@ export const createNewCell = (): ICell => ({
 });
 
 export interface INotebookStore {
-	files: NoterousFile[];
+	files: ThreadFile[];
 
 	path: string;
 	setPath: (path: string) => void;
@@ -54,14 +54,14 @@ export interface INotebookStore {
 	selectedNotebook: NotebookFile;
 	isFetchingNotebooks: boolean;
 	isFetchingFiles: boolean;
-	filesBeingUploaded: NoterousFile[];
+	filesBeingUploaded: ThreadFile[];
 	setIsFetchingNotebooks: (isFetching: boolean) => void;
 	setIsFetchingFiles: (isFetching: boolean) => void;
-	setNotebooks: (notebooks: NoterousFile[]) => void;
-	refreshFiles: (path?: string, silent?: boolean) => Promise<NoterousFile[]>;
-	deleteFile: (file: NoterousFile, router?: NextRouter) => Promise<void>;
-	downloadFile: (file: NoterousFile) => Promise<void>;
-	setFiles: (files: NoterousFile[]) => void;
+	setNotebooks: (notebooks: ThreadFile[]) => void;
+	refreshFiles: (path?: string, silent?: boolean) => Promise<ThreadFile[]>;
+	deleteFile: (file: ThreadFile, router?: NextRouter) => Promise<void>;
+	downloadFile: (file: ThreadFile) => Promise<void>;
+	setFiles: (files: ThreadFile[]) => void;
 	setSelectedNotebook: (notebook: NotebookFile | undefined) => void;
 
 	fileContents: NotebookFile | undefined;
@@ -84,7 +84,7 @@ export interface INotebookStore {
 	setKernelId: (id: string) => void;
 	getKernelId: () => string | undefined;
 
-	cells: NoterousCell[];
+	cells: ThreadCell[];
 	metadata: NotebookMetadata;
 
 	// Cell related functions
@@ -141,7 +141,7 @@ export interface INotebookStore {
 		notebook: NotebookFile,
 		kernelSelection?: string,
 	) => NotebookFile;
-	handleNotebookClick: (notebook: NoterousFile) => Promise<void>;
+	handleNotebookClick: (notebook: ThreadFile) => Promise<void>;
 	navigateToPath: (path: string) => void;
 	handleSave: () => void;
 	isSaving: boolean;
@@ -176,7 +176,7 @@ export const useNotebookStore = create<INotebookStore>()(
 						.then((contents) => {
 							setPath(path);
 							if (!contents) {
-								return [] as NoterousFile[];
+								return [] as ThreadFile[];
 							}
 							if (!contents.sort) {
 								console.log(contents);
@@ -195,7 +195,7 @@ export const useNotebookStore = create<INotebookStore>()(
 								return a.name.localeCompare(b.name);
 							});
 
-							setFiles(sortedContent as NoterousFile[]);
+							setFiles(sortedContent as ThreadFile[]);
 
 							return sortedContent;
 						})
@@ -205,7 +205,7 @@ export const useNotebookStore = create<INotebookStore>()(
 								"Ran into error while navigating to path: ",
 								error,
 							);
-							return [] as NoterousFile[];
+							return [] as ThreadFile[];
 						})
 						.finally(() => {
 							if (!silent) {
@@ -213,7 +213,7 @@ export const useNotebookStore = create<INotebookStore>()(
 							}
 						});
 				},
-				deleteFile: async (file: NoterousFile) => {
+				deleteFile: async (file: ThreadFile) => {
 					const { path } = get();
 
 					const isFile = "last_modified" in file;
@@ -245,7 +245,7 @@ export const useNotebookStore = create<INotebookStore>()(
 						get().refreshFiles(path, true);
 					}
 				},
-				setFiles: (files: NoterousFile[]) => set({ files: files }),
+				setFiles: (files: ThreadFile[]) => set({ files: files }),
 				setSelectedNotebook: (notebook: NotebookFile) =>
 					set({
 						selectedNotebook: notebook,
@@ -304,9 +304,9 @@ export const useNotebookStore = create<INotebookStore>()(
 									id: cell.id ?? newUuid(),
 									metadata: {
 										...cell.metadata,
-										noterous: {
+										thread: {
 											...(cell.metadata
-												.noterous as PartialJSONObject),
+												.thread as PartialJSONObject),
 											ran: false,
 											user: user,
 										},
@@ -351,7 +351,7 @@ export const useNotebookStore = create<INotebookStore>()(
 							...updatedCells[index],
 							metadata: {
 								...updatedCells[index],
-								noterous: {
+								thread: {
 									group,
 								},
 							},
@@ -388,15 +388,15 @@ export const useNotebookStore = create<INotebookStore>()(
 				},
 				setNotebookId: (notebookId: string) => {
 					const metadata = get().metadata;
-					if (!metadata || !metadata.noterous) {
+					if (!metadata || !metadata.thread) {
 						return;
 					}
 
 					set((state) => ({
 						metadata: {
 							...state.metadata,
-							noterous: {
-								...metadata.noterous,
+							thread: {
+								...metadata.thread,
 								id: notebookId,
 							},
 						},
@@ -410,8 +410,8 @@ export const useNotebookStore = create<INotebookStore>()(
 					set({
 						metadata: {
 							...metadata,
-							noterous: {
-								...metadata.noterous,
+							thread: {
+								...metadata.thread,
 								sessionId: id,
 							},
 						},
@@ -420,8 +420,8 @@ export const useNotebookStore = create<INotebookStore>()(
 				getSessionId: () => {
 					let sessionId;
 					const { metadata } = get().metadata;
-					if (metadata && metadata.noterous) {
-						sessionId = metadata.noterous.sessionId;
+					if (metadata && metadata.thread) {
+						sessionId = metadata.thread.sessionId;
 					}
 					return sessionId;
 				},
@@ -430,8 +430,8 @@ export const useNotebookStore = create<INotebookStore>()(
 					set({
 						metadata: {
 							...metadata,
-							noterous: {
-								...metadata.noterous,
+							thread: {
+								...metadata.thread,
 								kernelId: id,
 							},
 						},
@@ -440,8 +440,8 @@ export const useNotebookStore = create<INotebookStore>()(
 				getKernelId: () => {
 					let kernelId;
 					const { metadata } = get().metadata;
-					if (metadata && metadata.noterous) {
-						kernelId = metadata.noterous.kernelId;
+					if (metadata && metadata.thread) {
+						kernelId = metadata.thread.kernelId;
 					}
 					return kernelId;
 				},
@@ -543,8 +543,8 @@ export const useNotebookStore = create<INotebookStore>()(
 						updatedCells[index] = {
 							...updatedCells[index],
 							metadata: {
-								noterous: {
-									...updatedCells[index].metadata.noterous,
+								thread: {
+									...updatedCells[index].metadata.thread,
 									user,
 								},
 							},
@@ -892,7 +892,7 @@ export const useNotebookStore = create<INotebookStore>()(
 						source: source || "",
 						cell_type: type || "code",
 						metadata: {
-							noterous: {
+							thread: {
 								group: group || undefined,
 								user,
 								action: action,
@@ -1095,7 +1095,7 @@ export const useNotebookStore = create<INotebookStore>()(
 
 					ConnectionManager.getInstance().connectToKernelForNotebook({
 						kernelSelection,
-						sessionId: notebook.metadata?.noterous?.sessionId,
+						sessionId: notebook.metadata?.thread?.sessionId,
 					});
 
 					const router = get().router;
@@ -1112,7 +1112,7 @@ export const useNotebookStore = create<INotebookStore>()(
 
 					return notebook;
 				},
-				handleNotebookClick: async (notebookFile: NoterousFile) => {
+				handleNotebookClick: async (notebookFile: ThreadFile) => {
 					const { selectNotebook, router } = get();
 
 					useNotebookStore.setState({

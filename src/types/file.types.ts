@@ -1,6 +1,6 @@
-import { NoterousCell } from "./code.types";
+import { ThreadCell } from "./code.types";
 
-export interface NoterousFile extends File {
+export interface ThreadFile extends File {
 	type: string;
 	name: string;
 	last_modified: string;
@@ -12,7 +12,7 @@ export interface NoterousFile extends File {
 }
 
 export type NotebookMetadata = {
-	noterous: {
+	thread: {
 		id: string;
 		sessionId?: string;
 		kernelId?: string;
@@ -20,7 +20,7 @@ export type NotebookMetadata = {
 } & Record<string, any>;
 
 export type NotebookFile = {
-	cells: NoterousCell[];
+	cells: ThreadCell[];
 	metadata: NotebookMetadata;
 	nbformat: number;
 	nbformat_minor: number;

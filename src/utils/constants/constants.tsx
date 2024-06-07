@@ -70,7 +70,7 @@ export const NEW_NOTEBOOK: () => NotebookFile = () => {
 	return {
 		cells: [],
 		metadata: {
-			noterous: {
+			thread: {
 				id: id,
 				preferredLanguage: "",
 			},

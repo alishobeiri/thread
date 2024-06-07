@@ -3,12 +3,12 @@ import useCellStore, {
 } from "../../components/cell/store/CellStore";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
 import ConnectionManager from "../../services/connection/connectionManager";
-import { NoterousCell } from "../../types/code.types";
+import { ThreadCell } from "../../types/code.types";
 import { API_URL } from "../constants/constants";
 import { makeStreamingFunctionRequest } from "../streaming";
 import { getAppTheme, multilineStringToString } from "../utils";
 
-export const editCell = async (cell: NoterousCell, query: string) => {
+export const editCell = async (cell: ThreadCell, query: string) => {
 	const setPreviousQuery = useCellStore.getState().setPreviousQuery;
 	const setProposedSource = useCellStore.getState().setProposedSource;
 	const setCellStatus = useCellStore.getState().setCellStatus;

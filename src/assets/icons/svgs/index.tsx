@@ -935,7 +935,7 @@ export const LevelUpIcon = createIcon({
 	),
 });
 
-export const NoterousIcon = (props: IconProps) => {
+export const ThreadIcon = (props: IconProps) => {
 	const { colorMode } = useColorMode();
 	const fillColor = colorMode === "dark" ? "white" : "black";
 

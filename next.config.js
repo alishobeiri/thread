@@ -38,7 +38,7 @@ module.exports = withSentryConfig(
     // Suppresses source map uploading logs during build
     silent: true,
     org: "squaredtechnologiesinc",
-    project: "noterous",
+    project: "Thread",
   },
   {
     // For all available options, see:

@@ -15,7 +15,7 @@ import {
 } from "../../utils/constants/constants";
 import { getCustomMarkdownComponents } from "../../utils/markdown";
 import {
-	getNoterousCellMetadata,
+	getThreadCellMetadata,
 	multilineStringToString,
 } from "../../utils/utils";
 import {
@@ -182,8 +182,8 @@ const MarkdownCellContainer: React.FC<CellContainerProps> = ({
 	index,
 	isBeingEdited,
 }) => {
-	const noterousMetadata = getNoterousCellMetadata(cell);
-	const isUserMessage = noterousMetadata?.user === "user";
+	const threadMetadata = getThreadCellMetadata(cell);
+	const isUserMessage = threadMetadata?.user === "user";
 
 	return (
 		<VStack

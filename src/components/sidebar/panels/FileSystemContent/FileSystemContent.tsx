@@ -19,7 +19,7 @@ import {
 	ToggleSidebar,
 } from "../../../../assets/icons";
 import ConnectionManager from "../../../../services/connection/connectionManager";
-import { NoterousFile } from "../../../../types/file.types";
+import { ThreadFile } from "../../../../types/file.types";
 import { SIDEPANEL_WIDTH } from "../../../../utils/constants/constants";
 import { isPlatformMac } from "../../../../utils/utils";
 import Spinner from "../../../misc/Spinner";
@@ -32,7 +32,7 @@ const FilesPanel = ({
 	handleDeleteItem,
 	navigateToPath,
 }: {
-	handleDeleteItem: (file: NoterousFile) => Promise<void>;
+	handleDeleteItem: (file: ThreadFile) => Promise<void>;
 	navigateToPath: (path: string) => void;
 }) => {
 	const router = useRouter();
@@ -156,8 +156,8 @@ const FilesPanel = ({
 						mt="4"
 					/>
 				) : (
-					(files as NoterousFile[]).map(
-						(file: NoterousFile, i: number) => (
+					(files as ThreadFile[]).map(
+						(file: ThreadFile, i: number) => (
 							<FileRow
 								key={`${file.name}-${i}`}
 								file={file}
@@ -179,7 +179,7 @@ export const FileSystemContent = ({
 	const { path, navigateToPath } = useNotebookStore.getState();
 	const connectionManager = ConnectionManager.getInstance();
 
-	const deleteItem = async (file: NoterousFile) => {
+	const deleteItem = async (file: ThreadFile) => {
 		try {
 			await connectionManager.serviceManager!.contents.delete(file.path);
 		} catch (error) {

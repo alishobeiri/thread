@@ -19,7 +19,7 @@ import {
 	ThreeDotsVerticalIcon,
 	TrashCanIcon,
 } from "../../../../assets/icons";
-import { NoterousFile } from "../../../../types/file.types";
+import { ThreadFile } from "../../../../types/file.types";
 import { getFileName } from "../../../../utils/utils";
 import { useRouter } from "next/router";
 import { useNotebookStore } from "../../../notebook/store/NotebookStore";
@@ -29,8 +29,8 @@ export const FileRow = ({
 	file,
 	deleteItem,
 }: {
-	file: NoterousFile;
-	deleteItem: (file: NoterousFile) => Promise<void>;
+	file: ThreadFile;
+	deleteItem: (file: ThreadFile) => Promise<void>;
 }) => {
 	const router = useRouter();
 	const { navigateToPath } = useNotebookStore.getState();
@@ -39,7 +39,7 @@ export const FileRow = ({
 	const fileName = getFileName(file);
 	const fileSelected = fileName == router.query.path;
 
-	const fetchIcon = (file: NoterousFile) => {
+	const fetchIcon = (file: ThreadFile) => {
 		if (file.type === "directory") {
 			return <Icon as={FolderIcon} color="orange.300" />;
 		} else if (file.type === "notebook") {
@@ -101,8 +101,8 @@ const MoreOptionsMenu = ({
 	file,
 	deleteItem,
 }: {
-	file: NoterousFile;
-	deleteItem: (file: NoterousFile) => void;
+	file: ThreadFile;
+	deleteItem: (file: ThreadFile) => void;
 }) => {
 	return (
 		<Menu>

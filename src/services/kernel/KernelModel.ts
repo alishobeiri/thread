@@ -13,7 +13,7 @@ import { PartialJSONObject } from "@lumino/coreutils/types";
 import { ISignal, Signal } from "@lumino/signaling";
 import { captureException } from "@sentry/nextjs";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
-import { NoterousCell } from "../../types/code.types";
+import { ThreadCell } from "../../types/code.types";
 import { multilineStringToString } from "../../utils/utils";
 import TextEmbeddingModel from "../embedding/TextEmbedder";
 
@@ -59,11 +59,11 @@ export class KernelModel {
 		return this._currentlyProcessingCellId ?? "";
 	}
 
-	set cell(cell: NoterousCell) {
+	set cell(cell: ThreadCell) {
 		this._currentlyProcessingCell = cell;
 	}
 
-	get cell(): NoterousCell | null | undefined {
+	get cell(): ThreadCell | null | undefined {
 		return this._currentlyProcessingCell;
 	}
 
@@ -84,10 +84,10 @@ export class KernelModel {
 			this.cell.metadata = {};
 		}
 
-		if (!this.cell.metadata["noterous"]) {
-			this.cell.metadata["noterous"] = {};
+		if (!this.cell.metadata["thread"]) {
+			this.cell.metadata["thread"] = {};
 		}
-		return this.cell.metadata["noterous"] as PartialJSONObject;
+		return this.cell.metadata["thread"] as PartialJSONObject;
 	}
 
 	clearQueue(): void {
@@ -154,7 +154,7 @@ export class KernelModel {
 	preProcessCellExecutionOperations(code: string): void {}
 
 	async postCellExecutionOperations(
-		cell: NoterousCell,
+		cell: ThreadCell,
 	): Promise<(IFuture<IExecuteRequestMsg, IExecuteReplyMsg> | null)[]> {
 		// Used to capture the current variables in the execution state
 		if (!this.kernel) {
@@ -267,7 +267,7 @@ export class KernelModel {
 	private _addCellOutput = useNotebookStore.getState().addCellOutput;
 
 	// Currently processing cell
-	private _currentlyProcessingCell: NoterousCell | null | undefined;
+	private _currentlyProcessingCell: ThreadCell | null | undefined;
 	private _currentlyProcessingCellId: string | undefined;
 	private _output: IOutput | null = null;
 	private session: ISessionConnection;

@@ -1,18 +1,18 @@
 import { IError, IOutput, IStream } from "@jupyterlab/nbformat";
 import { captureException } from "@sentry/nextjs";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
-import { NoterousCell } from "../../types/code.types";
+import { ThreadCell } from "../../types/code.types";
 import { MAX_OUTPUT_LENGTH } from "../constants/constants";
 import {
 	extractErrorLineWithRegex,
-	getNoterousCellMetadata,
+	getThreadCellMetadata,
 	limitStringLength,
 	multilineStringToString,
 	removeAnsiEscapeSequences,
 	stringifyWithoutStringValues,
 } from "../utils";
 
-export type NoterousMessage = {
+export type ThreadMessage = {
 	role: "system" | "user" | "assistant";
 	content: string;
 };
@@ -125,7 +125,7 @@ const preprocessCellOutputs = (outputs: IOutput[]): IOutput[] => {
 	return combinedOutputs;
 };
 
-export const formatCellOutputs = (cell: NoterousCell) => {
+export const formatCellOutputs = (cell: ThreadCell) => {
 	const cellOutputs: IOutput[] = preprocessCellOutputs(
 		cell.outputs as IOutput[],
 	);
@@ -188,25 +188,23 @@ const sanitizeOutput = (output: any): any => {
 	};
 };
 
-const postProcessMessages = (
-	messages: NoterousMessage[],
-): NoterousMessage[] => {
+const postProcessMessages = (messages: ThreadMessage[]): ThreadMessage[] => {
 	// Filter out empty messages
 	return messages.filter((message) => message.content.trim() !== "");
 };
 
 export const formatCellsAsMessages = (
-	cells: NoterousCell[],
+	cells: ThreadCell[],
 	n: number,
 	limitChars = false,
 	startIndex?: number,
 	asExchanges = false,
-): NoterousMessage[] => {
+): ThreadMessage[] => {
 	let messagesRemaining = n;
 	let prevCell = null;
 	let previousCellExecutedCorrectly = false;
 
-	const messages: NoterousMessage[] = [];
+	const messages: ThreadMessage[] = [];
 	const initialIndex =
 		startIndex !== undefined
 			? Math.min(startIndex, cells.length - 1)
@@ -217,7 +215,7 @@ export const formatCellsAsMessages = (
 			const cell = cells[i];
 			const type = cell.cell_type;
 			const source = multilineStringToString(cell.source);
-			const noterousMetadata = getNoterousCellMetadata(cell);
+			const threadMetadata = getThreadCellMetadata(cell);
 
 			const sameAsPrevCell = prevCell && prevCell.source === source;
 			if (sameAsPrevCell) {
@@ -225,7 +223,7 @@ export const formatCellsAsMessages = (
 				continue;
 			}
 
-			if (type === "markdown" && noterousMetadata.user === "user") {
+			if (type === "markdown" && threadMetadata.user === "user") {
 				// Reset the error tracking for markdown cells
 				previousCellExecutedCorrectly = false;
 				messages.unshift({

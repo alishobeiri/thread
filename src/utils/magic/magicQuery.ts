@@ -11,16 +11,16 @@ import { API_URL, MESSAGES_LOOKBACK_WINDOW } from "../constants/constants";
 import { trackEventData } from "../posthog";
 import {
 	getAppTheme,
-	getNoterousCellMetadata,
+	getThreadCellMetadata,
 	newUuid,
-	noterousFetch,
+	threadFetch,
 } from "../utils";
 import { getAction, getActionInfo } from "./actionUtils";
 import { codeAction } from "./actions/code";
 import { fixErrorAction } from "./actions/fixError";
 import { editCell } from "./edit";
 import {
-	NoterousMessage,
+	ThreadMessage,
 	formatCellsAsMessages,
 	getLastNMessages,
 } from "./messages";
@@ -28,8 +28,8 @@ import {
 // Keeps track of all the action states that
 export type ActionState = {
 	userRequest: string;
-	prevMessages: NoterousMessage[];
-	messagesAfterQuery: NoterousMessage[];
+	prevMessages: ThreadMessage[];
+	messagesAfterQuery: ThreadMessage[];
 	firstQuery: boolean;
 
 	// The index where cell generation has begun
@@ -174,7 +174,7 @@ export const processStream = async (
 				// For existing cells, update the source content
 				const cell = cells[cellEditIndex];
 				const id = cell.id as string;
-				const metadata = getNoterousCellMetadata(cell);
+				const metadata = getThreadCellMetadata(cell);
 				if (metadata.group != group) {
 					// Processing a cell that belongs to a new group, add a new cell to extend the current group instead
 					addCellAtIndex(
@@ -332,7 +332,7 @@ const generateCells = async (query: string, followUpRetries: number) => {
 		if (wasAborted()) {
 			break;
 		}
-		const fetchAction = await noterousFetch(
+		const fetchAction = await threadFetch(
 			`${API_URL}/api/magic/actions/action`,
 			{
 				method: "POST",

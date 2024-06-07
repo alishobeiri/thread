@@ -1,7 +1,7 @@
 import { ToolCall } from "ai";
 import { parse } from "best-effort-json-parser";
 import { useCallback, useEffect, useState } from "react";
-import { noterousFetch } from "./utils";
+import { threadFetch } from "./utils";
 
 interface MakeStreamingRequestParams {
 	url: string;
@@ -26,7 +26,7 @@ export async function* makeStreamingRequest({
 	shouldCancel = () => false,
 }: MakeStreamingRequestParams) {
 	try {
-		const res = await noterousFetch(url, {
+		const res = await threadFetch(url, {
 			method: method,
 			headers: {
 				"Content-Type": "application/json",

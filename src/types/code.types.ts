@@ -5,8 +5,8 @@ export type CodeLine = {
 	l: number;
 };
 
-export type NoterousCell = ICell & {
+export type ThreadCell = ICell & {
 	metadata: {
-		noterous?: Record<string, any>;
+		thread?: Record<string, any>;
 	};
 };

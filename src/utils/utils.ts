@@ -1,7 +1,7 @@
 import { captureException } from "@sentry/nextjs";
 import { v4 as uuidv4 } from "uuid";
-import { NoterousCell } from "../types/code.types";
-import { NoterousFile } from "../types/file.types";
+import { ThreadCell } from "../types/code.types";
+import { ThreadFile } from "../types/file.types";
 
 export function getTimePartition(date: string): string {
 	const updatedDate = new Date(date);
@@ -21,10 +21,10 @@ export function getTimePartition(date: string): string {
 }
 
 export const partitionChatItems = (
-	items: NoterousFile[],
-): Record<string, NoterousFile[]> => {
+	items: ThreadFile[],
+): Record<string, ThreadFile[]> => {
 	return items.reduce(
-		(acc: Record<string, NoterousFile[]>, item: NoterousFile) => {
+		(acc: Record<string, ThreadFile[]>, item: ThreadFile) => {
 			const partition = getTimePartition(item.last_modified.toString());
 			if (!acc[partition]) {
 				acc[partition] = [];
@@ -94,7 +94,7 @@ export const capitalizeFirstLetter = (str: string) => {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-export const getFileName = (file?: NoterousFile) => {
+export const getFileName = (file?: ThreadFile) => {
 	if (!file) return "";
 	const isFile = "updated_at" in file || "type" in file;
 	if (isFile) {
@@ -104,12 +104,12 @@ export const getFileName = (file?: NoterousFile) => {
 	}
 };
 
-export const getFileId = (file?: NoterousFile) => {
+export const getFileId = (file?: ThreadFile) => {
 	if (!file) return "";
 	return file.name;
 };
 
-export const getDateFromFile = (file?: NoterousFile) => {
+export const getDateFromFile = (file?: ThreadFile) => {
 	if (!file) return "";
 	return file.last_modified;
 };
@@ -132,7 +132,7 @@ export function convertPythonListStringToArray(inputString: string) {
 		.map((element) => element.replace(/(^')|('$)/g, ""));
 }
 
-export async function noterousFetch(
+export async function threadFetch(
 	url: string,
 	body: any,
 	signal?: AbortSignal,
@@ -152,16 +152,16 @@ export const makeUrlSafe = (title: string) => {
 	return title.replace(/[^a-zA-Z0-9-_ .]+/g, "-");
 };
 
-export const getNoterousCellMetadata = (cell: NoterousCell) => {
+export const getThreadCellMetadata = (cell: ThreadCell) => {
 	if (!cell.metadata) {
 		cell.metadata = {};
 	}
 
-	if (!cell.metadata.noterous) {
-		cell.metadata.noterous = {};
+	if (!cell.metadata.thread) {
+		cell.metadata.thread = {};
 	}
 
-	return cell.metadata.noterous;
+	return cell.metadata.thread;
 };
 
 export const removeAnsiEscapeSequences = (text: string) => {
