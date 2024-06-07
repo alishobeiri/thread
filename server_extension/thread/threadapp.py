@@ -1,8 +1,11 @@
 import os
 from jupyter_server.extension.application import ExtensionApp
 from jupyter_server.utils import url_path_join
-from tornado.web import StaticFileHandler, HTTPError, RedirectHandler
+from tornado.web import StaticFileHandler, HTTPError, RedirectHandler, RequestHandler
+from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPResponse
 from traitlets import Unicode, default
+import uuid
+import json
 
 # Constants
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -24,6 +27,94 @@ class StaticIndexHandler(StaticFileHandler):
                 raise e
 
 
+class ProxyHandler(RequestHandler):
+    def check_xsrf_cookie(self):
+        pass
+
+    async def get(self, path):
+        await self.forward_request()
+
+    async def post(self, path):
+        await self.forward_request()
+
+    async def put(self, path):
+        await self.forward_request()
+
+    async def delete(self, path):
+        await self.forward_request()
+
+    async def patch(self, path):
+        await self.forward_request()
+
+    async def options(self, path):
+        self.set_status(204)
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Methods',
+                        'POST, GET, OPTIONS, PUT, DELETE, PATCH')
+        self.set_header('Access-Control-Allow-Headers',
+                        'Content-Type, Authorization')
+        self.finish()
+
+    def get_mac_address(self):
+        mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
+        return ":".join(mac[i:i+2] for i in range(0, 12, 2))
+
+    async def forward_request(self):
+        client = AsyncHTTPClient()
+
+        # Determine the external API base URL based on the node environment
+        environment = os.getenv("NODE_ENV", "development")
+        if environment == "production":
+            external_api_base_url = "http://production.url"
+        else:
+            external_api_base_url = "http://localhost:5001"
+
+        external_api_url = self.request.uri.replace(
+            self.request.path, external_api_base_url +
+            self.request.path[len("/thread"):]
+        )
+
+        unique_id = self.get_mac_address()
+
+        body = None
+        if self.request.method in ["POST", "PUT", "PATCH"]:
+            try:
+                existing_body = json.loads(self.request.body)
+            except json.JSONDecodeError:
+                existing_body = {}
+
+            existing_body["uniqueId"] = unique_id
+            body = json.dumps(existing_body).encode('utf-8')
+
+        request = HTTPRequest(
+            url=external_api_url,
+            method=self.request.method,
+            headers=self.request.headers,
+            body=body if body is not None else self.request.body,
+            follow_redirects=True,
+            streaming_callback=self.on_streaming_chunk
+        )
+
+        response = await client.fetch(request, raise_error=False)
+
+        for header, value in response.headers.items():
+            if header not in ['Content-Length', 'Transfer-Encoding', 'Content-Encoding', 'Connection']:
+                self.set_header(header, value)
+        self.set_status(response.code)
+        self.finish()
+
+    def on_streaming_chunk(self, chunk):
+        self.write(chunk)
+        self.flush()
+
+    def on_finish(self):
+        # Add any necessary cleanup logic here
+        pass
+
+    def set_default_headers(self):
+        pass
+
+
 class ThreadApp(ExtensionApp):
     version = app_version
     extension_url = "/thread"
@@ -31,8 +122,6 @@ class ThreadApp(ExtensionApp):
     app_name = "Thread"
     app_version = app_version
     load_other_extensions = False
-
-    load_other_extensions = True
 
     default_url = Unicode("/thread", config=True,
                           help="The default URL redirecting to `/`")
@@ -69,10 +158,11 @@ class ThreadApp(ExtensionApp):
         self.log.info(f"Static path: {static_path}")
 
         handlers = [
+            (url_path_join(self.serverapp.base_url, "/thread/api/(.*)"), ProxyHandler),
+            (url_path_join(self.serverapp.base_url, "/favicon.ico"), RedirectHandler,
+             {"url": self.serverapp.base_url + "thread/favicon.ico"}),
             (url_path_join(self.serverapp.base_url, "/thread/?(.*)"),
              StaticIndexHandler, {"path": static_path}),
-            (url_path_join(self.serverapp.base_url, "/favicon.ico"),
-             RedirectHandler, {"url": self.serverapp.base_url + "thread/favicon.ico"})
         ]
         self.handlers.extend(handlers)
 

@@ -13,7 +13,9 @@ export const editCell = async (cell: NoterousCell, query: string) => {
 	const setCellStatus = useCellStore.getState().setCellStatus;
 	setCellStatus(cell.id as string, CellStatus.Generating);
 	const stream = makeStreamingFunctionRequest({
-		url: "http://localhost:5001/api/magic/actions/editCell",
+		url: `${
+			ConnectionManager.getInstance().serverUrl
+		}/thread/api/magic/actions/editCell`,
 		method: "POST",
 		payload: {
 			userRequest: query,

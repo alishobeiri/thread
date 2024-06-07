@@ -142,7 +142,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 			let assistantMessageId;
 
 			const stream = makeStreamingRequest({
-				url: "http://localhost:5001/api/chat/assistant",
+				url: `${
+					ConnectionManager.getInstance().serverUrl
+				}/thread/api/chat/assistant`,
 				method: "POST",
 				payload: {
 					query,

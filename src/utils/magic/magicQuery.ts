@@ -337,7 +337,9 @@ const generateCells = async (query: string, followUpRetries: number) => {
 			break;
 		}
 		const fetchAction = await noterousFetch(
-			"http://localhost:5001/api/magic/actions/action",
+			`${
+				ConnectionManager.getInstance().serverUrl
+			}/thread/api/magic/actions/action`,
 			{
 				method: "POST",
 				headers: {

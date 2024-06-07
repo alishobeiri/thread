@@ -1,3 +1,4 @@
+import ConnectionManager from "../../../services/connection/connectionManager";
 import { ActionState } from "../magicQuery";
 import { sharedAction } from "./shared/utils";
 
@@ -8,7 +9,9 @@ export async function* fixErrorAction(
 	yield* sharedAction(
 		actionState,
 		wasAborted,
-		"http://localhost:5001/api/magic/actions/fixError",
+		`${
+			ConnectionManager.getInstance().serverUrl
+		}/thread/api/magic/actions/fixError`,
 		"code",
 	);
 }
