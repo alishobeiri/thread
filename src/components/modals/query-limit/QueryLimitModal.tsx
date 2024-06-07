@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { MAX_AI_API_CALLS } from "../../../hooks/useApiCallStore";
+import { useOpenAISettingsModalStore } from "../openai-settings/OpenAISettingsModalStore";
 import { useQueryLimitModalStore } from "./QueryLimitModalStore";
 
 const QueryLimitModal = () => {
@@ -50,7 +51,7 @@ const QueryLimitModal = () => {
 							Settings
 						</Heading>
 					</VStack>
-					<VStack width="100%" gap={2} alignItems={"flex-start"}>
+					<VStack width="100%" gap={6} alignItems={"flex-start"}>
 						<Text>
 							You have exceeded the AI query limit of{" "}
 							{MAX_AI_API_CALLS} API calls. Please reach out to{" "}
@@ -62,6 +63,23 @@ const QueryLimitModal = () => {
 								ali@vizlylabs.com
 							</Text>{" "}
 							to increase your limit.
+						</Text>
+						<Text>
+							You can also enter your own OpenAI API key{" "}
+							<Text
+								as="span"
+								onClick={() => {
+									handleClose();
+									useOpenAISettingsModalStore
+										.getState()
+										.setShowOpenAISettingsModal(true);
+								}}
+								cursor={"pointer"}
+								color="orange.400"
+							>
+								here
+							</Text>{" "}
+							for unlimited usage of Thread.
 						</Text>
 					</VStack>
 				</ModalBody>

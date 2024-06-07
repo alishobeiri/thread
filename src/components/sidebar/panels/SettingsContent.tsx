@@ -7,10 +7,11 @@ import {
 	VStack,
 	useColorMode,
 } from "@chakra-ui/react";
-import { KeyboardIcon, ToggleSidebar } from "../../../assets/icons";
+import { KeyIcon, KeyboardIcon, ToggleSidebar } from "../../../assets/icons";
 import { SIDEPANEL_WIDTH } from "../../../utils/constants/constants";
 import { isPlatformMac } from "../../../utils/utils";
 import { useShortcutsModalStore } from "../../modals/cheat-sheet/ShortcutsModalStore";
+import { useOpenAISettingsModalStore } from "../../modals/openai-settings/OpenAISettingsModalStore";
 import SidebarIcon from "../buttons/SidebarIcon";
 
 export const ThemeToggle = () => {
@@ -41,7 +42,7 @@ export const SettingsContent = ({
 			borderRight="1px solid var(--chakra-colors-chakra-border-color)"
 			fontFamily={"Space Grotesk"}
 		>
-			<VStack width="100%" height="100%" gap={0}>
+			<VStack width="100%" height="100%" gap={3}>
 				<HStack
 					width="100%"
 					display={"flex"}
@@ -69,9 +70,39 @@ export const SettingsContent = ({
 					display={"flex"}
 					flex="0 0 auto"
 					justifyContent={"space-between"}
-					padding={"12px"}
+					paddingX={"12px"}
 				>
-					<Heading fontSize="smaller" fontWeight={"600"}>
+					<Heading
+						fontSize="smaller"
+						fontWeight={"600"}
+						fontFamily={"Space Grotesk"}
+					>
+						OpenAI API key
+					</Heading>
+					<IconButton
+						variant={"ghost"}
+						icon={<KeyIcon />}
+						aria-label="OpenAI key"
+						size="md"
+						onClick={() => {
+							useOpenAISettingsModalStore
+								.getState()
+								.setShowOpenAISettingsModal(true);
+						}}
+					/>
+				</HStack>
+				<HStack
+					width="100%"
+					display={"flex"}
+					flex="0 0 auto"
+					justifyContent={"space-between"}
+					paddingX={"12px"}
+				>
+					<Heading
+						fontSize="smaller"
+						fontWeight={"600"}
+						fontFamily={"Space Grotesk"}
+					>
 						Theme
 					</Heading>
 					<ThemeToggle />
@@ -81,9 +112,13 @@ export const SettingsContent = ({
 					display={"flex"}
 					flex="0 0 auto"
 					justifyContent={"space-between"}
-					padding={"12px"}
+					paddingX={"12px"}
 				>
-					<Heading fontSize="smaller" fontWeight={"600"}>
+					<Heading
+						fontSize="smaller"
+						fontWeight={"600"}
+						fontFamily={"Space Grotesk"}
+					>
 						Shortcuts
 					</Heading>
 					<IconButton

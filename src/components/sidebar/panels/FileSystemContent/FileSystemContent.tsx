@@ -67,6 +67,7 @@ const FilesPanel = ({
 								variant={"ghost"}
 								leftIcon={<AddIcon />}
 								colorScheme="orange"
+								fontFamily={"Space Grotesk"}
 								onClick={() => {
 									// Clearing the file contents will go to the launcher
 									useNotebookStore
