@@ -7,7 +7,7 @@ import {
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
 import { useChatStore } from "../../components/sidebar/chat/store/ChatStore";
 import ConnectionManager from "../../services/connection/connectionManager";
-import { MESSAGES_LOOKBACK_WINDOW } from "../constants/constants";
+import { API_URL, MESSAGES_LOOKBACK_WINDOW } from "../constants/constants";
 import { trackEventData } from "../posthog";
 import {
 	getAppTheme,
@@ -333,9 +333,7 @@ const generateCells = async (query: string, followUpRetries: number) => {
 			break;
 		}
 		const fetchAction = await noterousFetch(
-			`${
-				ConnectionManager.getInstance().serverUrl
-			}/thread/api/magic/actions/action`,
+			`${API_URL}/api/magic/actions/action`,
 			{
 				method: "POST",
 				headers: {
@@ -343,6 +341,7 @@ const generateCells = async (query: string, followUpRetries: number) => {
 				},
 				body: JSON.stringify({
 					actionState: actionState,
+					uniqueId: ConnectionManager.getInstance().uniqueId,
 				}),
 			},
 			get().userAbortedMagicQueryController.signal,

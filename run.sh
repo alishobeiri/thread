@@ -12,7 +12,7 @@ cp -r ./out/* ./server_extension/thread/static/
 
 # Uninstall and reinstall thread package
 pip uninstall -y thread-dev
-pip install -e ./server_extension
+pip install -e ./server_extension --no-cache-dir
 
 # Enable Jupyter server extension for thread
 jupyter server extension enable thread

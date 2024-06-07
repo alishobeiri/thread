@@ -3,6 +3,10 @@ import { newUuid } from "../utils";
 
 // TODO add real PostHog Project
 export const PH_PROJECT_API_KEY = "123";
+export const API_URL =
+	process.env.NODE_ENV == "production"
+		? "https://vizly-notebook-server.onrender.com"
+		: "http://localhost:5001";
 
 export const CELL_ACTIVE_COLOR = "var(--chakra-colors-orange-500)";
 

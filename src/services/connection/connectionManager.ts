@@ -63,6 +63,7 @@ class ConnectionManager {
 	setKernelStatus = useConnectionManagerStore.getState().setKernelStatus;
 	defaultKernelName = "python";
 
+	uniqueId?: string = undefined;
 	token?: string = undefined;
 	serviceManager?: ServiceManager = undefined;
 	sessionManager?: Session.IManager = undefined;
@@ -117,6 +118,19 @@ class ConnectionManager {
 		try {
 			// Load the text embedding model
 			TextEmbeddingModel.getInstance();
+		} catch (e) {
+			console.error(e);
+		}
+
+		try {
+			const response = await fetch(
+				`${serverUrl}/thread/uniqueId?token=${token}`,
+				{
+					method: "GET",
+				},
+			);
+			const uniqueId = await response.text();
+			this.uniqueId = uniqueId;
 		} catch (e) {
 			console.error(e);
 		}

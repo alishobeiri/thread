@@ -1,4 +1,4 @@
-import ConnectionManager from "../../../services/connection/connectionManager";
+import { API_URL } from "../../constants/constants";
 import { ActionState } from "../magicQuery";
 import { sharedAction } from "./shared/utils";
 
@@ -9,9 +9,7 @@ export async function* codeAction(
 	yield* sharedAction(
 		actionState,
 		wasAborted,
-		`${
-			ConnectionManager.getInstance().serverUrl
-		}/thread/api/magic/actions/code`,
+		`${API_URL}/api/magic/actions/code`,
 		"code",
 	);
 }

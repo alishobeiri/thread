@@ -4,11 +4,16 @@ import useApiCallStore, {
 	MAX_AI_API_CALLS,
 } from "../../../../hooks/useApiCallStore";
 import ConnectionManager from "../../../../services/connection/connectionManager";
-import { CHAT_PANEL_ID } from "../../../../utils/constants/constants";
+import {
+	API_URL,
+	CHAT_PANEL_ID,
+	CONTEXT_WINDOW_SIZE,
+} from "../../../../utils/constants/constants";
 import { makeStreamingRequest } from "../../../../utils/streaming";
 import { useQueryLimitModalStore } from "../../../modals/query-limit/QueryLimitModalStore";
 import { useNotebookStore } from "../../../notebook/store/NotebookStore";
 import { useSidebarStore } from "../../store/SidebarStore";
+import { mostRelevantCellsForQuery } from "../../../../utils/embeddings";
 export type UserType = "assistant" | "user";
 
 export interface ChatMessage {
@@ -138,18 +143,14 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 		set({ isResponding: true });
 		// send message to the chat assistant
 		try {
-			// TODO find the most relevant cells
-			// const mostRelevantCells = await mostRelevantCellsForQuery(
-			// 	query,
-			// 	CONTEXT_WINDOW_SIZE,
-			// );
+			const mostRelevantCells = await mostRelevantCellsForQuery(
+				query,
+				CONTEXT_WINDOW_SIZE,
+			);
 
 			let assistantMessageId;
-
 			const stream = makeStreamingRequest({
-				url: `${
-					ConnectionManager.getInstance().serverUrl
-				}/thread/api/chat/assistant`,
+				url: `${API_URL}/api/chat/assistant`,
 				method: "POST",
 				payload: {
 					query,
@@ -157,9 +158,14 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 					currentChatContext,
 					currentChatNamespace,
 					activeCellSource,
-					mostRelevantContextualCellsForQuery: [],
+					mostRelevantContextualCellsForQuery: mostRelevantCells,
+					uniqueId: ConnectionManager.getInstance().uniqueId,
 				},
-				shouldCancel: () => abortController.signal.aborted,
+				shouldCancel: () => {
+					const aborted = abortController.signal.aborted;
+					console.log("aborted: ", aborted);
+					return aborted;
+				},
 			});
 
 			let errorCount = 0;

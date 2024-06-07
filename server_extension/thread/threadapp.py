@@ -2,6 +2,7 @@ from email.mime import application
 import os
 from jupyter_server.extension.application import ExtensionApp
 from jupyter_server.utils import url_path_join
+import tornado
 from tornado.web import StaticFileHandler, HTTPError, RedirectHandler, RequestHandler
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPResponse
 from traitlets import Unicode, default
@@ -30,98 +31,28 @@ class StaticIndexHandler(StaticFileHandler):
                 raise e
 
 
-class ProxyHandler(RequestHandler):
-    def initialize(self, display_url: str) -> None:
-        app_log.info("Initializing ProxyHandler")
-        app_log.log("display_url: ", display_url)
+class UniqueIdHandler(tornado.web.RequestHandler):
+    def initialize(self, display_url):
+        app_log.info(f"display_url: {display_url}")
         self.display_url = display_url
+        self.allowed_origins = ["http://localhost:3000",
+                                "http://localhost:3000", self.display_url]
 
-    def check_xsrf_cookie(self):
-        pass
+    async def get(self):
+        self.set_cors_headers()
+        mac_address = self.get_mac_address()
+        self.write(mac_address)
 
-    async def get(self, path):
-        await self.forward_request()
-
-    async def post(self, path):
-        await self.forward_request()
-
-    async def put(self, path):
-        await self.forward_request()
-
-    async def delete(self, path):
-        await self.forward_request()
-
-    async def patch(self, path):
-        await self.forward_request()
+    def set_cors_headers(self):
+        origin = self.request.headers.get("Origin")
+        if origin in self.allowed_origins:
+            self.set_header("Access-Control-Allow-Origin", origin)
+        # Optionally, you might want to handle the case where origin is not in allowed_origins
+        # with a different response, depending on your application's requirements.
 
     def get_mac_address(self):
         mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
         return ":".join(mac[i:i+2] for i in range(0, 12, 2))
-
-    def set_cors_headers(self):
-        app_log.info(self)
-        self.set_header('Access-Control-Allow-Origin', "*")
-        self.set_header('Access-Control-Allow-Origin', 'null')
-        self.set_header('Access-Control-Allow-Methods',
-                        'POST, GET, OPTIONS, PUT, DELETE, PATCH')
-        self.set_header('Access-Control-Allow-Headers',
-                        'Content-Type, Authorization')
-
-    async def forward_request(self):
-        client = AsyncHTTPClient()
-
-        # Determine the external API base URL based on the node environment
-        environment = os.getenv("NODE_ENV", "development")
-        app_log.info(f"Node Environment: {environment}")
-        if environment == "production":
-            external_api_base_url = "http://production.url"
-        else:
-            external_api_base_url = "http://localhost:5001"
-
-        external_api_url = self.request.uri.replace(
-            self.request.path, external_api_base_url +
-            self.request.path[len("/thread"):]
-        )
-
-        unique_id = self.get_mac_address()
-
-        body = None
-        if self.request.method in ["POST", "PUT", "PATCH"]:
-            try:
-                existing_body = json.loads(self.request.body)
-            except json.JSONDecodeError:
-                existing_body = {}
-
-            existing_body["uniqueId"] = unique_id
-            body = json.dumps(existing_body).encode('utf-8')
-
-        request = HTTPRequest(
-            url=external_api_url,
-            method=self.request.method,
-            headers=self.request.headers,
-            body=body if body is not None else self.request.body,
-            follow_redirects=True,
-            streaming_callback=self.on_streaming_chunk
-        )
-
-        response = await client.fetch(request, raise_error=False)
-
-        for header, value in response.headers.items():
-            if header not in ['Content-Length', 'Transfer-Encoding', 'Content-Encoding', 'Connection']:
-                self.set_header(header, value)
-        self.set_status(response.code)
-        self.finish()
-
-    def on_streaming_chunk(self, chunk):
-        self.write(chunk)
-        self.flush()
-
-    def on_finish(self):
-        # Add any necessary cleanup logic here
-        pass
-
-    def set_default_headers(self):
-        self.set_cors_headers()
 
 
 class ThreadApp(ExtensionApp):
@@ -169,8 +100,8 @@ class ThreadApp(ExtensionApp):
         self.log.info(f"Static path: {static_path}")
 
         handlers = [
-            (url_path_join(self.serverapp.base_url, "/thread/api/(.*)"),
-             ProxyHandler, {'display_url': self.serverapp.display_url}),
+            (url_path_join(self.serverapp.base_url,
+             "/thread/uniqueId"), UniqueIdHandler, {"display_url": self.serverapp.display_url}),
             (url_path_join(self.serverapp.base_url, "/favicon.ico"), RedirectHandler,
              {"url": self.serverapp.base_url + "thread/favicon.ico"}),
             (url_path_join(self.serverapp.base_url, "/thread/?(.*)"),
