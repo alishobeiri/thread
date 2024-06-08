@@ -52,3 +52,7 @@ jupyter_server.log
 
 */build
 */dist
+
+.thread-dev/
+.virtual_documents/
+.ipynb_checkpoints/

@@ -95,6 +95,10 @@ class ConnectionManager {
 		return ConnectionManager.instance;
 	}
 
+	isServiceReady(): Promise<void[]> {
+		return Promise.all([this.ready, this.serviceManager?.ready]);
+	}
+
 	async connectToServer(): Promise<ServiceManager.IManager> {
 		// Extract the token from the query parameters
 		const urlParams = new URLSearchParams(window.location.search);

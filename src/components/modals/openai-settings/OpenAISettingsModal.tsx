@@ -29,6 +29,7 @@ const OpenAISettingsModal = () => {
 		setIsOpen(false);
 	};
 
+	useOpenAISettingsModalStore.getState().fetchOpenAIKey();
 	const openAIKey = useOpenAISettingsModalStore((state) => state.openAIKey);
 	const { setOpenAIKey } = useOpenAISettingsModalStore.getState();
 	const [show, setShow] = useState(false);
@@ -95,7 +96,7 @@ const OpenAISettingsModal = () => {
 						>
 							Cancel
 						</Button>
-						<Button colorScheme="blue" onClick={saveSettings}>
+						<Button colorScheme="orange" onClick={saveSettings}>
 							Save
 						</Button>
 					</HStack>

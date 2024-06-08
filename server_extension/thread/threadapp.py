@@ -109,6 +109,11 @@ class ThreadApp(ExtensionApp):
         ]
         self.handlers.extend(handlers)
 
+    def initialize_settings(self):
+        super().initialize_settings()
+        app_log.info(f"settings: {str(self.settings)}")
+        self.settings["contents_manager"].allow_hidden = True
+
 
 # Entry point to launch the extension app
 main = ThreadApp.launch_instance
