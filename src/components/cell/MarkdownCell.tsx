@@ -109,6 +109,7 @@ const MarkdownCell = ({
 					? `3px solid ${CELL_ACTIVE_COLOR}`
 					: `3px solid ${defaultBorderColor}`
 			}
+			width={"100%"}
 			onClick={() => {}}
 		>
 			{rendered ? (
@@ -118,11 +119,14 @@ const MarkdownCell = ({
 							? "1px dashed var(--jp-border-color2)"
 							: hovered
 							? "1px dashed var(--jp-border-color2)"
-							: undefined
+							: "1px dashed transparent"
 					}
+					height={"100%"}
 					cursor={hovered ? "pointer" : undefined}
 					onMouseEnter={() => setIsHovering(true)}
 					onMouseLeave={() => setIsHovering(false)}
+					px={2.5}
+					py={1}
 				>
 					<Markdown
 						remarkPlugins={[remarkGfm, remarkBreaks, remarkMath]}

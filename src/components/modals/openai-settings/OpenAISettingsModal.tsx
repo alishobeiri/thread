@@ -93,10 +93,15 @@ const OpenAISettingsModal = () => {
 							variant="ghost"
 							colorScheme="red"
 							onClick={handleClose}
+							fontFamily={"Space Grotesk"}
 						>
 							Cancel
 						</Button>
-						<Button colorScheme="orange" onClick={saveSettings}>
+						<Button
+							colorScheme="orange"
+							onClick={saveSettings}
+							fontFamily={"Space Grotesk"}
+						>
 							Save
 						</Button>
 					</HStack>

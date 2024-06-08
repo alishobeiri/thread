@@ -1,6 +1,5 @@
-import { AddIcon, CheckIcon, CopyIcon, WarningTwoIcon } from "@chakra-ui/icons";
+import { AddIcon, CheckIcon, CopyIcon } from "@chakra-ui/icons";
 import {
-	Avatar,
 	Box,
 	Button,
 	Code,
@@ -15,7 +14,6 @@ import {
 	TableCaption,
 	Tbody,
 	Td,
-	Text,
 	Tfoot,
 	Th,
 	Thead,
@@ -23,10 +21,10 @@ import {
 	Tr,
 	UnorderedList,
 } from "@chakra-ui/react";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 
-import { NextRouter, useRouter } from "next/router";
-import { CheckmarkIcon, DownloadIcon } from "../assets/icons";
+import { NextRouter } from "next/router";
+import { CheckmarkIcon } from "../assets/icons";
 import { useNotebookStore } from "../components/notebook/store/NotebookStore";
 import { BasicCodeMirrorEditor } from "./codemirror";
 
@@ -161,13 +159,13 @@ export const getCustomMarkdownComponents = ({
 } = {}) => {
 	return {
 		h1: (props: HeadingProps) => (
-			<Heading as="h1" size="xl" my="4" {...props} />
+			<Heading as="h1" size="xl" my="2" {...props} />
 		),
 		h2: (props: HeadingProps) => (
-			<Heading as="h2" size="lg" my="4" {...props} />
+			<Heading as="h2" size="lg" my="2" {...props} />
 		),
 		h3: (props: HeadingProps) => (
-			<Heading as="h3" size="md" my="3" {...props} />
+			<Heading as="h3" size="md" my="1.5" {...props} />
 		),
 		h4: (props: HeadingProps) => (
 			<Heading as="h4" size="sm" mt="0" mb="2" {...props} />

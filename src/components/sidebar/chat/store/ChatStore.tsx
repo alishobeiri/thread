@@ -157,9 +157,8 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 					activeCellSource,
 					mostRelevantContextualCellsForQuery: mostRelevantCells,
 					uniqueId: ConnectionManager.getInstance().uniqueId,
-					openaiApiKey: useOpenAISettingsModalStore
-						.getState()
-						.fetchOpenAIKey(),
+					openaiApiKey:
+						useOpenAISettingsModalStore.getState().openAIKey,
 				},
 				shouldCancel: () => {
 					const aborted = abortController.signal.aborted;

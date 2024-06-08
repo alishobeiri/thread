@@ -30,8 +30,8 @@ const Custom404: NextPage = () => {
 						textAlign={"center"}
 					>
 						This page cannot be found.{" "}
-						<Text href="/" color="orange.300" as={Link}>
-							Return to the homepage.
+						<Text href="/thread" color="orange.300" as={Link}>
+							Return to the launcher.
 						</Text>
 					</Heading>
 				</VStack>

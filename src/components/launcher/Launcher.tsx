@@ -121,23 +121,26 @@ const Launcher = () => {
 						.filter(
 							(key) => kernelSpecs.kernelspecs[key]?.display_name,
 						)
-						.map((key) => ({
-							label: kernelSpecs.kernelspecs[key]!.display_name,
-							icon: (
-								<img
-									src={`${kernelSpecs.kernelspecs[key]?.resources["logo-svg"]}`}
-									alt={
-										kernelSpecs.kernelspecs[key]!
-											.display_name
-									}
-									height="36px"
-									width="36px"
-								/>
-							),
-							actionHandler: () => {
-								createNewNotebook(key);
-							},
-						}));
+						.map((key) => {
+							return {
+								label: kernelSpecs.kernelspecs[key]!
+									.display_name,
+								icon: (
+									<img
+										src={`${kernelSpecs.kernelspecs[key]?.resources["logo-svg"]}`}
+										alt={
+											kernelSpecs.kernelspecs[key]!
+												.display_name
+										}
+										height="36px"
+										width="36px"
+									/>
+								),
+								actionHandler: () => {
+									createNewNotebook(key);
+								},
+							};
+						});
 					setNotebookItems(newItems);
 				} else {
 					console.error("Failed to fetch kernelspecs");
@@ -183,7 +186,7 @@ const Launcher = () => {
 					icon: <GithubIcon boxSize={"36px"} />,
 					actionHandler: () =>
 						window.open(
-							"https://github.com/squaredtechnologies/thread/issues",
+							"https://github.com/squaredtechnologies/thread",
 							"_blank",
 						),
 				},
