@@ -30,9 +30,7 @@ const useApiCallStore = create<ApiCallState>((set) => ({
 	checkAndIncrementApiCallCount: () => {
 		const { apiCallCount, incrementApiCallCount } =
 			useApiCallStore.getState();
-		const openaiApiKey = useOpenAISettingsModalStore
-			.getState()
-			.fetchOpenAIKey();
+		const openaiApiKey = useOpenAISettingsModalStore.getState().openAIKey;
 
 		if (openaiApiKey) {
 			return true;
