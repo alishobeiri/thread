@@ -28,6 +28,7 @@ import { useNotebookStore } from "../notebook/store/NotebookStore";
 import InputArea from "./input/InputArea";
 import OutputArea from "./output/OutputArea";
 import useCellStore, { CellStatus } from "./store/CellStore";
+import { isPlatformMac } from "../../utils/utils";
 
 interface CellContainerProps {
 	index: number;
@@ -49,6 +50,8 @@ const CellHeaderActions = ({ cell }: { cell: ICell }) => {
 	const cellState = useCellStore((state) => state.cellStates)[
 		cellId as string
 	];
+
+	const getShortcutKey = () => (isPlatformMac() ? "⌘" : "Ctrl");
 
 	useEffect(() => {
 		// Define the keydown event handler
@@ -97,14 +100,15 @@ const CellHeaderActions = ({ cell }: { cell: ICell }) => {
 						<Button
 							size="xs"
 							colorScheme="green"
-							leftIcon={<Text>(⌘+Shift+⏎)</Text>}
 							onClick={() => {
 								const { acceptAndRunProposedSource } =
 									useCellStore.getState();
 								acceptAndRunProposedSource(cellId as string);
 							}}
 						>
-							Update and run
+							{"Update and run (" +
+								getShortcutKey() +
+								"+Shift+⏎)"}
 						</Button>
 					)}
 					<Button
@@ -118,7 +122,7 @@ const CellHeaderActions = ({ cell }: { cell: ICell }) => {
 							acceptProposedSource(cellId as string);
 						}}
 					>
-						Update (⌘+⏎)
+						{"Update (" + getShortcutKey() + "+⏎)"}
 					</Button>
 					<Button
 						size="xs"
@@ -131,7 +135,7 @@ const CellHeaderActions = ({ cell }: { cell: ICell }) => {
 							rejectProposedSource(cellId as string);
 						}}
 					>
-						Reject (⌘+⌫)
+						{"Reject (" + getShortcutKey() + "+⌫)"}
 					</Button>
 				</HStack>
 			)}
