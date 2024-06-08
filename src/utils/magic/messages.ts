@@ -1,6 +1,7 @@
 import { IError, IOutput, IStream } from "@jupyterlab/nbformat";
 import { captureException } from "@sentry/nextjs";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
+import ConnectionManager from "../../services/connection/connectionManager";
 import { ThreadCell } from "../../types/code.types";
 import { MAX_OUTPUT_LENGTH } from "../constants/constants";
 import {
@@ -204,6 +205,7 @@ export const formatCellsAsMessages = (
 	let prevCell = null;
 	let previousCellExecutedCorrectly = false;
 
+	const connectionManager = ConnectionManager.getInstance();
 	const messages: ThreadMessage[] = [];
 	const initialIndex =
 		startIndex !== undefined

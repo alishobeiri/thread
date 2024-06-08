@@ -122,11 +122,8 @@ export const useNotebookHotkeys = () => {
 
 	const runCellLogic = () => {
 		const cell = getActiveCell();
-		if (
-			cell &&
-			cell.id &&
-			cellState(cell.id as string).status == CellStatus.FollowUp
-		) {
+		const cState = cellState(cell.id as string);
+		if (cell && cell.id && cState && cState.status == CellStatus.FollowUp) {
 			// Cell header is present so the default action is overridden
 			return;
 		} else {

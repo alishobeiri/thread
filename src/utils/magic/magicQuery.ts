@@ -7,7 +7,9 @@ import {
 import { useOpenAISettingsModalStore } from "../../components/modals/openai-settings/OpenAISettingsModalStore";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
 import { useChatStore } from "../../components/sidebar/chat/store/ChatStore";
-import ConnectionManager from "../../services/connection/connectionManager";
+import ConnectionManager, {
+	useConnectionManagerStore,
+} from "../../services/connection/connectionManager";
 import { API_URL, MESSAGES_LOOKBACK_WINDOW } from "../constants/constants";
 import { trackEventData } from "../posthog";
 import {
@@ -313,6 +315,12 @@ const generateCells = async (query: string, followUpRetries: number) => {
 	const get = useNotebookStore.getState;
 	const set = useNotebookStore.setState;
 
+	const connectionManager = ConnectionManager.getInstance();
+	if (!connectionManager || !connectionManager.kernel) {
+		useConnectionManagerStore.getState().openKernelSelectionModal();
+		return;
+	}
+
 	set({ isGeneratingCells: true });
 
 	query = query.trim();
@@ -325,8 +333,6 @@ const generateCells = async (query: string, followUpRetries: number) => {
 
 	const wasAborted = () =>
 		get().userAbortedMagicQueryController.signal.aborted;
-
-	const magicQueryStartTimestamp = Date.now();
 
 	let numberOfActions = 0;
 	for (let i = 0; i < followUpRetries; i++) {
