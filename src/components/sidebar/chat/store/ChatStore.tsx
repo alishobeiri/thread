@@ -140,10 +140,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 		set({ isResponding: true });
 		// send message to the chat assistant
 		try {
-			const mostRelevantCells = await mostRelevantCellsForQuery(
-				query,
-				CONTEXT_WINDOW_SIZE,
-			);
+			const mostRelevantCells = await mostRelevantCellsForQuery(query);
 
 			let assistantMessageId;
 			const stream = makeStreamingRequest({

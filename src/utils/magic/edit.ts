@@ -6,6 +6,7 @@ import { useNotebookStore } from "../../components/notebook/store/NotebookStore"
 import ConnectionManager from "../../services/connection/connectionManager";
 import { ThreadCell } from "../../types/code.types";
 import { API_URL } from "../constants/constants";
+import { mostRelevantCellsForQuery } from "../embeddings";
 import { makeStreamingFunctionRequest } from "../streaming";
 import { getAppTheme, multilineStringToString } from "../utils";
 
@@ -21,6 +22,7 @@ export const editCell = async (cell: ThreadCell, query: string) => {
 			userRequest: query,
 			currentCellSource: multilineStringToString(cell.source),
 			currentNamespace: ConnectionManager.getInstance().currentNamespace,
+			mostRelevantCellsForQuery: await mostRelevantCellsForQuery(query),
 			theme: getAppTheme(),
 			uniqueId: ConnectionManager.getInstance().uniqueId,
 			openaiApiKey: useOpenAISettingsModalStore.getState().openAIKey,
