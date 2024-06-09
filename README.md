@@ -30,15 +30,25 @@ Best of all, Thread runs locally, and can be used for free with your own API key
 pip install thread-dev
 ```
 
-And then:
+To start thread-dev, run the following
 
 ```
 thread
 ```
 
+or
+
+```
+jupyter thread
+```
+
 <p align="center">
   <img src="DEMO_PICTURE_OF_NICE_NOTEBOOK_WITH_GRAPHS (MAYBE GIF)"/>
 </p>
+
+# Demo
+
+Demo video
 
 # Key features
 
@@ -66,10 +76,6 @@ To install via pip use the following command:
 ```
 pip install thread-dev
 ```
-
-# Demo
-
-Demo video
 
 # Thread.dev Cloud
 
