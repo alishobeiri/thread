@@ -43,12 +43,17 @@ jupyter thread
 ```
 
 <p align="center">
-  <img src="DEMO_PICTURE_OF_NICE_NOTEBOOK_WITH_GRAPHS (MAYBE GIF)"/>
+  <img src="https://thread-github.s3.us-west-1.amazonaws.com/ThreadDemo.gif"/>
 </p>
 
 # Demo
 
-Demo video
+<p align="center">
+  <video width="100%" autoplay controls>
+    <source src="https://thread-github.s3.us-west-1.amazonaws.com/ThreadDemo.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</p>
 
 # Key features
 
@@ -69,14 +74,17 @@ Demo video
 
 4. Modernized React frontend
 
-# Quickstart
+# Feature Roadmap
 
-To install via pip use the following command:
+These are some of the features we are hoping to launch in the next few month. If you have any suggestions or would like to see a feature added, please don't hesitate to open an issue or reach out to us [via email](mailto:ali@vizlylabs.com) or [discord](https://discord.gg/ZuHq9hDs2y).
 
-```
-pip install thread-dev
-```
+-   [ ] Add co-pilot style inline code suggestions
+-   [ ] Data warehouse + SQL support
+-   [ ] No code data exploration
+-   [ ] UI based chart creation
+-   [ ] Ability to collaborate on notebooks
+-   [ ] Publish notebooks as shareable webapps
 
 # Thread.dev Cloud
 
-We hope to offer a managed cloud version of Thread that allows a multitude of collaboration features. As part of this, we are looking for initial design partners that might be interested in working with us to help build this out. If you're interested, please reach out to us [via email](mailto:ali@vizlylabs.com)
+Eventually we hope to provide Thread as a shareable web app with lots of collaboration features. As part of this, we are looking for initial enterprise design partners that might be interested in partnering with us on this. If you're interested, please reach out to us [via email](mailto:ali@vizlylabs.com) or [join our waitlist](https://waitlist.thread.dev).
