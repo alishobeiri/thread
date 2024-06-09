@@ -48,21 +48,22 @@ https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad
 
 # Key features
 
-1. Juptyer Notebook editing experience
+### 1. Juptyer Notebook editing experience
 ![SameEditorExperience](https://github.com/squaredtechnologies/thread/assets/18422723/7bc86160-bd67-43dd-be86-bbf5360b5837)
 
 
-2. Editing code using natural language
+### 2. Editing code using natural language
 ![CellEditing](https://github.com/squaredtechnologies/thread/assets/18422723/73061e90-cc81-4bd7-b346-8bb01f5061a5)
 
 
-3. Generating groups of cells
+### 3. Generating groups of cells
 ![CellGeneration](https://github.com/squaredtechnologies/thread/assets/18422723/fdb81966-379d-4c5f-bbdf-1fb3b9dc02ca)
 
-4. Chat / ask questions about the notebook
+### 4. Chat / ask questions about the notebook
 ![ThreadChatDemo](https://github.com/squaredtechnologies/thread/assets/18422723/f3c165d4-078e-41f2-b170-278919ba6bea)
 
-5. Modernized React frontend
+### 5. Modernized React frontend
+- Thread is built from the ground up using React, hopefully making it more accessible to build on top of for a wider range of developers.
 
 # Feature Roadmap
 
