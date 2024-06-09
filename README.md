@@ -41,10 +41,7 @@ or
 ```
 jupyter thread
 ```
-
-<p align="center">
-  ![ThreadDemo480p20fps](https://github.com/squaredtechnologies/thread/assets/18422723/ba6740c1-dab9-429f-9950-bbaf4bebd34d)
-</p>
+![ThreadDemo480p20fps](https://github.com/squaredtechnologies/thread/assets/18422723/ba6740c1-dab9-429f-9950-bbaf4bebd34d)
 
 # Demo
 https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad-b293-217b940385fb
