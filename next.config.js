@@ -19,6 +19,10 @@ const nextConfig = {
         test: /__tests__/,
         loader: 'ignore-loader',
       });
+      config.module.rules.push({
+        test: /demo_assets/,
+        loader: 'ignore-loader',
+      });
     }
     return config;
   },
