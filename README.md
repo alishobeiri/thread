@@ -43,14 +43,14 @@ jupyter thread
 ```
 
 <p align="center">
-  <img src="https://thread-github.s3.us-west-1.amazonaws.com/ThreadDemo.gif"/>
+  <img src="demo_assets/ThreadDemo.gif"/>
 </p>
 
 # Demo
 
 <p align="center">
   <video width="100%" autoplay controls>
-    <source src="https://thread-github.s3.us-west-1.amazonaws.com/ThreadDemo.mp4" type="video/mp4">
+    <source src="demo_assets/ThreadDemo.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 </p>
