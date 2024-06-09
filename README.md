@@ -48,12 +48,7 @@ jupyter thread
 
 # Demo
 
-<p align="center">
-  <video width="100%" autoplay controls>
-    <source src="demo_assets/ThreadDemo.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-</p>
+https://github.com/squaredtechnologies/thread/raw/main/demo_assets/ThreadDemo.mp4
 
 # Key features
 
