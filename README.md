@@ -54,14 +54,10 @@ https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad
  </p>
 
 2. Generating groups of cells
- <p align="center">
-   <img src="DEMO_GIF_OF_GENERATING PYRAMIDS 3D PLOT"/>
- </p>
+![CellGeneration](https://github.com/squaredtechnologies/thread/assets/18422723/fdb81966-379d-4c5f-bbdf-1fb3b9dc02ca)
 
 3. Chat / ask questions about the notebook
- <p align="center">
-   <img src="DEMO_GIF_OF_GENERATING PYRAMIDS 3D PLOT"/>
- </p>
+![ThreadChatDemo](https://github.com/squaredtechnologies/thread/assets/18422723/f3c165d4-078e-41f2-b170-278919ba6bea)
 
 4. Modernized React frontend
 
