@@ -67,6 +67,7 @@ https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad
 ![ThreadChatDemo480](https://github.com/squaredtechnologies/thread/assets/18422723/a152550b-ede4-497b-9d48-bdff2f7ee7e4)
 
 ### 5. Automatically explain or fix errors
+
 <img width="1112" alt="image" src="https://github.com/squaredtechnologies/thread/assets/18422723/93a16931-4236-4ab0-b5b5-673100af2ca0">
 
 ### 6. React frontend
@@ -114,4 +115,14 @@ yarn dev
 
 Navigate to `localhost:3000/thread` and you should see your local version of Thread running.
 
-If you would like to develop with the AI features, I would recommend changing `API_URL` in `constants.tsx` to point to the production server as we haven't released the proxy to run locally yet.
+If you would like to develop with the AI features, navigate to the `proxy` folder and run:
+
+```
+yarn install
+```
+
+Then:
+
+```
+yarn dev --port 5001
+```
