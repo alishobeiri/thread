@@ -3,10 +3,9 @@ import posthog from "posthog-js";
 import { PH_PROJECT_API_KEY } from "./constants/constants";
 
 // Used to easily enable posthog in development
-const POSTHOG_OVERRIDE = false;
+const POSTHOG_OVERRIDE = true;
 
 export const initializePosthog = () => {
-	const middlewareBootstrapData = getPostHogMiddlewareCookie();
 	if (
 		typeof window !== "undefined" &&
 		(process.env.NODE_ENV === "production" ||
@@ -14,9 +13,8 @@ export const initializePosthog = () => {
 			POSTHOG_OVERRIDE)
 	) {
 		posthog.init(PH_PROJECT_API_KEY, {
-			api_host: window.location.origin + "/ingest",
+			api_host: "https://us.i.posthog.com",
 			ui_host: "https://app.posthog.com",
-			bootstrap: middlewareBootstrapData,
 			// Do not record any session, just use PostHog to capture events
 			disable_session_recording: true,
 		});

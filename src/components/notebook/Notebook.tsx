@@ -35,7 +35,7 @@ import React from "react";
 import { useScrollToBottom } from "../../hooks/useScroll";
 import { getCellTypesWithHandlers } from "../../utils/cellOptions";
 import { CELL_GUTTER_WIDTH } from "../../utils/constants/constants";
-import { trackEventData } from "../../utils/posthog";
+import { initializePosthog, trackEventData } from "../../utils/posthog";
 import { isInViewport } from "../../utils/utils";
 import CellPadding from "../cell/CellPadding";
 import MarkdownCellContainer from "../cell/MarkdownCell";
@@ -88,6 +88,9 @@ export const Notebook = () => {
 
 	useNotebookHotkeys();
 	useNotebookStore.getState().setRouter(router);
+	useEffect(() => {
+		initializePosthog();
+	}, []);
 
 	useEffect(() => {
 		const { path, navigateToPath } = useNotebookStore.getState();

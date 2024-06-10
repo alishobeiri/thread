@@ -30,6 +30,7 @@ import type {
 import type { Text } from "@codemirror/state";
 import type { PluginValue, ViewUpdate } from "@codemirror/view";
 import { Transport } from "@open-rpc/client-js/build/transports/Transport";
+import { captureException } from "@sentry/nextjs";
 import { Prec, keymap } from "@uiw/react-codemirror";
 import type * as LSP from "vscode-languageserver-protocol";
 import type { PublishDiagnosticsParams } from "vscode-languageserver-protocol";
@@ -115,6 +116,11 @@ export class LanguageServerClient {
 			this.processNotification(data as any);
 		});
 
+		this.client.onError((error) => {
+			console.error(error);
+			captureException(error);
+		});
+
 		const webSocketTransport = <WebSocketTransport>this.transport;
 		if (webSocketTransport && webSocketTransport.connection) {
 			// XXX(hjr265): Need a better way to do this. Relevant issue:
@@ -164,7 +170,7 @@ export class LanguageServerClient {
 	}
 
 	async initialize() {
-		const { capabilities } = await this.request(
+		const result = await this.request(
 			"initialize",
 			{
 				capabilities: {
@@ -225,7 +231,7 @@ export class LanguageServerClient {
 				rootUri: this.rootUri,
 				workspaceFolders: this.workspaceFolders,
 			},
-			timeout * 3,
+			5,
 		);
 
 		await this.request(
@@ -248,9 +254,12 @@ export class LanguageServerClient {
 					},
 				},
 			},
-			timeout * 3,
+			5,
 		);
-		this.capabilities = capabilities;
+		if (result) {
+			this.capabilities = result.capabilities;
+		}
+
 		this.notify("initialized", {});
 		this.ready = true;
 	}
@@ -290,21 +299,28 @@ export class LanguageServerClient {
 		method: K,
 		params: LSPRequestMap[K][0],
 		timeout: number,
-	): Promise<LSPRequestMap[K][1]> {
-		console.log(method, params);
-		return this.client.request({ method, params }, timeout);
+	): Promise<LSPRequestMap[K][1] | undefined> {
+		return this.client
+			.request({ method, params }, timeout)
+			.catch((error) => {
+				captureException(error);
+				console.error(error);
+				return Promise.resolve(undefined);
+			});
 	}
 
 	private notify<K extends keyof LSPNotifyMap>(
 		method: K,
 		params: LSPNotifyMap[K],
-	): Promise<LSPNotifyMap[K]> {
-		console.log(method, params);
-		return this.client.notify({ method, params });
+	): Promise<LSPNotifyMap[K] | undefined> {
+		return this.client.notify({ method, params }).catch((error) => {
+			captureException(error);
+			console.error(error);
+			return Promise.resolve(undefined);
+		});
 	}
 
 	private processNotification(notification: Notification) {
-		console.log("notification: ", notification);
 		for (const plugin of this.plugins) {
 			plugin.processNotification(notification);
 		}

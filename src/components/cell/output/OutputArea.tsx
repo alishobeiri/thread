@@ -71,7 +71,6 @@ const OutputArea: React.FC<OutputAreaProps> = React.memo(
 		const renderedOutputs = useMemo(
 			() =>
 				outputs.map((output: IOutput, i) => {
-					console.log(output);
 					let mimeKey: string;
 					delete output["transient"];
 					switch (output.output_type) {

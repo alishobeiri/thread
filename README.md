@@ -59,11 +59,12 @@ https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad
 ![CellEditing](https://github.com/squaredtechnologies/thread/assets/18422723/73061e90-cc81-4bd7-b346-8bb01f5061a5)
 
 ### 3. Generate cells to answer natural language questions
+
 ![ThreadGenerateMode](https://github.com/squaredtechnologies/thread/assets/18422723/f8a6f2de-4c8d-4eb5-b9a8-2a0bfbd5e740)
 
 ### 4. Ask questions in a context aware chat sidebar
-![ThreadChatDemo480](https://github.com/squaredtechnologies/thread/assets/18422723/a152550b-ede4-497b-9d48-bdff2f7ee7e4)
 
+![ThreadChatDemo480](https://github.com/squaredtechnologies/thread/assets/18422723/a152550b-ede4-497b-9d48-bdff2f7ee7e4)
 
 ### 5. Automatically explain or fix errors
 
@@ -81,7 +82,35 @@ These are some of the features we are hoping to launch in the next few month. If
 -   [ ] UI based chart creation
 -   [ ] Ability to collaborate on notebooks
 -   [ ] Publish notebooks as shareable webapps
+-   [ ] Add support for Jupyter Widgets
+-   [ ] Add file preview for all file types
 
 # Thread.dev Cloud
 
 Eventually we hope to integrate Thread into a cloud platform that can support collaboration features as well hosting of notebooks as web application. If this sounds interesting to you, we are looking for enterprise design partners to partner with and customize the solution for. If you're interested, please reach out to us [via email](mailto:ali@vizlylabs.com) or [join our waitlist](https://waitlist.thread.dev).
+
+# Development instructions
+
+To run the repo in development mode, you need to run two terminal commands. One will run Jupyter Server, the other will run the NextJS front end.
+
+To begin, run:
+
+```
+yarn install
+```
+
+Then in one terminal, run:
+
+```
+sh ./run_dev.sh
+```
+
+And in another, run:
+
+```
+yarn dev
+```
+
+Navigate to `localhost:3000/thread` and you should see your local version of Thread running.
+
+If you would like to develop with the AI features, I would recommend changing `API_URL` in `constants.tsx` to point to the production server as we haven't released the proxy to run locally yet.
