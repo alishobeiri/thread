@@ -42,7 +42,7 @@ or
 jupyter thread
 ```
 
-![ThreadDemo480p20fps](https://github.com/squaredtechnologies/thread/assets/18422723/ba6740c1-dab9-429f-9950-bbaf4bebd34d)
+![ThreadIntro](https://github.com/squaredtechnologies/thread/assets/18422723/ac49e65b-e8f7-4e7b-a349-76cf533178df)
 
 # Demo
 
