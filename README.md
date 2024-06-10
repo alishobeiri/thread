@@ -63,8 +63,8 @@ https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad
 ![CellGeneration](https://github.com/squaredtechnologies/thread/assets/18422723/fdb81966-379d-4c5f-bbdf-1fb3b9dc02ca)
 
 ### 4. Ask questions in a context aware chat sidebar
+![ThreadChatDemo480](https://github.com/squaredtechnologies/thread/assets/18422723/a152550b-ede4-497b-9d48-bdff2f7ee7e4)
 
-![ThreadChatDemo](https://github.com/squaredtechnologies/thread/assets/18422723/f3c165d4-078e-41f2-b170-278919ba6bea)
 
 ### 5. Automatically explain or fix errors
 
