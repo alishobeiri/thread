@@ -59,8 +59,7 @@ https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad
 ![CellEditing](https://github.com/squaredtechnologies/thread/assets/18422723/73061e90-cc81-4bd7-b346-8bb01f5061a5)
 
 ### 3. Generate code to answer natural language questions
-
-![CellGeneration](https://github.com/squaredtechnologies/thread/assets/18422723/fdb81966-379d-4c5f-bbdf-1fb3b9dc02ca)
+![ThreadGenerateMode](https://github.com/squaredtechnologies/thread/assets/18422723/f8a6f2de-4c8d-4eb5-b9a8-2a0bfbd5e740)
 
 ### 4. Ask questions in a context aware chat sidebar
 ![ThreadChatDemo480](https://github.com/squaredtechnologies/thread/assets/18422723/a152550b-ede4-497b-9d48-bdff2f7ee7e4)
