@@ -58,7 +58,7 @@ https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad
 
 ![CellEditing](https://github.com/squaredtechnologies/thread/assets/18422723/73061e90-cc81-4bd7-b346-8bb01f5061a5)
 
-### 3. Generate code to answer natural language questions
+### 3. Generate cells to answer natural language questions
 ![ThreadGenerateMode](https://github.com/squaredtechnologies/thread/assets/18422723/f8a6f2de-4c8d-4eb5-b9a8-2a0bfbd5e740)
 
 ### 4. Ask questions in a context aware chat sidebar
@@ -84,4 +84,4 @@ These are some of the features we are hoping to launch in the next few month. If
 
 # Thread.dev Cloud
 
-Eventually we hope to provide Thread as a shareable web app with lots of collaboration features. As part of this, we are looking for initial enterprise design partners that might be interested in partnering with us on this. If you're interested, please reach out to us [via email](mailto:ali@vizlylabs.com) or [join our waitlist](https://waitlist.thread.dev).
+Eventually we hope to integrate Thread into a cloud platform that can support collaboration features as well hosting of notebooks as web application. If this sounds interesting to you, we are looking for enterprise design partners to partner with and customize the solution for. If you're interested, please reach out to us [via email](mailto:ali@vizlylabs.com) or [join our waitlist](https://waitlist.thread.dev).
