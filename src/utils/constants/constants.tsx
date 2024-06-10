@@ -2,7 +2,8 @@ import { NotebookFile } from "../../types/file.types";
 import { newUuid } from "../utils";
 
 // TODO add real PostHog Project
-export const PH_PROJECT_API_KEY = "123";
+export const PH_PROJECT_API_KEY =
+	"phc_Pqhxx9TL3YeiBss7OfaIMdj1K8X7kjzeUUg7XsM3zpP";
 export const API_URL =
 	process.env.NODE_ENV == "production"
 		? "https://vizly-notebook-server.onrender.com"

@@ -6,6 +6,7 @@ import {
 import { ConnectionStatus } from "@jupyterlab/services/lib/kernel/kernel";
 import { ISessionConnection } from "@jupyterlab/services/lib/session/session";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
+import { trackEventData } from "../../utils/posthog";
 import ConnectionManager, {
 	useConnectionManagerStore,
 } from "../connection/connectionManager";
@@ -159,6 +160,7 @@ export class Kernel {
 
 	interrupt() {
 		useNotebookStore.getState().setExecutingCells([]);
+		trackEventData("[KERNEL] interrupted kernel");
 		if (this._kernelModel) {
 			this._kernelModel.interruptKernel();
 		}

@@ -474,10 +474,7 @@ export const useNotebookStore = create<INotebookStore>()(
 						userAbortedMagicQueryController: new AbortController(),
 					});
 
-					trackEventData("[MagicQuery] submitted", {
-						prompt: prompt.trim(),
-						promptLength: prompt.trim().length,
-					});
+					trackEventData("[MagicQuery] submitted");
 
 					const shouldContinue = useApiCallStore
 						.getState()
@@ -985,9 +982,7 @@ export const useNotebookStore = create<INotebookStore>()(
 						return Promise.resolve();
 					}
 
-					trackEventData("[NOTEBOOK] Cell executed", {
-						source: source,
-					});
+					trackEventData("[NOTEBOOK] Cell executed");
 
 					// TODO: Run the active cell, add the ability to run selected cells soon
 					// Only call the kernel if the code is non-empty (or there's an output that can be cleared).
@@ -1078,6 +1073,7 @@ export const useNotebookStore = create<INotebookStore>()(
 					kernelSelection?: string,
 				): NotebookFile => {
 					set({ isLoadingNotebook: true });
+					trackEventData("[NOTEBOOK] selectedNotebook");
 
 					const { setSelectedNotebook, setFileContents } = get();
 

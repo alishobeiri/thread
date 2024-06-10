@@ -36,9 +36,7 @@ const FixButton = ({ onClick }: { onClick: () => void }) => {
 			onClick={(e) => {
 				e.stopPropagation();
 				onClick();
-				trackEventData("[Output] Automatically fix error clicked", {
-					ai: true,
-				});
+				trackEventData("[Output] Automatically fix error clicked");
 			}}
 			fontFamily={"var(--chakra-fonts-body)"}
 		>

@@ -25,7 +25,7 @@ import {
 	CELL_GUTTER_WIDTH,
 	CELL_MINIMUM_HEIGHT,
 } from "../../utils/constants/constants";
-import { trackClickEvent } from "../../utils/posthog";
+import { trackClickEvent, trackEventData } from "../../utils/posthog";
 import { isInViewport, isPlatformMac } from "../../utils/utils";
 import { enableCommandMode } from "../cell/actions/actions";
 import useCellStore, { CellStatus } from "../cell/store/CellStore";
@@ -44,6 +44,7 @@ const goToActiveCell = (mainPanelRef: React.RefObject<HTMLDivElement>) => {
 		const relativeTop = elementTop + containerScrollTop - containerTop;
 		const offsetPosition = relativeTop - offset;
 
+		trackEventData("[CLICK] Go to active cell");
 		mainPanelRef.current.scrollTo({
 			top: offsetPosition,
 		});
@@ -263,6 +264,7 @@ export const MagicInput = ({
 				selectedOption as MagicInputSelections,
 			);
 			const nextIndex = (currentIndex + 1) % availableSelections.length;
+			trackEventData("Rotated magic input options");
 			setSelectedOption(availableSelections[nextIndex]);
 			event.preventDefault();
 		}
@@ -270,6 +272,7 @@ export const MagicInput = ({
 
 	const handleOptionSelect = (option: MagicInputSelections) => {
 		setSelectedOption(option);
+		trackEventData("Option selected", { option });
 	};
 
 	const getPlaceholderText = () => {
