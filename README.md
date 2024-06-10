@@ -67,6 +67,7 @@ https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad
 ![ThreadChatDemo480](https://github.com/squaredtechnologies/thread/assets/18422723/a152550b-ede4-497b-9d48-bdff2f7ee7e4)
 
 ### 5. Automatically explain or fix errors
+<img width="1112" alt="image" src="https://github.com/squaredtechnologies/thread/assets/18422723/93a16931-4236-4ab0-b5b5-673100af2ca0">
 
 ### 6. React frontend
 
