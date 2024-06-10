@@ -3,7 +3,7 @@ import posthog from "posthog-js";
 import { PH_PROJECT_API_KEY } from "./constants/constants";
 
 // Used to easily enable posthog in development
-const POSTHOG_OVERRIDE = true;
+const POSTHOG_OVERRIDE = false;
 
 export const initializePosthog = () => {
 	if (
