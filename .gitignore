@@ -56,3 +56,6 @@ jupyter_server.log
 .thread-dev/
 .virtual_documents/
 .ipynb_checkpoints/
+
+*/.next
+*/.env
