@@ -24,8 +24,9 @@ const nextConfig = {
         loader: 'ignore-loader',
       });
       config.module.rules.push({
-        test: /proxy/,
-        loader: 'ignore-loader',
+        test: /\.(js|jsx|ts|tsx)$/,
+        include: path.resolve(__dirname, 'proxy'),
+        loader: 'ignore-loader'
       });
     }
     return config;
