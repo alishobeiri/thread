@@ -161,7 +161,7 @@ export default function Sidebar() {
 							label={"Join the Discord"}
 							onClick={() =>
 								window.open(
-									"https://discord.gg/gkB2sWu8",
+									"https://discord.gg/ZuHq9hDs2y",
 									"_blank",
 								)
 							}
