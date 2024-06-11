@@ -20,7 +20,6 @@ import { BasicCodeMirrorEditor } from "../../../utils/codemirror";
 import {
 	MAX_MESSAGE_LENGTH,
 	SCROLL_TO_BOTTOM_THRESHOLD,
-	SIDEPANEL_WIDTH,
 } from "../../../utils/constants/constants";
 import { getCustomMarkdownComponents } from "../../../utils/markdown";
 import { isPlatformMac } from "../../../utils/utils";
@@ -303,7 +302,6 @@ export default function ChatContent({
 }: {
 	handleCloseSidebar: () => void;
 }) {
-	const containerRef = useRef<HTMLDivElement>(null);
 	const isChatLive = useChatStore((state) => state.isChatLive);
 
 	useHotkeys("mod+backspace", () => {
@@ -313,81 +311,66 @@ export default function ChatContent({
 	});
 
 	return (
-		<Box
-			ref={containerRef}
-			width={`${SIDEPANEL_WIDTH}px`}
-			height="100%"
-			borderRight="1px solid var(--chakra-colors-chakra-border-color)"
-		>
-			<VStack width="100%" height="100%" gap={0}>
-				<HStack
-					width="100%"
-					display={"flex"}
-					flex="0 0 auto"
-					justifyContent={"space-between"}
-					padding={"12px"}
-				>
-					<Heading fontSize="smaller" textTransform={"uppercase"}>
-						Chat
-						<Tooltip
-							fontSize="xs"
-							hasArrow
-							borderRadius={"sm"}
-							placement="top"
-							label={`The chat is context-aware, with information about your current notebook. You can add specific context by selecting code in the notebook.`}
-						>
-							<InfoIcon
-								ml={2}
-								fontSize={"xs"}
-								cursor={"pointer"}
-							/>
-						</Tooltip>
-					</Heading>
-					<SidebarIcon
-						label={`Close sidebar (${
-							isPlatformMac() ? "⌘ + B" : "Ctrl + B"
-						})`}
-						icon={<ToggleSidebar />}
-						size="sm"
-						onClick={handleCloseSidebar}
-					/>
-				</HStack>
-				<VStack
-					width="100%"
-					onClick={() => {
-						const { textInputRef } = useSidebarStore.getState();
-						textInputRef?.focus();
-					}}
-					overflow={"auto"}
-				>
-					<HStack
-						width={"100%"}
-						justifyContent={"space-between"}
-						px={2}
+		<VStack width="100%" height="100%" gap={0}>
+			<HStack
+				width="100%"
+				display={"flex"}
+				flex="0 0 auto"
+				justifyContent={"space-between"}
+				padding={"12px"}
+			>
+				<Heading fontSize="smaller" textTransform={"uppercase"}>
+					Chat
+					<Tooltip
+						fontSize="xs"
+						hasArrow
+						borderRadius={"sm"}
+						placement="top"
+						label={`The chat is context-aware, with information about your current notebook. You can add specific context by selecting code in the notebook.`}
 					>
-						{isChatLive ? (
-							<Button
-								fontSize="11px"
-								size="xs"
-								variant="ghost"
-								onClick={() => {
-									useChatStore
-										.getState()
-										.abortController?.abort();
-									useChatStore.getState().endChat();
-								}}
-								leftIcon={<AddIcon boxSize="8px" />}
-							>
-								New chat
-							</Button>
-						) : (
-							<></>
-						)}
-					</HStack>
-					{isChatLive && <Messages />}
-					<ChatPanelFooter />
-				</VStack>
+						<InfoIcon ml={2} fontSize={"xs"} cursor={"pointer"} />
+					</Tooltip>
+				</Heading>
+				<SidebarIcon
+					label={`Close sidebar (${
+						isPlatformMac() ? "⌘ + B" : "Ctrl + B"
+					})`}
+					icon={<ToggleSidebar />}
+					size="sm"
+					onClick={handleCloseSidebar}
+				/>
+			</HStack>
+			<VStack
+				width="100%"
+				onClick={() => {
+					const { textInputRef } = useSidebarStore.getState();
+					textInputRef?.focus();
+				}}
+				overflow={"auto"}
+			>
+				<HStack width={"100%"} justifyContent={"space-between"} px={2}>
+					{isChatLive ? (
+						<Button
+							fontSize="11px"
+							size="xs"
+							variant="ghost"
+							onClick={() => {
+								useChatStore
+									.getState()
+									.abortController?.abort();
+								useChatStore.getState().endChat();
+							}}
+							leftIcon={<AddIcon boxSize="8px" />}
+						>
+							New chat
+						</Button>
+					) : (
+						<></>
+					)}
+				</HStack>
+				{isChatLive && <Messages />}
+				<ChatPanelFooter />
 			</VStack>
-		</Box>
+		</VStack>
 	);
 }

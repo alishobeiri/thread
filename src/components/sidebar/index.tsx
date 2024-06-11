@@ -6,7 +6,12 @@ import {
 	VStack,
 	useColorModeValue,
 } from "@chakra-ui/react";
-import React, { JSXElementConstructor, ReactElement, ReactNode } from "react";
+import React, {
+	JSXElementConstructor,
+	ReactElement,
+	ReactNode,
+	useEffect,
+} from "react";
 import {
 	ChatIcon,
 	DiscordIcon,
@@ -14,6 +19,7 @@ import {
 	GithubIcon,
 	SettingsIcon,
 } from "../../assets/icons";
+import { useResizeWidth } from "../../hooks/useResizeWidth";
 import {
 	CHAT_PANEL_ID,
 	FILESYSTEM_PANEL_ID,
@@ -24,7 +30,11 @@ import ChatContent from "./panels/ChatContent";
 import FileSystemContent from "./panels/FileSystemContent/FileSystemContent";
 import SettingsContent from "./panels/SettingsContent";
 import TerminalContent from "./panels/TerminalContent";
-import { useSidebarStore } from "./store/SidebarStore";
+import {
+	MAX_SIDEBAR_WIDTH,
+	MIN_SIDEBAR_WIDTH,
+	useSidebarStore,
+} from "./store/SidebarStore";
 
 type SidebarIconProps = {
 	icon: ReactElement<any, string | JSXElementConstructor<any>> | undefined;
@@ -99,11 +109,22 @@ export default function Sidebar() {
 		"var(--jp-layout-color2)",
 		"var(--jp-layout-color1)",
 	);
-
 	const panelType = useSidebarStore((state) => state.panelType) ?? "chat";
 	const isExpanded = useSidebarStore((state) => state.isExpanded);
+	const sidebarWidth = useSidebarStore((state) => state.sidebarWidth);
+	const setSidebarWidth = useSidebarStore((state) => state.setSidebarWidth);
+	const handleMouseDown = useResizeWidth(
+		sidebarWidth,
+		setSidebarWidth,
+		MIN_SIDEBAR_WIDTH,
+		MAX_SIDEBAR_WIDTH,
+	);
 
 	const { setPanelType, setIsExpanded } = useSidebarStore.getState();
+
+	useEffect(() => {
+		useSidebarStore.getState().initializeSidebar();
+	}, []);
 
 	const handleSidebarIconClick = (type: string) => {
 		// If this panel is already open, close the sidebar.
@@ -190,10 +211,36 @@ export default function Sidebar() {
 				</VStack>
 			</Box>
 			{isExpanded && (
-				<SidebarPanel
-					panelType={panelType}
-					handleCloseSidebar={handleCloseSidebar}
-				/>
+				<Box position={"relative"} display={"flex"} height="100%">
+					<Box width={`${sidebarWidth}px`} height="100%">
+						<SidebarPanel
+							panelType={panelType}
+							handleCloseSidebar={handleCloseSidebar}
+						/>
+						<Box
+							onMouseDown={handleMouseDown}
+							width="3px"
+							_light={{
+								bg: "blackAlpha.200",
+								_hover: {
+									bg: "blackAlpha.300",
+								},
+							}}
+							_dark={{
+								bg: "whiteAlpha.300",
+								_hover: {
+									bg: "whiteAlpha.400",
+								},
+							}}
+							height="100%"
+							position="absolute"
+							right="0"
+							top="0"
+							cursor="col-resize"
+							zIndex="10"
+						/>
+					</Box>
+				</Box>
 			)}
 		</HStack>
 	);

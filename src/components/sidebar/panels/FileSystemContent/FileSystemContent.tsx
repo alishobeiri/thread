@@ -1,6 +1,5 @@
 import { AddIcon } from "@chakra-ui/icons";
 import {
-	Box,
 	Breadcrumb,
 	BreadcrumbItem,
 	BreadcrumbLink,
@@ -20,7 +19,6 @@ import {
 } from "../../../../assets/icons";
 import ConnectionManager from "../../../../services/connection/connectionManager";
 import { ThreadFile } from "../../../../types/file.types";
-import { SIDEPANEL_WIDTH } from "../../../../utils/constants/constants";
 import { isPlatformMac } from "../../../../utils/utils";
 import Spinner from "../../../misc/Spinner";
 import { useNotebookStore } from "../../../notebook/store/NotebookStore";
@@ -191,47 +189,41 @@ export const FileSystemContent = ({
 	};
 
 	return (
-		<Box
-			width={`${SIDEPANEL_WIDTH}px`}
-			height="100%"
-			borderRight="1px solid var(--chakra-colors-chakra-border-color)"
-		>
-			<VStack width="100%" height="100%" gap={0}>
-				<HStack
-					width="100%"
-					display={"flex"}
-					flex="0 0 auto"
-					justifyContent={"space-between"}
-					px={"12px"}
-					pt={"12px"}
-					pb={"4px"}
-				>
-					<Heading fontSize="smaller" textTransform={"uppercase"}>
-						Files
-					</Heading>
-					<SidebarIcon
-						label={`Close sidebar (${
-							isPlatformMac() ? "⌘ + B" : "Ctrl + B"
-						})`}
-						icon={<ToggleSidebar />}
-						onClick={handleCloseSidebar}
-					/>
-				</HStack>
-				<VStack
-					width="100%"
-					overflow="hidden"
-					display={"flex"}
-					flex="1"
-					flexDirection={"column"}
-					gap={0}
-				>
-					<FilesPanel
-						handleDeleteItem={deleteItem}
-						navigateToPath={navigateToPath}
-					/>
-				</VStack>
+		<VStack width="100%" height="100%" gap={0}>
+			<HStack
+				width="100%"
+				display={"flex"}
+				flex="0 0 auto"
+				justifyContent={"space-between"}
+				px={"12px"}
+				pt={"12px"}
+				pb={"4px"}
+			>
+				<Heading fontSize="smaller" textTransform={"uppercase"}>
+					Files
+				</Heading>
+				<SidebarIcon
+					label={`Close sidebar (${
+						isPlatformMac() ? "⌘ + B" : "Ctrl + B"
+					})`}
+					icon={<ToggleSidebar />}
+					onClick={handleCloseSidebar}
+				/>
+			</HStack>
+			<VStack
+				width="100%"
+				overflow="hidden"
+				display={"flex"}
+				flex="1"
+				flexDirection={"column"}
+				gap={0}
+			>
+				<FilesPanel
+					handleDeleteItem={deleteItem}
+					navigateToPath={navigateToPath}
+				/>
 			</VStack>
-		</Box>
+		</VStack>
 	);
 };
 
