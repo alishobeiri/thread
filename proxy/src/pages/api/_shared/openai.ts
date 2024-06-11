@@ -2,6 +2,7 @@ import OpenAI from "openai";
 
 // Azure example: https://github.com/openai/openai-node/blob/b595cd953a704dba2aef4c6c3fa431f83f18ccf9/examples/azure.ts
 const OPENAI_API_KEY: string = process.env.OPENAI_API_KEY || "";
+const OPENAI_BASE_URL: string = process.env.OPENAI_BASE_URL || "";
 const AZURE_API_KEY: string = process.env.AZURE_OPENAI_API_KEY || "";
 const AZURE_RESOURCE_NAME: string =
 	process.env.AZURE_OPENAI_RESOURCE_NAME || "";
@@ -25,9 +26,11 @@ const AZURE_CONFIG: {
 
 // OpenAI configuration
 const OPENAI_CONFIG: {
-	apiKey: string;
+        apiKey: string;
+        baseUrl: string;
 } = {
 	apiKey: OPENAI_API_KEY,
+        baseUrl: OPENAI_BASE_URL,
 };
 
 export const openai = new OpenAI(OPENAI_CONFIG);
@@ -38,6 +41,8 @@ export const getOpenAIClient = (apiKey?: string) => {
 	if (!apiKeyToUse) {
 		throw new Error("No OpenAI API key provided");
 	}
-
-	return new OpenAI({ apiKey: apiKeyToUse });
+        const config = OPENAI_BASE_URL ?
+        	{ apiKey: apiKeyToUse, baseUrl: OPENAI_BASE_URL } :
+        	{ apiKey: apiKeyToUse };
+	return new OpenAI(config);
 };
