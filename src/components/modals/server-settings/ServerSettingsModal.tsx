@@ -103,8 +103,7 @@ const ServerSettingsModal = () => {
 						<FormControl
 							id="api-key"
 							isInvalid={Boolean(
-								(tempServerURL || tempBaseOpenAIURL) &&
-									!tempOpenAIKey,
+								tempBaseOpenAIURL && !tempOpenAIKey,
 							)}
 						>
 							<FormLabel fontWeight="bold" fontSize="lg">
