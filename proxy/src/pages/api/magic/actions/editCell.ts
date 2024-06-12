@@ -39,14 +39,16 @@ export default async function handler(req: Request, res: NextApiResponse) {
 			currentNamespace,
 			theme,
 			uniqueId,
-			openaiApiKey,
+			openAIKey,
+			openAIBaseURL,
 		} = (await req.json()) as {
 			userRequest?: string;
 			currentCellSource?: string;
 			currentNamespace?: string;
 			theme: "dark" | "light";
 			uniqueId?: string;
-			openaiApiKey: string | undefined;
+			openAIKey?: string;
+			openAIBaseURL?: string;
 		};
 
 		const context = {
@@ -82,7 +84,7 @@ ${themePrompt}`,
 			},
 		];
 
-		const openai = getOpenAIClient(openaiApiKey);
+		const openai = getOpenAIClient(openAIKey, openAIBaseURL);
 
 		try {
 			const model = getModelForRequest(req);

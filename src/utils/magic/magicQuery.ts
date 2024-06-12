@@ -4,13 +4,13 @@ import {
 	MagicInputSelections,
 	useMagicInputStore,
 } from "../../components/input/MagicInputStore";
-import { useOpenAISettingsModalStore } from "../../components/modals/openai-settings/OpenAISettingsModalStore";
+import { useServerSettingsModalStore } from "../../components/modals/server-settings/ServerSettingsModalStore";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
 import { useChatStore } from "../../components/sidebar/chat/store/ChatStore";
 import ConnectionManager, {
 	useConnectionManagerStore,
 } from "../../services/connection/connectionManager";
-import { API_URL, MESSAGES_LOOKBACK_WINDOW } from "../constants/constants";
+import { MESSAGES_LOOKBACK_WINDOW } from "../constants/constants";
 import { trackEventData } from "../posthog";
 import {
 	getAppTheme,
@@ -51,6 +51,8 @@ export type ActionState = {
 };
 
 const getCells = () => useNotebookStore.getState().cells;
+
+const { getServerProxyUrl } = useServerSettingsModalStore.getState();
 
 type Actions = {
 	[key: string]: (
@@ -340,7 +342,7 @@ const generateCells = async (query: string, followUpRetries: number) => {
 			break;
 		}
 		const fetchAction = await threadFetch(
-			`${API_URL}/api/magic/actions/action`,
+			`${getServerProxyUrl()}/api/magic/actions/action`,
 			{
 				method: "POST",
 				headers: {
@@ -349,7 +351,7 @@ const generateCells = async (query: string, followUpRetries: number) => {
 				body: JSON.stringify({
 					actionState: actionState,
 					openaiApiKey:
-						useOpenAISettingsModalStore.getState().openAIKey,
+						useServerSettingsModalStore.getState().openAIKey,
 					uniqueId: ConnectionManager.getInstance().uniqueId,
 				}),
 			},

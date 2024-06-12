@@ -1,6 +1,8 @@
-import { API_URL } from "../../constants/constants";
+import { useServerSettingsModalStore } from "../../../components/modals/server-settings/ServerSettingsModalStore";
 import { ActionState } from "../magicQuery";
 import { sharedAction } from "./shared/utils";
+
+const { getServerProxyUrl } = useServerSettingsModalStore.getState();
 
 export async function* fixErrorAction(
 	actionState: ActionState,
@@ -9,7 +11,7 @@ export async function* fixErrorAction(
 	yield* sharedAction(
 		actionState,
 		wasAborted,
-		`${API_URL}/api/magic/actions/fixError`,
+		`${getServerProxyUrl()}/api/magic/actions/fixError`,
 		"code",
 	);
 }

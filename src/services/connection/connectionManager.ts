@@ -29,16 +29,21 @@ export interface ServerConnection {
 export type KernelStatus = Status;
 
 export interface ConnectionManagerStore {
+	uniqueId?: string;
+
 	kernelStatus: KernelStatus;
 	setKernelStatus: (kernelStatus: KernelStatus) => void;
 
 	isKernelSelectionModalOpen: boolean;
 	openKernelSelectionModal: () => void;
 	closeKernelSelectionModal: () => void;
+
+	setUniqueId: (uniqueId: string) => void;
 }
 
 export const useConnectionManagerStore = create<ConnectionManagerStore>(
 	(set, get) => ({
+		uniqueId: undefined,
 		kernelStatus: "unknown",
 		setKernelStatus(kernelStatus: KernelStatus) {
 			set(() => {
@@ -53,6 +58,8 @@ export const useConnectionManagerStore = create<ConnectionManagerStore>(
 			set(() => ({ isKernelSelectionModalOpen: true })),
 		closeKernelSelectionModal: () =>
 			set(() => ({ isKernelSelectionModalOpen: false })),
+
+		setUniqueId: (uniqueId: string) => set(() => ({ uniqueId })),
 	}),
 );
 
@@ -189,6 +196,11 @@ class ConnectionManager {
 			localStorage.setItem(`${userId}-token`, token);
 		}
 		this.token = token;
+	}
+
+	setUniqueId(uniqueId: string) {
+		this.uniqueId = uniqueId;
+		useConnectionManagerStore.getState().setUniqueId(uniqueId);
 	}
 
 	async getNewSession({

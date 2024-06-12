@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { useOpenAISettingsModalStore } from "../components/modals/openai-settings/OpenAISettingsModalStore";
 import { useQueryLimitModalStore } from "../components/modals/query-limit/QueryLimitModalStore";
+import { useServerSettingsModalStore } from "../components/modals/server-settings/ServerSettingsModalStore";
 
 interface ApiCallState {
 	apiCallCount: number;
@@ -30,10 +30,11 @@ const useApiCallStore = create<ApiCallState>((set) => ({
 	checkAndIncrementApiCallCount: () => {
 		const { apiCallCount, incrementApiCallCount } =
 			useApiCallStore.getState();
-   	        const openaiApiKey = useOpenAISettingsModalStore.getState().openAIKey;
-                const openaiApiBaseUrl = useOpenAISettingsModalStore.getState().baseUrl;
+		const openaiApiKey = useServerSettingsModalStore.getState().openAIKey;
+		const serverProxyURL =
+			useServerSettingsModalStore.getState().serverProxyURL;
 
-		if (openaiApiKey || openaiApiBaseUrl != '') {
+		if (openaiApiKey || serverProxyURL != "") {
 			return true;
 		}
 

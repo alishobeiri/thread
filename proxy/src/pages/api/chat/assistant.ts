@@ -99,7 +99,8 @@ export default async function handler(req: Request, res: NextApiResponse) {
 			currentChatNamespace,
 			activeCellSource,
 			uniqueId,
-			openaiApiKey,
+			openAIKey,
+			openAIBaseURL,
 			mostRelevantContextualCellsForQuery,
 		} = (await req.json()) as {
 			query: string;
@@ -109,10 +110,11 @@ export default async function handler(req: Request, res: NextApiResponse) {
 			activeCellSource: string;
 			mostRelevantContextualCellsForQuery: string[];
 			uniqueId?: string;
-			openaiApiKey: string | undefined;
+			openAIKey?: string;
+			openAIBaseURL?: string;
 		};
 
-		const openai = getOpenAIClient(openaiApiKey);
+		const openai = getOpenAIClient(openAIKey, openAIBaseURL);
 
 		if (!query) {
 			console.error("No message found in the request body");

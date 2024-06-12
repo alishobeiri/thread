@@ -190,12 +190,14 @@ export default async function handler(
 	if (req.method === "POST") {
 		let {
 			actionState,
-			openaiApiKey,
+			openAIKey,
+			openAIBaseURL,
 			uniqueId,
 		}: {
 			actionState: ActionState;
-			openaiApiKey: string | undefined;
-			uniqueId: string | undefined;
+			openAIKey?: string;
+			openAIBaseURL?: string;
+			uniqueId?: string;
 		} = req.body;
 
 		const systemPrompt = `You are a helpful agent that decides which action needs to be taken in the conversation. You only return the type of action to take, you do not try to perform the action or generate any other value related to performing the action.
@@ -221,7 +223,7 @@ Your instructions:
 			maskedActionFunction.parameters!.properties as any
 		).action.oneOf.map((action: any) => action.properties.type.const);
 
-		const openai = getOpenAIClient(openaiApiKey);
+		const openai = getOpenAIClient(openAIKey, openAIBaseURL);
 
 		try {
 			const model = getModelForRequest();

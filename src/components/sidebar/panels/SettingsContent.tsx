@@ -9,8 +9,9 @@ import {
 import { KeyIcon, KeyboardIcon, ToggleSidebar } from "../../../assets/icons";
 import { isPlatformMac } from "../../../utils/utils";
 import { useShortcutsModalStore } from "../../modals/cheat-sheet/ShortcutsModalStore";
-import { useOpenAISettingsModalStore } from "../../modals/openai-settings/OpenAISettingsModalStore";
+import { useServerSettingsModalStore } from "../../modals/server-settings/ServerSettingsModalStore";
 import SidebarIcon from "../buttons/SidebarIcon";
+import { ServerIcon } from "../../../assets/icons/svgs";
 
 export const ThemeToggle = () => {
 	const { colorMode, toggleColorMode } = useColorMode();
@@ -69,17 +70,17 @@ export const SettingsContent = ({
 					fontWeight={"600"}
 					fontFamily={"Space Grotesk"}
 				>
-					OpenAI API key
+					Server Settings
 				</Heading>
 				<IconButton
 					variant={"ghost"}
-					icon={<KeyIcon />}
-					aria-label="OpenAI key"
+					icon={<ServerIcon />}
+					aria-label="Server Settings"
 					size="md"
 					onClick={() => {
-						useOpenAISettingsModalStore
+						useServerSettingsModalStore
 							.getState()
-							.setShowOpenAISettingsModal(true);
+							.setShowServerSettingsModal(true);
 					}}
 				/>
 			</HStack>

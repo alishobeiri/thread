@@ -38,11 +38,13 @@ export const runtime = "edge";
 
 export default async function handler(req: Request, res: NextApiResponse) {
 	if (req.method === "POST") {
-		const { actionState, uniqueId, openaiApiKey } = (await req.json()) as {
-			actionState: ActionState;
-			uniqueId?: string;
-			openaiApiKey: string | undefined;
-		};
+		const { actionState, uniqueId, openAIKey, openAIBaseURL } =
+			(await req.json()) as {
+				actionState: ActionState;
+				uniqueId?: string;
+				openAIKey?: string;
+				openAIBaseURL?: string;
+			};
 
 		const systemPrompt = `You are Thread, a helpful Python code generating assistant that operates as part of an ensemble of agents and is tasked with the subtask of generating syntactically correct Python code.
 - The Python code you generate will be executed in order in a Jupyter Notebook environment.
@@ -76,7 +78,7 @@ Data analysis instructions:
 
 - When creating a Plotly plot, please use 'fig.show()' to display the plot.`;
 
-		const openai = getOpenAIClient(openaiApiKey);
+		const openai = getOpenAIClient(openAIKey, openAIBaseURL);
 		const messages = formatMessages(systemPrompt, actionState, 20e3);
 
 		try {

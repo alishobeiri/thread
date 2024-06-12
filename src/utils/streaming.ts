@@ -1,7 +1,10 @@
 import { ToolCall } from "ai";
 import { parse } from "best-effort-json-parser";
 import { useCallback, useEffect, useState } from "react";
+import { useServerSettingsModalStore } from "../components/modals/server-settings/ServerSettingsModalStore";
 import { threadFetch } from "./utils";
+
+const { getAdditionalRequestMetadata } = useServerSettingsModalStore.getState();
 
 interface MakeStreamingRequestParams {
 	url: string;
@@ -31,7 +34,10 @@ export async function* makeStreamingRequest({
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(payload),
+			body: JSON.stringify({
+				...payload,
+				...getAdditionalRequestMetadata(),
+			}),
 		});
 
 		const data = res.body;

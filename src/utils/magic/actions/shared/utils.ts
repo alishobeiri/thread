@@ -1,5 +1,3 @@
-import { useOpenAISettingsModalStore } from "../../../../components/modals/openai-settings/OpenAISettingsModalStore";
-import ConnectionManager from "../../../../services/connection/connectionManager";
 import { makeStreamingFunctionRequest } from "../../../streaming";
 import { ActionState } from "../../magicQuery";
 
@@ -14,8 +12,6 @@ export async function* sharedAction(
 		method: "POST",
 		payload: {
 			actionState: actionState,
-			uniqueId: ConnectionManager.getInstance().uniqueId,
-			openaiApiKey: useOpenAISettingsModalStore.getState().openAIKey,
 		},
 		shouldCancel: wasAborted,
 	});

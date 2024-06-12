@@ -26,23 +26,27 @@ const AZURE_CONFIG: {
 
 // OpenAI configuration
 const OPENAI_CONFIG: {
-        apiKey: string;
-        baseUrl: string;
+	apiKey: string;
+	baseURL: string;
 } = {
 	apiKey: OPENAI_API_KEY,
-        baseUrl: OPENAI_BASE_URL,
+	baseURL: OPENAI_BASE_URL,
 };
 
 export const openai = new OpenAI(OPENAI_CONFIG);
 export const azure_openai = new OpenAI(AZURE_CONFIG);
 
-export const getOpenAIClient = (apiKey?: string) => {
+export const getOpenAIClient = (apiKey?: string, serverUrl?: string) => {
 	const apiKeyToUse = apiKey || OPENAI_API_KEY;
 	if (!apiKeyToUse) {
 		throw new Error("No OpenAI API key provided");
 	}
-        const config = OPENAI_BASE_URL ?
-        	{ apiKey: apiKeyToUse, baseUrl: OPENAI_BASE_URL } :
-        	{ apiKey: apiKeyToUse };
+	const baseUrl = serverUrl ?? OPENAI_BASE_URL;
+	let config;
+	if (baseUrl) {
+		config = { apiKey: apiKeyToUse, baseURL: baseUrl };
+	} else {
+		config = { apiKey: apiKeyToUse };
+	}
 	return new OpenAI(config);
 };

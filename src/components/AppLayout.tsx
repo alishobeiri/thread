@@ -4,7 +4,7 @@ import { ToastContainer } from "../theme";
 import ShortcutsCheatSheetModal from "./modals/cheat-sheet/ShortcutsCheatSheetModal";
 import FileViewModal from "./modals/file-view/FileViewModal";
 import KernelSelectionModal from "./modals/kernel-selection/KernelSelectionModal";
-import OpenAISettingsModal from "./modals/openai-settings/OpenAISettingsModal";
+import ServerSettingsModal from "./modals/server-settings/ServerSettingsModal";
 import QueryLimitModal from "./modals/query-limit/QueryLimitModal";
 import { initializeServerConnection } from "./notebook/Notebook";
 import { useNotebookStore } from "./notebook/store/NotebookStore";
@@ -44,7 +44,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 				<KernelSelectionModal />
 				<FileViewModal />
 				<QueryLimitModal />
-				<OpenAISettingsModal />
+				<ServerSettingsModal />
 				{children}
 			</HStack>
 		</VStack>

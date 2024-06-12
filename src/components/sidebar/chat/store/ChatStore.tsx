@@ -6,7 +6,7 @@ import { API_URL, CHAT_PANEL_ID } from "../../../../utils/constants/constants";
 import { mostRelevantCellsForQuery } from "../../../../utils/embeddings";
 import { formatCellOutputs } from "../../../../utils/magic/messages";
 import { makeStreamingRequest } from "../../../../utils/streaming";
-import { useOpenAISettingsModalStore } from "../../../modals/openai-settings/OpenAISettingsModalStore";
+import { useServerSettingsModalStore } from "../../../modals/server-settings/ServerSettingsModalStore";
 import { useNotebookStore } from "../../../notebook/store/NotebookStore";
 import { useSidebarStore } from "../../store/SidebarStore";
 export type UserType = "assistant" | "user";
@@ -148,10 +148,12 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 				},
 			);
 
-			let assistantMessageId;
+			const { getServerProxyUrl } =
+				useServerSettingsModalStore.getState();
 
+			let assistantMessageId;
 			const stream = makeStreamingRequest({
-				url: `${API_URL}/api/chat/assistant`,
+				url: `${getServerProxyUrl()}/api/chat/assistant`,
 				method: "POST",
 				payload: {
 					query,
@@ -162,8 +164,6 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 					mostRelevantContextualCellsForQuery:
 						mostRelevantCellsWithFormattedOutputs,
 					uniqueId: ConnectionManager.getInstance().uniqueId,
-					openaiApiKey:
-						useOpenAISettingsModalStore.getState().openAIKey,
 				},
 				shouldCancel: () => {
 					const aborted = abortController.signal.aborted;

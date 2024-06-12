@@ -38,11 +38,13 @@ export const runtime = "edge";
 
 export default async function handler(req: Request, res: NextApiResponse) {
 	if (req.method === "POST") {
-		const { actionState, uniqueId, openaiApiKey } = (await req.json()) as {
-			actionState: ActionState;
-			uniqueId?: string;
-			openaiApiKey?: string;
-		};
+		const { actionState, uniqueId, openAIKey, openAIBaseURL } =
+			(await req.json()) as {
+				actionState: ActionState;
+				uniqueId?: string;
+				openAIKey?: string;
+				openAIBaseURL?: string;
+			};
 
 		const systemPrompt = `You are Thread, a helpful Python code fixing assistant that operates as part of an ensemble of agents and is tasked with the subtask of fixing Python code that encountered syntax, runtime or other errors.
 - The Python code you generate will be executed in the same Jupyter Notebook environment where the other error occurred. 
@@ -61,7 +63,7 @@ Your instructions:
 		];
 
 		try {
-			const openai = getOpenAIClient(openaiApiKey);
+			const openai = getOpenAIClient(openAIKey, openAIBaseURL);
 			const model = getModelForRequest(req);
 
 			const response = await openai.chat.completions.create({
