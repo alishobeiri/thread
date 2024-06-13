@@ -126,7 +126,22 @@ const Launcher = () => {
 							return {
 								label: kernelSpecs.kernelspecs[key]!
 									.display_name,
-								icon: <PythonIcon boxSize={"36px"} />,
+								icon: kernelSpecs.kernelspecs[key]?.resources ? (
+									<img
+										src={
+											kernelSpecs.kernelspecs[key]
+												?.resources["logo-svg"]
+										}
+										alt={
+											kernelSpecs.kernelspecs[key]!
+												.display_name
+										}
+										height="36px"
+										width="36px"
+									/>
+								) : (
+									<PythonIcon boxSize={"36px"} />
+								),
 								actionHandler: () => {
 									createNewNotebook(key);
 								},
