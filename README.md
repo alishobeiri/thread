@@ -126,3 +126,7 @@ Then:
 ```
 yarn dev --port 5001
 ```
+
+# Why we built Thread
+
+We initially got the idea when building [Vizly](https://vizly.fyi/) a tool that lets non-technical users ask questions from their data. While Vizly is powerful at performing data transformations, as engineers, we often felt that natural language didn't give us enough freedom to edit the code that was generated or to explore the data further for ourselves. That is what gave us the inspiration to start Thread.
