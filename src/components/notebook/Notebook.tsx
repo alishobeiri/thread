@@ -371,6 +371,10 @@ const CellDivider = memo(({ index }: { index: number }) => {
 						</Tooltip>
 					</Flex>
 					<Divider flex={1} />
+					<Text fontSize="12px" color="gray.500" mx={2}>
+						Click to add cell
+					</Text>
+					<Divider flex={1} />
 				</HStack>
 			</PopoverTrigger>
 			<PopoverContent
@@ -402,15 +406,18 @@ const Cells = () => {
 				const active = i == activeCellIndex;
 
 				return (
-					<Cell
-						key={cell.id as string}
-						cell={cell}
-						isLastCell={i === cells.length - 1}
-						index={i}
-						active={active}
-						isExecuting={executingCells.has(cellId)}
-						isBeingEdited={notebookMode === "edit" && active}
-					/>
+					<>
+						<CellDivider index={i} />
+						<Cell
+							key={cell.id as string}
+							cell={cell}
+							isLastCell={i === cells.length - 1}
+							index={i}
+							active={active}
+							isExecuting={executingCells.has(cellId)}
+							isBeingEdited={notebookMode === "edit" && active}
+						/>
+					</>
 				);
 			})}
 			<HStack>
