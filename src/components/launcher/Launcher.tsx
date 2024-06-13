@@ -6,6 +6,7 @@ import {
 	InfoIcon,
 	JupyterIcon,
 	PlusIcon,
+	PythonIcon,
 } from "../../assets/icons";
 import ConnectionManager from "../../services/connection/connectionManager";
 import { useNotebookStore } from "../notebook/store/NotebookStore";
@@ -125,17 +126,7 @@ const Launcher = () => {
 							return {
 								label: kernelSpecs.kernelspecs[key]!
 									.display_name,
-								icon: (
-									<img
-										src={`${kernelSpecs.kernelspecs[key]?.resources["logo-svg"]}`}
-										alt={
-											kernelSpecs.kernelspecs[key]!
-												.display_name
-										}
-										height="36px"
-										width="36px"
-									/>
-								),
+								icon: <PythonIcon boxSize={"36px"} />,
 								actionHandler: () => {
 									createNewNotebook(key);
 								},
