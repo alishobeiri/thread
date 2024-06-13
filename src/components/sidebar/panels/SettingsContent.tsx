@@ -5,7 +5,9 @@ import {
 	IconButton,
 	VStack,
 	useColorMode,
+	Box,
 } from "@chakra-ui/react";
+import { useColorModeValue } from "@chakra-ui/react";
 import { KeyIcon, KeyboardIcon, ToggleSidebar } from "../../../assets/icons";
 import { isPlatformMac } from "../../../utils/utils";
 import { useShortcutsModalStore } from "../../modals/cheat-sheet/ShortcutsModalStore";
@@ -13,27 +15,21 @@ import { useServerSettingsModalStore } from "../../modals/server-settings/Server
 import SidebarIcon from "../buttons/SidebarIcon";
 import { ServerIcon } from "../../../assets/icons/svgs";
 
-export const ThemeToggle = () => {
-	const { colorMode, toggleColorMode } = useColorMode();
-	return (
-		<IconButton
-			icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-			onClick={toggleColorMode}
-			variant="ghost"
-			aria-label="Toggle theme"
-		/>
-	);
-};
-
 export const SettingsContent = ({
 	handleCloseSidebar,
 }: {
 	handleCloseSidebar: () => void;
 }) => {
+	const { colorMode, toggleColorMode } = useColorMode();
 	const { setShowShortcutsModal } = useShortcutsModalStore.getState();
 	const handleOpenShortcuts = () => {
 		setShowShortcutsModal(true);
 	};
+
+	const handleServerSettingsOpen = () => {
+		useServerSettingsModalStore.getState().setShowServerSettingsModal(true);
+	};
+
 	return (
 		<VStack width="100%" height="100%" gap={3}>
 			<HStack
@@ -58,70 +54,75 @@ export const SettingsContent = ({
 					onClick={handleCloseSidebar}
 				/>
 			</HStack>
-			<HStack
+			<Box
+				as="button"
 				width="100%"
-				display={"flex"}
-				flex="0 0 auto"
-				justifyContent={"space-between"}
-				paddingX={"12px"}
+				padding={"12px"}
+				_hover={{ backgroundColor: useColorModeValue("gray.100", "gray.700") }}
+				onClick={handleServerSettingsOpen}
 			>
-				<Heading
-					fontSize="smaller"
-					fontWeight={"600"}
-					fontFamily={"Space Grotesk"}
+				<HStack
+					width="100%"
+					display={"flex"}
+					flex="0 0 auto"
+					justifyContent={"space-between"}
 				>
-					Server Settings
-				</Heading>
-				<IconButton
-					variant={"ghost"}
-					icon={<ServerIcon />}
-					aria-label="Server Settings"
-					size="md"
-					onClick={() => {
-						useServerSettingsModalStore
-							.getState()
-							.setShowServerSettingsModal(true);
-					}}
-				/>
-			</HStack>
-			<HStack
+					<Heading
+						fontSize="smaller"
+						fontWeight={"600"}
+						fontFamily={"Space Grotesk"}
+					>
+						Server Settings
+					</Heading>
+					<ServerIcon />
+				</HStack>
+			</Box>
+			<Box
+				as="button"
 				width="100%"
-				display={"flex"}
-				flex="0 0 auto"
-				justifyContent={"space-between"}
-				paddingX={"12px"}
+				padding={"12px"}
+				_hover={{ backgroundColor: useColorModeValue("gray.100", "gray.700") }}
+				onClick={toggleColorMode}
 			>
-				<Heading
-					fontSize="smaller"
-					fontWeight={"600"}
-					fontFamily={"Space Grotesk"}
+				<HStack
+					width="100%"
+					display={"flex"}
+					flex="0 0 auto"
+					justifyContent={"space-between"}
 				>
-					Theme
-				</Heading>
-				<ThemeToggle />
-			</HStack>
-			<HStack
+					<Heading
+						fontSize="smaller"
+						fontWeight={"600"}
+						fontFamily={"Space Grotesk"}
+					>
+						Theme
+					</Heading>
+					{colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+				</HStack>
+			</Box>
+			<Box
+				as="button"
 				width="100%"
-				display={"flex"}
-				flex="0 0 auto"
-				justifyContent={"space-between"}
-				paddingX={"12px"}
+				padding={"12px"}
+				_hover={{ backgroundColor: useColorModeValue("gray.100", "gray.700") }}
+				onClick={handleOpenShortcuts}
 			>
-				<Heading
-					fontSize="smaller"
-					fontWeight={"600"}
-					fontFamily={"Space Grotesk"}
+				<HStack
+					width="100%"
+					display={"flex"}
+					flex="0 0 auto"
+					justifyContent={"space-between"}
 				>
-					Shortcuts
-				</Heading>
-				<IconButton
-					variant={"ghost"}
-					icon={<KeyboardIcon />}
-					aria-label="Keyboard shortcuts"
-					size="md"
-					onClick={handleOpenShortcuts}
-				/>
-			</HStack>
+					<Heading
+						fontSize="smaller"
+						fontWeight={"600"}
+						fontFamily={"Space Grotesk"}
+					>
+						Shortcuts
+					</Heading>
+					<KeyboardIcon />
+				</HStack>
+			</Box>
 		</VStack>
 	);
 };
