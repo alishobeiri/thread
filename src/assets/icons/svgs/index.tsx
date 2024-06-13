@@ -1346,5 +1346,86 @@ export const ServerIcon = createIcon({
 			fill="currentColor"
 			d="M64 32C28.7 32 0 60.7 0 96v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm48 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zM64 288c-35.3 0-64 28.7-64 64v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V352c0-35.3-28.7-64-64-64H64zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm56 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"
 		></path>
-		),
+	),
+});
+
+export const InsertCellAboveIcon = createIcon({
+	displayName: "InsertCellAboveIcon",
+	viewBox: "0 0 14 14",
+	path: (
+		<>
+			<g
+				xmlns="http://www.w3.org/2000/svg"
+				clip-path="url(#clip0_137_19492)"
+			>
+				<path
+					className="jp-icon3"
+					d="M4.75 4.93066H6.625V6.80566C6.625 7.01191 6.79375 7.18066 7 7.18066C7.20625 7.18066 7.375 7.01191 7.375 6.80566V4.93066H9.25C9.45625 4.93066 9.625 4.76191 9.625 4.55566C9.625 4.34941 9.45625 4.18066 9.25 4.18066H7.375V2.30566C7.375 2.09941 7.20625 1.93066 7 1.93066C6.79375 1.93066 6.625 2.09941 6.625 2.30566V4.18066H4.75C4.54375 4.18066 4.375 4.34941 4.375 4.55566C4.375 4.76191 4.54375 4.93066 4.75 4.93066Z"
+					fill="currentColor"
+					stroke="currentColor"
+					stroke-width="0.7"
+				></path>
+			</g>
+			<path
+				xmlns="http://www.w3.org/2000/svg"
+				className="jp-icon3"
+				fill-rule="evenodd"
+				clip-rule="evenodd"
+				d="M11.5 9.5V11.5L2.5 11.5V9.5L11.5 9.5ZM12 8C12.5523 8 13 8.44772 13 9V12C13 12.5523 12.5523 13 12 13L2 13C1.44772 13 1 12.5523 1 12V9C1 8.44772 1.44771 8 2 8L12 8Z"
+				fill="currentColor"
+			></path>
+			<defs xmlns="http://www.w3.org/2000/svg">
+				<clipPath id="clip0_137_19492">
+					<rect
+						className="jp-icon3"
+						width="6"
+						height="6"
+						fill="currentColor"
+						transform="matrix(-1 0 0 1 10 1.55566)"
+					></rect>
+				</clipPath>
+			</defs>
+		</>
+	),
+});
+
+export const InsertCellBelowIcon = createIcon({
+	displayName: "InsertCellBelowIcon",
+	viewBox: "0 0 14 14",
+	path: (
+		<>
+			<g
+				xmlns="http://www.w3.org/2000/svg"
+				clip-path="url(#clip0_137_19498)"
+				fill="currentColor"
+			>
+				<path
+					className="jp-icon3"
+					d="M9.25 10.0693L7.375 10.0693L7.375 8.19434C7.375 7.98809 7.20625 7.81934 7 7.81934C6.79375 7.81934 6.625 7.98809 6.625 8.19434L6.625 10.0693L4.75 10.0693C4.54375 10.0693 4.375 10.2381 4.375 10.4443C4.375 10.6506 4.54375 10.8193 4.75 10.8193L6.625 10.8193L6.625 12.6943C6.625 12.9006 6.79375 13.0693 7 13.0693C7.20625 13.0693 7.375 12.9006 7.375 12.6943L7.375 10.8193L9.25 10.8193C9.45625 10.8193 9.625 10.6506 9.625 10.4443C9.625 10.2381 9.45625 10.0693 9.25 10.0693Z"
+					fill="currentColor"
+					stroke="currentColor"
+					stroke-width="0.7"
+				></path>
+			</g>
+			<path
+				xmlns="http://www.w3.org/2000/svg"
+				className="jp-icon3"
+				fill-rule="evenodd"
+				clip-rule="evenodd"
+				d="M2.5 5.5L2.5 3.5L11.5 3.5L11.5 5.5L2.5 5.5ZM2 7C1.44772 7 1 6.55228 1 6L1 3C1 2.44772 1.44772 2 2 2L12 2C12.5523 2 13 2.44772 13 3L13 6C13 6.55229 12.5523 7 12 7L2 7Z"
+				fill="currentColor"
+			></path>
+			<defs xmlns="http://www.w3.org/2000/svg">
+				<clipPath id="clip0_137_19498">
+					<rect
+						className="jp-icon3"
+						width="6"
+						height="6"
+						fill="currentColor"
+						transform="matrix(1 1.74846e-07 1.74846e-07 -1 4 13.4443)"
+					></rect>
+				</clipPath>
+			</defs>
+		</>
+	),
 });

@@ -9,6 +9,10 @@ import { HStack, IconButton, Tooltip } from "@chakra-ui/react";
 import { captureException } from "@sentry/nextjs";
 import React, { useState } from "react";
 import { useNotebookStore } from "../../notebook/store/NotebookStore";
+import {
+	InsertCellAboveIcon,
+	InsertCellBelowIcon,
+} from "../../../assets/icons";
 
 interface InputAreaToolbarProps {
 	active: boolean;
@@ -121,6 +125,47 @@ const InputAreaToolbar: React.FC<InputAreaToolbarProps> = ({
 						variant="ghost"
 						colorScheme="orange"
 						isDisabled={!source}
+					/>
+				</Tooltip>
+				<Tooltip
+					label="Add cell above"
+					size="sm"
+					fontSize={"small"}
+					hasArrow
+				>
+					<IconButton
+						size="xs"
+						colorScheme="orange"
+						aria-label="Add cell above"
+						icon={<InsertCellAboveIcon />}
+						onClick={(event) => {
+							useNotebookStore.getState().addCellAtIndex(index);
+							event.preventDefault();
+							event.stopPropagation();
+						}}
+						variant="ghost"
+					/>
+				</Tooltip>
+				<Tooltip
+					label="Add cell below"
+					size="sm"
+					fontSize={"small"}
+					hasArrow
+				>
+					<IconButton
+						size="xs"
+						colorScheme="orange"
+						aria-label="Add cell below"
+						// Add your custom SVG here
+						icon={<InsertCellBelowIcon />}
+						onClick={(event) => {
+							useNotebookStore
+								.getState()
+								.addCellAtIndex(index + 1);
+							event.preventDefault();
+							event.stopPropagation();
+						}}
+						variant="ghost"
 					/>
 				</Tooltip>
 				<Tooltip
