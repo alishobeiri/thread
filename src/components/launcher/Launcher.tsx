@@ -126,7 +126,8 @@ const Launcher = () => {
 							return {
 								label: kernelSpecs.kernelspecs[key]!
 									.display_name,
-								icon: kernelSpecs.kernelspecs[key]?.resources ? (
+								icon: kernelSpecs.kernelspecs[key]
+									?.resources ? (
 									<img
 										src={
 											kernelSpecs.kernelspecs[key]
@@ -200,7 +201,7 @@ const Launcher = () => {
 					label: "Discord",
 					icon: <DiscordIcon boxSize={"36px"} />,
 					actionHandler: () =>
-						window.open("https://discord.gg/gkB2sWu8", "_blank"),
+						window.open("https://discord.gg/ZuHq9hDs2y", "_blank"),
 				},
 			],
 		},
