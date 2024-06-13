@@ -77,7 +77,7 @@ export default function ShortcutsCheatSheetModal() {
 								keystroke: isPlatformMac()
 									? "⌘ + K"
 									: "Ctrl + K",
-								description: "Open spotlight",
+								description: "Focus input / Toggle input modes",
 							},
 							{
 								keystroke: "↑↓",

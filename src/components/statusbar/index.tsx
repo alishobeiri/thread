@@ -7,14 +7,13 @@ import {
 	useBreakpointValue,
 } from "@chakra-ui/react";
 
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import {
 	CircleIcon,
-	CloudSaveIcon,
 	PythonIcon,
 	RefreshIcon,
+	SaveIcon,
 } from "../../assets/icons";
 import ConnectionManager, {
 	useConnectionManagerStore,
@@ -27,7 +26,7 @@ export const SaveIndicator = () => {
 	const isSaving = useNotebookStore((state) => state.isSaving);
 	const [showText, setShowText] = useState(true);
 
-	const Icon = isSaving ? RefreshIcon : CloudSaveIcon;
+	const leftIcon = isSaving ? <RefreshIcon /> : <SaveIcon mb={0.25} />;
 	const text = isSaving ? "Saving..." : "Saved";
 
 	useEffect(() => {
@@ -52,7 +51,7 @@ export const SaveIndicator = () => {
 			size="xs"
 			variant="ghost"
 			backgroundColor="var(--chakra-colors-chakra-body-bg)"
-			leftIcon={<Icon />}
+			leftIcon={leftIcon}
 			height="100%"
 			borderRadius={"none"}
 			fontWeight={500}

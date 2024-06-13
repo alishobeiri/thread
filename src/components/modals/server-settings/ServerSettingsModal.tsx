@@ -13,8 +13,8 @@ import {
 	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
-	VStack,
 	Text,
+	VStack,
 	useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -96,7 +96,7 @@ const ServerSettingsModal = () => {
 		<Modal isOpen={isOpen} onClose={handleClose} size={["sm", "md", "lg"]}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Settings</ModalHeader>
+				<ModalHeader>Server Settings</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody>
 					<VStack spacing={10}>

@@ -2,18 +2,16 @@ import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
 	HStack,
 	Heading,
-	IconButton,
 	VStack,
 	useColorMode,
-	Box,
+	useColorModeValue,
 } from "@chakra-ui/react";
-import { useColorModeValue } from "@chakra-ui/react";
-import { KeyIcon, KeyboardIcon, ToggleSidebar } from "../../../assets/icons";
+import { KeyboardIcon, ToggleSidebar } from "../../../assets/icons";
+import { ServerIcon } from "../../../assets/icons/svgs";
 import { isPlatformMac } from "../../../utils/utils";
 import { useShortcutsModalStore } from "../../modals/cheat-sheet/ShortcutsModalStore";
 import { useServerSettingsModalStore } from "../../modals/server-settings/ServerSettingsModalStore";
 import SidebarIcon from "../buttons/SidebarIcon";
-import { ServerIcon } from "../../../assets/icons/svgs";
 
 export const SettingsContent = ({
 	handleCloseSidebar,
@@ -24,6 +22,11 @@ export const SettingsContent = ({
 	const { setShowShortcutsModal } = useShortcutsModalStore.getState();
 	const handleOpenShortcuts = () => {
 		setShowShortcutsModal(true);
+	};
+
+	const hoverBackgroundColor = useColorModeValue("gray.100", "gray.700");
+	const hoverStyles = {
+		background: hoverBackgroundColor,
 	};
 
 	const handleServerSettingsOpen = () => {
@@ -54,15 +57,13 @@ export const SettingsContent = ({
 					onClick={handleCloseSidebar}
 				/>
 			</HStack>
-			<Box
-				as="button"
-				width="100%"
-				padding={"12px"}
-				_hover={{ backgroundColor: useColorModeValue("gray.100", "gray.700") }}
-				onClick={handleServerSettingsOpen}
-			>
+			<VStack width="100%" gap={2}>
 				<HStack
+					as={"button"}
 					width="100%"
+					padding={"12px"}
+					_hover={hoverStyles}
+					onClick={handleServerSettingsOpen}
 					display={"flex"}
 					flex="0 0 auto"
 					justifyContent={"space-between"}
@@ -74,21 +75,17 @@ export const SettingsContent = ({
 					>
 						Server Settings
 					</Heading>
-					<ServerIcon />
+					<ServerIcon mr={2} boxSize="15px" />
 				</HStack>
-			</Box>
-			<Box
-				as="button"
-				width="100%"
-				padding={"12px"}
-				_hover={{ backgroundColor: useColorModeValue("gray.100", "gray.700") }}
-				onClick={toggleColorMode}
-			>
 				<HStack
+					as="button"
 					width="100%"
+					padding={"12px"}
+					_hover={hoverStyles}
 					display={"flex"}
 					flex="0 0 auto"
 					justifyContent={"space-between"}
+					onClick={toggleColorMode}
 				>
 					<Heading
 						fontSize="smaller"
@@ -97,21 +94,21 @@ export const SettingsContent = ({
 					>
 						Theme
 					</Heading>
-					{colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+					{colorMode === "light" ? (
+						<MoonIcon mr={2} boxSize="15px" />
+					) : (
+						<SunIcon mr={2} boxSize="15px" />
+					)}
 				</HStack>
-			</Box>
-			<Box
-				as="button"
-				width="100%"
-				padding={"12px"}
-				_hover={{ backgroundColor: useColorModeValue("gray.100", "gray.700") }}
-				onClick={handleOpenShortcuts}
-			>
 				<HStack
+					as="button"
 					width="100%"
+					padding={"12px"}
+					_hover={hoverStyles}
 					display={"flex"}
 					flex="0 0 auto"
 					justifyContent={"space-between"}
+					onClick={handleOpenShortcuts}
 				>
 					<Heading
 						fontSize="smaller"
@@ -120,9 +117,9 @@ export const SettingsContent = ({
 					>
 						Shortcuts
 					</Heading>
-					<KeyboardIcon />
+					<KeyboardIcon mr={2} boxSize="15px" />
 				</HStack>
-			</Box>
+			</VStack>
 		</VStack>
 	);
 };
