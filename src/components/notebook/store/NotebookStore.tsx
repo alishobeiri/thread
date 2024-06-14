@@ -21,6 +21,7 @@ import { trackEventData } from "../../../utils/posthog";
 import { newUuid } from "../../../utils/utils";
 import { enableCommandMode } from "../../cell/actions/actions";
 import { refresh } from "../../sidebar/filesystem/FileSystemToolbarUtils";
+import debounce from "lodash.debounce";
 export type ICellTypes = "markdown" | "code" | "rawNB";
 export type NotebookMode = "command" | "edit";
 export type ExecutionCountTypes = number | null;
@@ -38,6 +39,10 @@ export const createNewCell = (): ICell => ({
 	metadata: {},
 	execution_count: null,
 });
+
+const debounceFn = debounce(async (fn: () => Promise<void>) => {
+	await fn();
+}, 2000);
 
 export interface INotebookStore {
 	files: ThreadFile[];
@@ -1140,56 +1145,63 @@ export const useNotebookStore = create<INotebookStore>()(
 					refreshFiles(path);
 				},
 				handleSave: async () => {
-					const notebookPath = await get().getNotebookPath();
-					const connectionManager = ConnectionManager.getInstance();
-					if (
-						!notebookPath ||
-						!connectionManager ||
-						!connectionManager.serviceManager
-					) {
-						return;
-					}
-
-					const fileContents = get().getFileContents();
-					if (!fileContents || !fileContents.cells) return;
-					const metadata = get().metadata;
-					const filePath = "./" + get().getNotebookPath()!;
-
-					set(() => ({ isSaving: true }));
-
-					if (fileContents && fileContents.cells) {
-						// Copy over the metadata before saving
-						fileContents.metadata = metadata;
-
-						// Copy over the cells before saving
-						fileContents.cells = get().cells;
-						try {
-							ConnectionManager.getInstance().serviceManager?.contents.save(
-								filePath,
-								{
-									type: "notebook",
-									content: {
-										...get().fileContents,
-										cells: get().cells.map((cell) => {
-											if (cell.cell_type == "markdown") {
-												delete cell.id;
-											}
-											return cell;
-										}),
-										metadata: get().metadata,
-									},
-								},
-							);
-						} catch (e) {
-							console.error(
-								"Error encountered while saving: ",
-								e,
-							);
+					const saveNotebook = async () => {
+						const notebookPath = await get().getNotebookPath();
+						const connectionManager =
+							ConnectionManager.getInstance();
+						if (
+							!notebookPath ||
+							!connectionManager ||
+							!connectionManager.serviceManager
+						) {
+							return;
 						}
-					}
-					set(() => ({ isSaving: false }));
 
-					get().refreshFiles(get().path, true);
+						const fileContents = get().getFileContents();
+						if (!fileContents || !fileContents.cells) return;
+						const metadata = get().metadata;
+						const filePath = "./" + get().getNotebookPath()!;
+
+						set(() => ({ isSaving: true }));
+
+						if (fileContents && fileContents.cells) {
+							// Copy over the metadata before saving
+							fileContents.metadata = metadata;
+
+							// Copy over the cells before saving
+							fileContents.cells = get().cells;
+							try {
+								ConnectionManager.getInstance().serviceManager?.contents.save(
+									filePath,
+									{
+										type: "notebook",
+										content: {
+											...get().fileContents,
+											cells: get().cells.map((cell) => {
+												if (
+													cell.cell_type == "markdown"
+												) {
+													delete cell.id;
+												}
+												return cell;
+											}),
+											metadata: get().metadata,
+										},
+									},
+								);
+							} catch (e) {
+								console.error(
+									"Error encountered while saving: ",
+									e,
+								);
+							}
+						}
+						set(() => ({ isSaving: false }));
+
+						get().refreshFiles(get().path, true);
+					};
+
+					debounceFn(saveNotebook);
 				},
 				isSaving: false,
 				lastSaveTime: -1,

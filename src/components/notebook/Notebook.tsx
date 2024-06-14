@@ -134,12 +134,6 @@ export const MainPanel = () => {
 	const activeCellIndex = useNotebookStore((state) => state.activeCellIndex);
 	const fileContents = useNotebookStore((state) => state.fileContents);
 	const cells = useNotebookStore((state) => state.cells);
-	const { handleScroll, setUserHasScrolled } = useScrollToBottom(
-		mainPanelRef,
-		50,
-		cells,
-		useNotebookStore((state) => state.isGeneratingCells),
-	);
 
 	useEffect(() => {
 		if (isLoadingNotebook) return;
@@ -148,9 +142,6 @@ export const MainPanel = () => {
 			top: 0,
 		});
 		enableCommandMode();
-
-		// Reset the auto scroll behavior
-		setUserHasScrolled(false);
 	}, [isLoadingNotebook]);
 
 	useEffect(() => {
@@ -222,7 +213,6 @@ export const MainPanel = () => {
 				minWidth="0"
 				position={"relative"}
 				pt="64px"
-				onScroll={handleScroll}
 			>
 				<Box
 					position={"relative"}

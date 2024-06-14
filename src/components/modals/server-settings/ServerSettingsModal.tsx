@@ -18,28 +18,22 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useServerSettingsModalStore } from "./ServerSettingsModalStore";
+import { useSettingsStore } from "./SettingsStore";
 
 const ServerSettingsModal = () => {
-	const isOpen = useServerSettingsModalStore(
-		(state) => state.showServerSettingsModal,
-	);
-	const setIsOpen = useServerSettingsModalStore(
+	const isOpen = useSettingsStore((state) => state.showServerSettingsModal);
+	const setIsOpen = useSettingsStore(
 		(state) => state.setShowServerSettingsModal,
 	);
 	const handleClose = () => {
 		setIsOpen(false);
 	};
 
-	useServerSettingsModalStore.getState().fetchSettings();
-	const openaiKey = useServerSettingsModalStore((state) => state.openAIKey);
-	const serverProxyURL = useServerSettingsModalStore(
-		(state) => state.serverProxyURL,
-	);
-	const openAIBaseUrl = useServerSettingsModalStore(
-		(state) => state.openAIBaseURL,
-	);
-	const { setSettings } = useServerSettingsModalStore.getState();
+	useSettingsStore.getState().fetchSettings();
+	const openaiKey = useSettingsStore((state) => state.openAIKey);
+	const serverProxyURL = useSettingsStore((state) => state.serverProxyURL);
+	const openAIBaseUrl = useSettingsStore((state) => state.openAIBaseURL);
+	const { setSettings } = useSettingsStore.getState();
 	const [show, setShow] = useState(false);
 	const [tempOpenAIKey, setTempOpenAIKey] = useState("");
 	const [tempServerURL, setTempServerURL] = useState("");

@@ -1,7 +1,7 @@
 import useCellStore, {
 	CellStatus,
 } from "../../components/cell/store/CellStore";
-import { useServerSettingsModalStore } from "../../components/modals/server-settings/ServerSettingsModalStore";
+import { useSettingsStore } from "../../components/modals/server-settings/SettingsStore";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
 import ConnectionManager from "../../services/connection/connectionManager";
 import { ThreadCell } from "../../types/code.types";
@@ -9,7 +9,7 @@ import { mostRelevantCellsForQuery } from "../embeddings";
 import { makeStreamingFunctionRequest } from "../streaming";
 import { getAppTheme, multilineStringToString } from "../utils";
 
-const { getServerProxyUrl } = useServerSettingsModalStore.getState();
+const { getServerProxyUrl } = useSettingsStore.getState();
 
 export const editCell = async (cell: ThreadCell, query: string) => {
 	const setPreviousQuery = useCellStore.getState().setPreviousQuery;
@@ -26,7 +26,7 @@ export const editCell = async (cell: ThreadCell, query: string) => {
 			mostRelevantCellsForQuery: await mostRelevantCellsForQuery(query),
 			theme: getAppTheme(),
 			uniqueId: ConnectionManager.getInstance().uniqueId,
-			openaiApiKey: useServerSettingsModalStore.getState().openAIKey,
+			openaiApiKey: useSettingsStore.getState().openAIKey,
 		},
 		shouldCancel: () =>
 			useNotebookStore.getState().userAbortedMagicQueryController.signal

@@ -13,6 +13,7 @@ import {
 	MenuButton,
 	MenuItem,
 	MenuList,
+	Switch,
 	Text,
 	Textarea,
 	Tooltip,
@@ -33,6 +34,7 @@ import SpinnerWithStopButton from "../misc/SpinnerWithStopButton";
 import { useNotebookStore } from "../notebook/store/NotebookStore";
 import { useChatStore } from "../sidebar/chat/store/ChatStore";
 import { MagicInputSelections, useMagicInputStore } from "./MagicInputStore";
+import { useSettingsStore } from "../modals/server-settings/SettingsStore";
 
 const goToActiveCell = (mainPanelRef: React.RefObject<HTMLDivElement>) => {
 	const activeCell = document.querySelector(".active-cell");
@@ -174,6 +176,12 @@ export const MagicInput = ({
 	const availableSelections = useMagicInputStore(
 		(state) => state.availableSelections,
 	);
+	const autoExecuteGeneratedCode = useSettingsStore(
+		(state) => state.autoExecuteGeneratedCode,
+	);
+	const setAutoExecuteGeneratedCode =
+		useSettingsStore.getState().setAutoExecuteGeneratedCode;
+
 	const {
 		acceptAndRunProposedSource,
 		acceptProposedSource,
@@ -181,15 +189,20 @@ export const MagicInput = ({
 	} = useCellStore.getState();
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+	const getCtrlKey = () => {
+		const isMac = isPlatformMac();
+		return `${isMac ? "⌘" : "Ctrl"}`;
+	};
+
 	const getCommandKey = () => {
 		const isMac = isPlatformMac();
 		let commandKey;
 
 		if (isGeneratingCells) {
-			commandKey = `${isMac ? "⌘" : "Ctrl"} + ⌫ to stop`;
+			commandKey = `${getCtrlKey()} + ⌫ to stop`;
 		} else {
 			const focusState = isFocused ? "switch modes" : "focus";
-			commandKey = `${isMac ? "⌘" : "Ctrl"} + K to ${focusState}`;
+			commandKey = `${getCtrlKey()} + K to ${focusState}`;
 		}
 
 		return commandKey;
@@ -266,6 +279,10 @@ export const MagicInput = ({
 			const nextIndex = (currentIndex + 1) % availableSelections.length;
 			trackEventData("Rotated magic input options");
 			setSelectedOption(availableSelections[nextIndex]);
+			event.preventDefault();
+		} else if ((event.metaKey || event.ctrlKey) && event.key === "j") {
+			// Handle meta/ctrl + j
+			setAutoExecuteGeneratedCode(!autoExecuteGeneratedCode);
 			event.preventDefault();
 		}
 	};
@@ -405,6 +422,41 @@ export const MagicInput = ({
 							</Tooltip>
 						</HStack>
 					)}
+				{selectedOption === MagicInputSelections.Generate && (
+					<HStack
+						alignItems={"flex-start"}
+						mt={0}
+						px={2}
+						py={0}
+						pt={2}
+						w={"100%"}
+						gap={2}
+					>
+						<Text
+							fontFamily={"Space Grotesk"}
+							fontSize={"xs"}
+							color="gray.500"
+						>
+							{`Auto Execute Code (${getCtrlKey()} + J)`}
+						</Text>
+						<Tooltip
+							label={`Automatically Exexcute Generated Code (${getCtrlKey()} + J)`}
+							placement="top"
+						>
+							<Switch
+								isChecked={autoExecuteGeneratedCode}
+								onChange={(e) => {
+									setAutoExecuteGeneratedCode(
+										e.target.checked,
+									);
+								}}
+								colorScheme="orange"
+								size={"sm"}
+							/>
+						</Tooltip>
+					</HStack>
+				)}
+
 				<HStack width={"100%"}>
 					<Menu>
 						<MenuButton
@@ -440,7 +492,10 @@ export const MagicInput = ({
 							setIsFocused(true);
 							enableCommandMode();
 						}}
-						onBlur={() => setIsFocused(false)}
+						onBlur={() => {
+							setIsFocused(false);
+							enableCommandMode();
+						}}
 						boxShadow="none"
 						outline="none"
 						border="0px solid transparent"

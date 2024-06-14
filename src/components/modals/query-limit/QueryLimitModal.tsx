@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { MAX_AI_API_CALLS } from "../../../hooks/useApiCallStore";
-import { useServerSettingsModalStore } from "../server-settings/ServerSettingsModalStore";
+import { useSettingsStore } from "../server-settings/SettingsStore";
 import { useQueryLimitModalStore } from "./QueryLimitModalStore";
 
 const QueryLimitModal = () => {
@@ -70,7 +70,7 @@ const QueryLimitModal = () => {
 								as="span"
 								onClick={() => {
 									handleClose();
-									useServerSettingsModalStore
+									useSettingsStore
 										.getState()
 										.setShowServerSettingsModal(true);
 								}}

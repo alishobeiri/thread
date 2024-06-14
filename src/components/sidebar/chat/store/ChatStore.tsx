@@ -6,7 +6,7 @@ import { API_URL, CHAT_PANEL_ID } from "../../../../utils/constants/constants";
 import { mostRelevantCellsForQuery } from "../../../../utils/embeddings";
 import { formatCellOutputs } from "../../../../utils/magic/messages";
 import { makeStreamingRequest } from "../../../../utils/streaming";
-import { useServerSettingsModalStore } from "../../../modals/server-settings/ServerSettingsModalStore";
+import { useSettingsStore } from "../../../modals/server-settings/SettingsStore";
 import { useNotebookStore } from "../../../notebook/store/NotebookStore";
 import { useSidebarStore } from "../../store/SidebarStore";
 export type UserType = "assistant" | "user";
@@ -148,8 +148,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 				},
 			);
 
-			const { getServerProxyUrl } =
-				useServerSettingsModalStore.getState();
+			const { getServerProxyUrl } = useSettingsStore.getState();
 
 			let assistantMessageId;
 			const stream = makeStreamingRequest({

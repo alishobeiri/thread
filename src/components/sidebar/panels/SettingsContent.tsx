@@ -10,7 +10,7 @@ import { KeyboardIcon, ToggleSidebar } from "../../../assets/icons";
 import { ServerIcon } from "../../../assets/icons/svgs";
 import { isPlatformMac } from "../../../utils/utils";
 import { useShortcutsModalStore } from "../../modals/cheat-sheet/ShortcutsModalStore";
-import { useServerSettingsModalStore } from "../../modals/server-settings/ServerSettingsModalStore";
+import { useSettingsStore } from "../../modals/server-settings/SettingsStore";
 import SidebarIcon from "../buttons/SidebarIcon";
 
 export const SettingsContent = ({
@@ -30,7 +30,7 @@ export const SettingsContent = ({
 	};
 
 	const handleServerSettingsOpen = () => {
-		useServerSettingsModalStore.getState().setShowServerSettingsModal(true);
+		useSettingsStore.getState().setShowServerSettingsModal(true);
 	};
 
 	return (

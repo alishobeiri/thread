@@ -4,7 +4,7 @@ import {
 	MagicInputSelections,
 	useMagicInputStore,
 } from "../../components/input/MagicInputStore";
-import { useServerSettingsModalStore } from "../../components/modals/server-settings/ServerSettingsModalStore";
+import { useSettingsStore } from "../../components/modals/server-settings/SettingsStore";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
 import { useChatStore } from "../../components/sidebar/chat/store/ChatStore";
 import ConnectionManager, {
@@ -51,8 +51,7 @@ export type ActionState = {
 };
 
 const getCells = () => useNotebookStore.getState().cells;
-
-const { getServerProxyUrl } = useServerSettingsModalStore.getState();
+const { getServerProxyUrl } = useSettingsStore.getState();
 
 type Actions = {
 	[key: string]: (
@@ -203,15 +202,15 @@ export const processStream = async (
 				if (anotherCompletedCellAfterCurrent) {
 					index += 1;
 					const cellToExecute = getCells()[cellEditIndex];
-					await executeCell(cellToExecute.id as string);
+					if (useSettingsStore.getState().autoExecuteGeneratedCode) {
+						await executeCell(cellToExecute.id as string);
+					}
 				}
 
 				actionState.currentCellGenerationIndex = cellEditIndex;
 			}
 
 			useNotebookStore.setState({ addedGeneratedCell: true });
-
-			console.log("cellEditIndex: ", cellEditIndex);
 		}
 	}
 
@@ -224,7 +223,9 @@ export const processStream = async (
 		// Execute the last cell in the sequence
 		const cellEditIndex = cellGenerationIndex + generatedCellLength - 1;
 		const cellToExecute = getCells()[cellEditIndex];
-		await executeCell(cellToExecute.id as string);
+		if (useSettingsStore.getState().autoExecuteGeneratedCode) {
+			await executeCell(cellToExecute.id as string);
+		}
 		actionState.currentCellGenerationIndex = cellEditIndex + 1;
 	}
 };
@@ -255,19 +256,14 @@ export const getActionState = async ({
 	const messagesAfterQuery = formatCellsAsMessages(
 		cellsGeneratedSoFar,
 		cellsGeneratedSoFar.length,
-		// Limits the strings that are produced as part of the messages, reduces token count usage but potentially reduces accuracy
-		true,
-		initialCellGenerationIndex,
 	);
-
-	console.log("messagesAfterQuery: ", messagesAfterQuery);
 
 	const prevMessages =
 		actionState?.prevMessages ??
 		getLastNMessages(
 			MESSAGES_LOOKBACK_WINDOW,
 			true,
-			currentCellGenerationIndex - 2,
+			currentCellGenerationIndex - 1,
 		);
 	const updatedActionState: ActionState = {
 		userRequest: actionState?.userRequest ?? `${query}`,
@@ -282,7 +278,7 @@ export const getActionState = async ({
 		prevActions: actionState?.prevActions ?? [],
 	};
 
-	console.debug("Action State: ", updatedActionState);
+	console.log("Action State: ", updatedActionState);
 
 	return updatedActionState;
 };
@@ -350,9 +346,9 @@ const generateCells = async (query: string, followUpRetries: number) => {
 				},
 				body: JSON.stringify({
 					actionState: actionState,
-					openaiApiKey:
-						useServerSettingsModalStore.getState().openAIKey,
-					uniqueId: ConnectionManager.getInstance().uniqueId,
+					...useSettingsStore
+						.getState()
+						.getAdditionalRequestMetadata(),
 				}),
 			},
 			get().userAbortedMagicQueryController.signal,

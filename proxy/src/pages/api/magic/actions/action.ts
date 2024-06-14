@@ -193,11 +193,13 @@ export default async function handler(
 			openAIKey,
 			openAIBaseURL,
 			uniqueId,
+			autoExecuteGeneratedCode,
 		}: {
 			actionState: ActionState;
 			openAIKey?: string;
 			openAIBaseURL?: string;
 			uniqueId?: string;
+			autoExecuteGeneratedCode?: boolean;
 		} = req.body;
 
 		const systemPrompt = `You are a helpful agent that decides which action needs to be taken in the conversation. You only return the type of action to take, you do not try to perform the action or generate any other value related to performing the action.
@@ -213,7 +215,9 @@ Your instructions:
 - You must stop if the assistant requires a user response.
 - If the assistant has started to repeat themselves without making any progress, you must stop.
 - If the assistant has faced an error that it can't recover from without user intervention, please notify the user of the issue using markdown.
-- The previous actions are: ${actionState.prevActions}, if the assistant has been trying to 'fixError' repeatedly, try to produce a markdown action to explain to the user what is going on.`;
+- The previous actions are: ${actionState.prevActions}, if the assistant has been trying to 'fixError' repeatedly, try to produce a markdown action to explain to the user what is going on.
+- The user has set auto execute generated code to ${autoExecuteGeneratedCode}. If they do not want automatically executed code, do not continue just because the code was not executed.
+`;
 
 		const messages = formatMessages(systemPrompt, actionState, 5e3);
 

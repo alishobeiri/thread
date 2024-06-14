@@ -1,8 +1,8 @@
-import { useServerSettingsModalStore } from "../../../components/modals/server-settings/ServerSettingsModalStore";
+import { useSettingsStore } from "../../../components/modals/server-settings/SettingsStore";
 import { ActionState } from "../magicQuery";
 import { sharedAction } from "./shared/utils";
 
-const { getServerProxyUrl } = useServerSettingsModalStore.getState();
+const { getServerProxyUrl } = useSettingsStore.getState();
 
 export async function* fixErrorAction(
 	actionState: ActionState,
