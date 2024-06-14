@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { ModelInformation } from "./model";
 
 // Azure example: https://github.com/openai/openai-node/blob/b595cd953a704dba2aef4c6c3fa431f83f18ccf9/examples/azure.ts
 const OPENAI_API_KEY: string = process.env.OPENAI_API_KEY || "";
@@ -36,17 +37,25 @@ const OPENAI_CONFIG: {
 export const openai = new OpenAI(OPENAI_CONFIG);
 export const azure_openai = new OpenAI(AZURE_CONFIG);
 
-export const getOpenAIClient = (apiKey?: string, serverUrl?: string) => {
-	const apiKeyToUse = apiKey || OPENAI_API_KEY;
-	if (!apiKeyToUse) {
+// shoutout ollama compatibility with openai: https://ollama.com/blog/openai-compatibility
+export const getOpenAIClient = (modelInformation?: ModelInformation) => {
+	const { openAIKey, openAIBaseURL, ollamaUrl, modelType } =
+		modelInformation || {};
+
+	const config =
+		modelType === "ollama"
+			? {
+					baseURL: ollamaUrl || "http://0.0.0.0:11434/v1",
+					apiKey: "ollama",
+			  }
+			: {
+					apiKey: openAIKey || OPENAI_API_KEY,
+					baseURL: openAIBaseURL || OPENAI_BASE_URL,
+			  };
+
+	if (!config.apiKey) {
 		throw new Error("No OpenAI API key provided");
 	}
-	const baseUrl = serverUrl ?? OPENAI_BASE_URL;
-	let config;
-	if (baseUrl) {
-		config = { apiKey: apiKeyToUse, baseURL: baseUrl };
-	} else {
-		config = { apiKey: apiKeyToUse };
-	}
+
 	return new OpenAI(config);
 };

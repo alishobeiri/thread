@@ -1,23 +1,26 @@
-import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import {
+	Badge,
 	Box,
 	Button,
 	ButtonGroup,
-	Flex,
 	HStack,
 	Menu,
-	MenuButton,
 	MenuItem,
 	MenuList,
 	Text,
 	Tooltip,
 } from "@chakra-ui/react";
-import capitalize from "lodash/capitalize";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { PlayIcon, SquareIcon } from "../../assets/icons";
+import React, { useEffect, useState } from "react";
+import {
+	OllamaIcon,
+	OpenAIIcon,
+	PlayIcon,
+	SquareIcon,
+} from "../../assets/icons";
 import ConnectionManager from "../../services/connection/connectionManager";
 import { getCellTypesWithHandlers } from "../../utils/cellOptions";
-import { CELL_GUTTER_WIDTH } from "../../utils/constants/constants";
+import { useModelSettingsModalStore } from "../modals/model-settings/ModelSettingsModalStore";
 import { ICellTypes, useNotebookStore } from "../notebook/store/NotebookStore";
 import { triggerCellActionFailureToast } from "../toasts";
 
@@ -80,90 +83,48 @@ const RunModeSelector = () => {
 	);
 };
 
-const CellTypeMenu: React.FC<{
-	formattedType: string;
-	cellId: string;
-}> = React.memo(
-	({ formattedType, cellId }) => {
-		const { setCellType } = useNotebookStore.getState();
-		const handlePythonClick = useCallback(
-			() => setCellType(cellId, "code"),
-			[cellId, setCellType],
-		);
-		const handleMarkdownClick = useCallback(
-			() => setCellType(cellId, "markdown"),
-			[cellId, setCellType],
-		);
+function ModelTypeSwitcher() {
+	const modelType = useModelSettingsModalStore((state) => state.modelType);
 
-		const menuItems = getCellTypesWithHandlers({
-			code: handlePythonClick,
-			markdown: handleMarkdownClick,
-		});
-
-		return (
-			<Menu>
-				<Tooltip
-					hasArrow
-					borderRadius={"md"}
-					placement="bottom"
-					label={"Select the cell type"}
-				>
-					<MenuButton
-						as={Button}
-						aria-label="Run Options"
-						size="sm"
-						variant="outline"
-						backgroundColor="var(--chakra-colors-chakra-body-bg)"
-						colorScheme="orange"
-						rightIcon={<ChevronDownIcon />}
-						fontFamily={"Space Grotesk"}
-					>
-						{formattedType}
-					</MenuButton>
-				</Tooltip>
-
-				<MenuList width="fit-content">
-					{menuItems.map(({ icon, label, handler }) => {
-						return (
-							<MenuItem
-								key={`menu-item-${label}`}
-								icon={icon}
-								onClick={handler}
-								fontFamily={"Space Grotesk"}
-							>
-								<Text fontSize="small">{label}</Text>
-							</MenuItem>
-						);
-					})}
-				</MenuList>
-			</Menu>
-		);
-	},
-	(prevProps, nextProps) =>
-		prevProps.formattedType === nextProps.formattedType &&
-		prevProps.cellId === nextProps.cellId,
-);
-
-CellTypeMenu.displayName = "CellTypeMenu";
-
-function CellTypeSwitcher() {
-	const cells = useNotebookStore((state) => state.cells);
-	const activeCellIndex = useNotebookStore((state) => state.activeCellIndex);
-
-	const cell = useMemo(
-		() => cells[activeCellIndex],
-		[cells, activeCellIndex],
+	return (
+		<Tooltip
+			hasArrow
+			fontSize="sm"
+			borderRadius={"md"}
+			placement="bottom"
+			label={"Select the model you want to use"}
+		>
+			<Button
+				aria-label="Open modal to select model"
+				size="sm"
+				leftIcon={
+					modelType === "openai" ? <OpenAIIcon /> : <OllamaIcon />
+				}
+				colorScheme="orange"
+				fontFamily={"Space Grotesk"}
+				onClick={() => {
+					useModelSettingsModalStore
+						.getState()
+						.setShowModelSettingsModal(true);
+				}}
+				rightIcon={
+					modelType === "openai" ? undefined : (
+						<Badge
+							fontSize="smaller"
+							colorScheme="blue"
+							_dark={{ background: "blue.100" }}
+						>
+							Beta
+						</Badge>
+					)
+				}
+				backgroundColor="var(--chakra-colors-chakra-body-bg)"
+				variant="outline"
+			>
+				{modelType === "openai" ? "OpenAI" : "Ollama"}
+			</Button>
+		</Tooltip>
 	);
-	if (!cell) return null;
-
-	const cellId = cell.id as string;
-
-	const { cell_type } = cell;
-
-	const formattedType =
-		cell_type === "code" ? "Python" : capitalize(cell_type as string);
-
-	return <CellTypeMenu formattedType={formattedType} cellId={cellId} />;
 }
 
 export default function Toolbar({
@@ -197,11 +158,10 @@ export default function Toolbar({
 		>
 			<HStack justifyContent={"space-between"} width={"100%"}>
 				<HStack gap={2}>
-					<Flex width={`${CELL_GUTTER_WIDTH}px`} />
+					<ModelTypeSwitcher />
 				</HStack>
 				<HStack>
 					<RunModeSelector />
-					<CellTypeSwitcher />
 					<Menu>
 						<Tooltip
 							hasArrow

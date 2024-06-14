@@ -6,7 +6,7 @@ import {
 	ChatCompletionMessageParam,
 	FunctionDefinition,
 } from "openai/resources";
-import { getModelForRequest } from "../../_shared/model";
+import { ModelInformation, getModelForRequest } from "../../_shared/model";
 import { getOpenAIClient } from "../../_shared/openai";
 import { getThemePrompt } from "../../_shared/promptUtils";
 
@@ -39,16 +39,14 @@ export default async function handler(req: Request, res: NextApiResponse) {
 			currentNamespace,
 			theme,
 			uniqueId,
-			openAIKey,
-			openAIBaseURL,
+			modelInformation,
 		} = (await req.json()) as {
 			userRequest?: string;
 			currentCellSource?: string;
 			currentNamespace?: string;
 			theme: "dark" | "light";
 			uniqueId?: string;
-			openAIKey?: string;
-			openAIBaseURL?: string;
+			modelInformation?: ModelInformation;
 		};
 
 		const context = {
@@ -84,11 +82,10 @@ ${themePrompt}`,
 			},
 		];
 
-		const openai = getOpenAIClient(openAIKey, openAIBaseURL);
+		const openai = getOpenAIClient(modelInformation);
+		const model = getModelForRequest(modelInformation);
 
 		try {
-			const model = getModelForRequest(req);
-
 			const response = await openai.chat.completions.create({
 				model: model,
 				messages: messages,

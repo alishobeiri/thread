@@ -4,8 +4,6 @@ import {
 	FormLabel,
 	HStack,
 	Input,
-	InputGroup,
-	InputRightElement,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
@@ -29,46 +27,21 @@ const ServerSettingsModal = () => {
 		setIsOpen(false);
 	};
 
-	useSettingsStore.getState().fetchSettings();
-	const openaiKey = useSettingsStore((state) => state.openAIKey);
+	useEffect(() => {
+		useSettingsStore.getState().fetchSettings();
+	}, []);
+
 	const serverProxyURL = useSettingsStore((state) => state.serverProxyURL);
-	const openAIBaseUrl = useSettingsStore((state) => state.openAIBaseURL);
 	const { setSettings } = useSettingsStore.getState();
-	const [show, setShow] = useState(false);
-	const [tempOpenAIKey, setTempOpenAIKey] = useState("");
 	const [tempServerURL, setTempServerURL] = useState("");
-	const [tempBaseOpenAIURL, setTempBaseOpenAIURL] = useState("");
-	const [isValid, setIsValid] = useState(true);
 	const toast = useToast();
 
 	const loadSettings = () => {
-		setTempOpenAIKey(openaiKey || "");
 		setTempServerURL(serverProxyURL || "");
-		setTempBaseOpenAIURL(openAIBaseUrl || "");
 	};
 
-	const validate = () => {
-		if (tempBaseOpenAIURL && !tempOpenAIKey) {
-			setIsValid(false);
-		} else {
-			setIsValid(true);
-		}
-	};
-
-	const saveSettings = () => {
-		if (!isValid) {
-			toast({
-				title: "Error",
-				description: "API key must be set if base URL is provided.",
-				status: "error",
-				duration: 4000,
-				isClosable: true,
-			});
-			return;
-		}
-		setSettings({
-			openAIBaseURL: tempBaseOpenAIURL,
-			openAIKey: tempOpenAIKey,
+	const saveSettings = async () => {
+		await setSettings({
 			serverProxyURL: tempServerURL,
 		});
 		handleClose();
@@ -80,12 +53,6 @@ const ServerSettingsModal = () => {
 		}
 	}, [isOpen]);
 
-	useEffect(() => {
-		validate();
-	}, [tempOpenAIKey, tempServerURL, tempBaseOpenAIURL]);
-
-	const toggleShowKey = () => setShow(!show);
-
 	return (
 		<Modal isOpen={isOpen} onClose={handleClose} size={["sm", "md", "lg"]}>
 			<ModalOverlay />
@@ -93,64 +60,13 @@ const ServerSettingsModal = () => {
 				<ModalHeader>Server Settings</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody>
-					<VStack spacing={10}>
-						<FormControl
-							id="api-key"
-							isInvalid={Boolean(
-								tempBaseOpenAIURL && !tempOpenAIKey,
-							)}
-						>
-							<FormLabel fontWeight="bold" fontSize="lg">
-								OpenAI API Key
-							</FormLabel>
-							<InputGroup>
-								<Input
-									pr="4.5rem"
-									type={show ? "text" : "password"}
-									placeholder="Enter your OpenAI API Key"
-									value={tempOpenAIKey}
-									onChange={(e) =>
-										setTempOpenAIKey(e.target.value)
-									}
-								/>
-								<InputRightElement width="4.5rem">
-									<Button
-										h="1.75rem"
-										size="sm"
-										onClick={toggleShowKey}
-									>
-										{show ? "Hide" : "Show"}
-									</Button>
-								</InputRightElement>
-							</InputGroup>
-							{!isValid && tempBaseOpenAIURL && (
-								<Text mt="2" fontSize="small" color="red.500">
-									API key must be set if base URL or proxy URL
-									is provided.
-								</Text>
-							)}
-							<Text mt="2" fontSize="small" color="gray.500">
-								For unlimited usage of Thread&apos;s AI
-								features, enter your OpenAI API key above.
-							</Text>
-						</FormControl>
-						<FormControl id="base-openai-url">
-							<FormLabel fontWeight="bold" fontSize="lg">
-								OpenAI Base URL
-							</FormLabel>
-							<Input
-								placeholder="Enter your OpenAI Base URL"
-								value={tempBaseOpenAIURL}
-								onChange={(e) =>
-									setTempBaseOpenAIURL(e.target.value)
-								}
-							/>
-							<Text mt="2" fontSize="small" color="gray.500">
-								Optional: Enter the base URL for OpenAI.
-							</Text>
-						</FormControl>
+					<VStack>
 						<FormControl id="proxy-url">
-							<FormLabel fontWeight="bold" fontSize="lg">
+							<FormLabel
+								fontWeight="bold"
+								fontSize="lg"
+								fontFamily={"Space Grotesk"}
+							>
 								Server Proxy URL
 							</FormLabel>
 							<Input
@@ -161,7 +77,10 @@ const ServerSettingsModal = () => {
 								}
 							/>
 							<Text mt="2" fontSize="small" color="gray.500">
-								Optional: Enter the URL of your server proxy.
+								Optional: Enter the URL of your server proxy. If
+								using a local model, this should point to
+								http://localhost:5001 or whichever port serves
+								the proxy.
 							</Text>
 						</FormControl>
 					</VStack>
@@ -180,7 +99,6 @@ const ServerSettingsModal = () => {
 							colorScheme="orange"
 							onClick={saveSettings}
 							fontFamily={"Space Grotesk"}
-							isDisabled={!isValid}
 						>
 							Save
 						</Button>

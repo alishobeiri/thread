@@ -8,7 +8,7 @@ import {
 } from "openai/resources/chat/completions";
 import { Stream } from "openai/streaming";
 import { ChatMessage } from "../../../types/messages";
-import { getModelForRequest } from "../_shared/model";
+import { ModelInformation, getModelForRequest } from "../_shared/model";
 import { getOpenAIClient } from "../_shared/openai";
 import { getChatContextPrompt } from "../_shared/promptUtils";
 
@@ -98,10 +98,9 @@ export default async function handler(req: Request, res: NextApiResponse) {
 			currentChatContext,
 			currentChatNamespace,
 			activeCellSource,
-			uniqueId,
-			openAIKey,
-			openAIBaseURL,
+			modelInformation,
 			mostRelevantContextualCellsForQuery,
+			uniqueId,
 		} = (await req.json()) as {
 			query: string;
 			previousMessages: ChatMessage[];
@@ -109,12 +108,12 @@ export default async function handler(req: Request, res: NextApiResponse) {
 			currentChatNamespace: string;
 			activeCellSource: string;
 			mostRelevantContextualCellsForQuery: string[];
+			modelInformation?: ModelInformation;
 			uniqueId?: string;
-			openAIKey?: string;
-			openAIBaseURL?: string;
 		};
 
-		const openai = getOpenAIClient(openAIKey, openAIBaseURL);
+		const openai = getOpenAIClient(modelInformation);
+		const model = getModelForRequest(modelInformation);
 
 		if (!query) {
 			console.error("No message found in the request body");
@@ -131,8 +130,6 @@ export default async function handler(req: Request, res: NextApiResponse) {
 		});
 
 		try {
-			const model = getModelForRequest(req);
-
 			const response: Stream<ChatCompletionChunk> =
 				await openai.chat.completions.create({
 					model: model,
@@ -142,7 +139,7 @@ export default async function handler(req: Request, res: NextApiResponse) {
 
 			response.controller.signal.addEventListener("abort", () => {
 				console.log("openai.chat.completions aborted");
-				throw new Error("Cell generation was aborted");
+				throw new Error("Response generation was aborted");
 			});
 
 			const stream = OpenAIStream(response);

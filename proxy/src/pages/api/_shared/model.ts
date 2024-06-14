@@ -1,16 +1,17 @@
-import { NextRequest } from "next/server";
-
-const _getModelForNextRequest = (request?: NextRequest) => {
-	return "gpt-4o";
+export type ModelInformation = {
+	openAIKey?: string;
+	openAIBaseURL?: string;
+	ollamaUrl?: string;
+	ollamaModel?: string;
+	modelType?: string;
 };
 
-const _getModelForRequest = (request?: Request) => {
-	return "gpt-4o";
-};
+export const getModelForRequest = (modelInformation?: ModelInformation) => {
+	const { modelType, ollamaModel } = modelInformation || {};
 
-export const getModelForRequest = (request?: Request | NextRequest) => {
-	if (request instanceof NextRequest) {
-		return _getModelForNextRequest(request);
+	if (modelType === "ollama") {
+		return ollamaModel || "";
 	}
-	return _getModelForRequest(request);
+
+	return "gpt-4o";
 };

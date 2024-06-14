@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import { FunctionDefinition } from "openai/resources";
 import { ActionState } from "../../../../types/messages";
 import { formatMessages } from "../../_shared/message";
-import { getModelForRequest } from "../../_shared/model";
+import { ModelInformation, getModelForRequest } from "../../_shared/model";
 import { getOpenAIClient } from "../../_shared/openai";
 
 export const CODE_FUNCTION_NAME = "code";
@@ -38,12 +38,11 @@ export const runtime = "edge";
 
 export default async function handler(req: Request, res: NextApiResponse) {
 	if (req.method === "POST") {
-		const { actionState, uniqueId, openAIKey, openAIBaseURL } =
+		const { actionState, uniqueId, modelInformation } =
 			(await req.json()) as {
 				actionState: ActionState;
+				modelInformation?: ModelInformation;
 				uniqueId?: string;
-				openAIKey?: string;
-				openAIBaseURL?: string;
 			};
 
 		const systemPrompt = `You are Thread, a helpful Python code generating assistant that operates as part of an ensemble of agents and is tasked with the subtask of generating syntactically correct Python code.
@@ -78,11 +77,11 @@ Data analysis instructions:
 
 - When creating a Plotly plot, please use 'fig.show()' to display the plot.`;
 
-		const openai = getOpenAIClient(openAIKey, openAIBaseURL);
+		const openai = getOpenAIClient(modelInformation);
+		const model = getModelForRequest(modelInformation);
 		const messages = formatMessages(systemPrompt, actionState, 20e3);
 
 		try {
-			const model = getModelForRequest(req);
 			const response = await openai.chat.completions.create({
 				model: model,
 				messages: messages,

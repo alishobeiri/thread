@@ -7,9 +7,10 @@ import {
 	useColorModeValue,
 } from "@chakra-ui/react";
 import { KeyboardIcon, ToggleSidebar } from "../../../assets/icons";
-import { ServerIcon } from "../../../assets/icons/svgs";
+import { BrainIcon, ServerIcon } from "../../../assets/icons/svgs";
 import { isPlatformMac } from "../../../utils/utils";
 import { useShortcutsModalStore } from "../../modals/cheat-sheet/ShortcutsModalStore";
+import { useModelSettingsModalStore } from "../../modals/model-settings/ModelSettingsModalStore";
 import { useSettingsStore } from "../../modals/server-settings/SettingsStore";
 import SidebarIcon from "../buttons/SidebarIcon";
 
@@ -27,6 +28,10 @@ export const SettingsContent = ({
 	const hoverBackgroundColor = useColorModeValue("gray.100", "gray.700");
 	const hoverStyles = {
 		background: hoverBackgroundColor,
+	};
+
+	const handleModelSettingsOpen = () => {
+		useModelSettingsModalStore.getState().setShowModelSettingsModal(true);
 	};
 
 	const handleServerSettingsOpen = () => {
@@ -76,6 +81,25 @@ export const SettingsContent = ({
 						Server Settings
 					</Heading>
 					<ServerIcon mr={2} boxSize="15px" />
+				</HStack>
+				<HStack
+					as={"button"}
+					width="100%"
+					padding={"12px"}
+					_hover={hoverStyles}
+					onClick={handleModelSettingsOpen}
+					display={"flex"}
+					flex="0 0 auto"
+					justifyContent={"space-between"}
+				>
+					<Heading
+						fontSize="smaller"
+						fontWeight={"600"}
+						fontFamily={"Space Grotesk"}
+					>
+						Model Settings
+					</Heading>
+					<BrainIcon mr={2} boxSize="15px" />
 				</HStack>
 				<HStack
 					as="button"

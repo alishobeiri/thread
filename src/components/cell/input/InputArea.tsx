@@ -1,4 +1,4 @@
-import { Box, Button, HStack } from "@chakra-ui/react";
+import { Box, HStack } from "@chakra-ui/react";
 import { python } from "@codemirror/lang-python";
 import { keymap } from "@codemirror/view";
 import { ICell } from "@jupyterlab/nbformat";
@@ -13,20 +13,20 @@ import { jupyterLabKeymap } from "./keymap";
 import { jupyterTheme } from "./theme";
 
 import { indentationMarkers } from "@replit/codemirror-indentation-markers";
+import CodeMirrorMerge, { CodeMirrorMergeRef } from "react-codemirror-merge";
 import ConnectionManager from "../../../services/connection/connectionManager";
 import { multilineStringToString } from "../../../utils/utils";
 import { enableEditMode } from "../actions/actions";
 import useCellStore from "../store/CellStore";
+import InputAreaToolbar from "./InputAreaToolbar";
 import { codeSelectionExtension } from "./extensions/codeSelection";
+import { documentUri } from "./extensions/languageServer";
 import { newLineText } from "./extensions/newLineText";
 import {
 	modKKeymap,
 	onChangePlugin,
 	useExtensionWithDependency,
 } from "./extensions/shared";
-import { documentUri } from "./extensions/languageServer";
-import InputAreaToolbar from "./InputAreaToolbar";
-import CodeMirrorMerge, { CodeMirrorMergeRef } from "react-codemirror-merge";
 
 const Original = CodeMirrorMerge.Original;
 const Modified = CodeMirrorMerge.Modified;
@@ -44,6 +44,7 @@ const InputArea = forwardRef<ReactCodeMirrorRef, InputAreaProps>(
 		{ index, active, cell, isBeingEdited, isCodeEditable = true },
 		forwardedCmRef: ForwardedRef<ReactCodeMirrorRef | null>,
 	) => {
+		const cellId = cell.id as string;
 		const cmRef =
 			forwardedCmRef as MutableRefObject<ReactCodeMirrorRef | null>;
 		const cmMergeRef =
@@ -198,10 +199,12 @@ const InputArea = forwardRef<ReactCodeMirrorRef, InputAreaProps>(
 						)}
 					</>
 					<InputAreaToolbar
+						id={cellId}
 						active={active}
 						source={source}
 						index={index}
 						cmRef={cmRef}
+						type={"code"}
 					/>
 				</HStack>
 			</Box>
