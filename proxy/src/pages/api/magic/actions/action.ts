@@ -215,9 +215,7 @@ Your instructions:
 - You must stop if the assistant requires a user response.
 - If the assistant has started to repeat themselves without making any progress, you must stop.
 - If the assistant has faced an error that it can't recover from without user intervention, please notify the user of the issue using markdown.
-- The previous actions are: ${actionState.prevActions}, if the assistant has been trying to 'fixError' repeatedly, try to produce a markdown action to explain to the user what is going on.
-- The user has set auto execute generated code to ${autoExecuteGeneratedCode}. If they do not want automatically executed code, do not continue just because the code was not executed.
-`;
+- The user has set auto execute generated code to ${autoExecuteGeneratedCode}. If they do not want automatically executed code, do not continue just because the code was not executed.`;
 
 		const messages = formatMessages(systemPrompt, actionState, 5e3);
 
