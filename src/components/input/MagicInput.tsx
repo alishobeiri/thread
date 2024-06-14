@@ -432,13 +432,6 @@ export const MagicInput = ({
 						w={"100%"}
 						gap={2}
 					>
-						<Text
-							fontFamily={"Space Grotesk"}
-							fontSize={"xs"}
-							color="gray.500"
-						>
-							{`Auto Execute Code (${getCtrlKey()} + J)`}
-						</Text>
 						<Tooltip
 							label={`Automatically Exexcute Generated Code (${getCtrlKey()} + J)`}
 							placement="top"
@@ -454,6 +447,13 @@ export const MagicInput = ({
 								size={"sm"}
 							/>
 						</Tooltip>
+						<Text
+							fontFamily={"Space Grotesk"}
+							fontSize={"xs"}
+							color="gray.500"
+						>
+							{`Auto Execute Code (${getCtrlKey()} + J)`}
+						</Text>
 					</HStack>
 				)}
 

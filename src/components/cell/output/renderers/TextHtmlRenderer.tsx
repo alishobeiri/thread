@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Text, VStack } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { DataTable, TableData } from "../../../datatable/DataTable";
 import { transformRowsAndColumnsToData } from "../../../file/utils";
@@ -128,7 +128,7 @@ const TextHtmlRenderer = ({
 			});
 
 			sections.push(
-				<Box my={1}>
+				<Box my={1} key={sections.length}>
 					{headers && headers.length > 0 ? (
 						<VStack alignItems={"flex-start"} gap={0}>
 							<CrazyTable
@@ -158,7 +158,6 @@ const TextHtmlRenderer = ({
 			} catch {}
 		} else if (element.nodeName.toLowerCase() === "script") {
 			// Execute script content within the container
-			// Execute script content within the container
 			const scriptElement = element as HTMLScriptElement;
 			sections.push(
 				<ScriptExecutor
@@ -184,8 +183,8 @@ const TextHtmlRenderer = ({
 	}
 
 	useEffect(() => {
-		const element = [textHtmlRef.current];
-		if (element[0]) {
+		const element = textHtmlRef.current;
+		if (element) {
 			const parser = new DOMParser();
 			const doc = parser.parseFromString(htmlContent, "text/html");
 
@@ -194,17 +193,11 @@ const TextHtmlRenderer = ({
 
 			// Clean up processed HTML
 			if (doc.documentElement) {
-				const prePrefix =
-					"<pre style='font-size: 14px; white-space: pre-wrap;'>";
-
-				let processedHTML = doc.documentElement.innerHTML
-					.replace(/>\s+/g, ">") // right-trim tag content
-					.replace(/\s+</g, "<"); // left-trim tag content
-
 				sections.push(
 					<div
+						style={{ whiteSpace: "pre-wrap", fontSize: "14px" }}
 						dangerouslySetInnerHTML={{
-							__html: prePrefix + processedHTML + "</pre>",
+							__html: doc.documentElement.innerHTML,
 						}}
 						key={sections.length}
 					/>,
@@ -216,8 +209,8 @@ const TextHtmlRenderer = ({
 
 		// Clean up
 		return () => {
-			if (element[0]) {
-				element[0].innerHTML = "";
+			if (element) {
+				element.innerHTML = "";
 			}
 		};
 	}, [htmlContent]);

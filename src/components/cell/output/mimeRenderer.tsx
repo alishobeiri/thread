@@ -8,6 +8,8 @@ import {
 	IMG_GIF,
 	IMG_JPEG,
 	IMG_PNG,
+	IMG_PNG_IMG_SVG,
+	IMG_PNG_IMG_SVG_TEXT_PLAIN,
 	IMG_SVG,
 	IMG_SVG_TEXT_PLAIN,
 	IMG_WEBP,
@@ -43,7 +45,9 @@ export const mimeRenderer = (
 		case IMG_PNG:
 		case IMG_JPEG:
 			return <ImageRenderer key={outputIndex} data={output.data} />;
+		case IMG_PNG_IMG_SVG:
 		case IMG_SVG_TEXT_PLAIN:
+		case IMG_PNG_IMG_SVG_TEXT_PLAIN:
 			// SVG is a special type of image
 			return (
 				<TextHtmlRenderer
