@@ -56,7 +56,6 @@ const actionProperty: ActionProperty<typeof isDevelopment> = {
 			type: "object",
 			description: `Conditions you should return '${ActionType.Code}':
 - The user has asked you to complete an action that can be completed using code.
-- The assistant needs to execute code as the next step in the conversation or to complete the user's request.
 - The user has asked a question that can be answered by loading of the files provided.`,
 			properties: {
 				type: {
@@ -99,6 +98,7 @@ const actionProperty: ActionProperty<typeof isDevelopment> = {
 		{
 			type: "object",
 			description: `Conditions you should return '${ActionType.Stop}':
+- The assistant has generated the necessary code to answer the users request.
 - The user must answer the assistant's question before you can proceed.
 - You are awaiting for the user's input. You must return '${ActionType.Stop}' in this case.
 - The user's answer has been completely answered and a result summary has been provided.
