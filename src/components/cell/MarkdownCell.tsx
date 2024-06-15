@@ -169,10 +169,12 @@ const MarkdownCell = ({
 						}}
 					/>
 					<InputAreaToolbar
+						id={cellId}
 						active={active}
 						source={source}
 						index={index}
 						cmRef={cmRef}
+						type={"markdown"}
 					/>
 				</HStack>
 			)}

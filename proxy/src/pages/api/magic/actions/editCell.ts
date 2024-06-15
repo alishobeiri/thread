@@ -8,7 +8,7 @@ import {
 } from "openai/resources";
 import { v4 as uuidv4 } from "uuid";
 import { LangfuseClient, captureOpenAIStream } from "../../_shared/langfuse";
-import { getModelForRequest } from "../../_shared/model";
+import { ModelInformation, getModelForRequest } from "../../_shared/model";
 import { getOpenAIClient } from "../../_shared/openai";
 import { getThemePrompt } from "../../_shared/promptUtils";
 
@@ -41,16 +41,14 @@ export default async function handler(req: Request, res: NextApiResponse) {
 			currentNamespace,
 			theme,
 			uniqueId,
-			openAIKey,
-			openAIBaseURL,
+			modelInformation,
 		} = (await req.json()) as {
 			userRequest?: string;
 			currentCellSource?: string;
 			currentNamespace?: string;
 			theme: "dark" | "light";
 			uniqueId?: string;
-			openAIKey?: string;
-			openAIBaseURL?: string;
+			modelInformation?: ModelInformation;
 		};
 
 		const context = {
@@ -86,7 +84,8 @@ ${themePrompt}`,
 			},
 		];
 
-		const openai = getOpenAIClient(openAIKey, openAIBaseURL);
+		const openai = getOpenAIClient(modelInformation);
+		const model = getModelForRequest(modelInformation);
 
 		try {
 			const model = getModelForRequest(req);

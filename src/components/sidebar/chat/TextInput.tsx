@@ -1,9 +1,7 @@
-import { Textarea, Button, VStack, HStack } from "@chakra-ui/react";
+import { Button, HStack, Textarea, VStack } from "@chakra-ui/react";
 import { KeyboardEvent, useEffect, useRef } from "react";
 import ResizeTextarea from "react-textarea-autosize";
 import { useSidebarStore } from "../store/SidebarStore";
-import CharacterCounter from "../../misc/CharacterCounter";
-import { MAX_MESSAGE_LENGTH } from "../../../utils/constants/constants";
 
 interface DynamicTextAreaProps {
 	value: string;

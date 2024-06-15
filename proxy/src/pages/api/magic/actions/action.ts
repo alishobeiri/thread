@@ -5,7 +5,7 @@ import { FunctionDefinition } from "openai/resources";
 import { ActionState } from "../../../../types/messages";
 import { createTraceAndGeneration } from "../../_shared/langfuse";
 import { formatMessages } from "../../_shared/message";
-import { getModelForRequest } from "../../_shared/model";
+import { ModelInformation, getModelForRequest } from "../../_shared/model";
 import { getOpenAIClient } from "../../_shared/openai";
 
 enum ActionType {
@@ -190,14 +190,12 @@ export default async function handler(
 	if (req.method === "POST") {
 		let {
 			actionState,
-			openAIKey,
-			openAIBaseURL,
+			modelInformation,
 			uniqueId,
 			autoExecuteGeneratedCode,
 		}: {
 			actionState: ActionState;
-			openAIKey?: string;
-			openAIBaseURL?: string;
+			modelInformation?: ModelInformation;
 			uniqueId?: string;
 			autoExecuteGeneratedCode?: boolean;
 		} = req.body;
@@ -224,7 +222,8 @@ Your instructions:
 			maskedActionFunction.parameters!.properties as any
 		).action.oneOf.map((action: any) => action.properties.type.const);
 
-		const openai = getOpenAIClient(openAIKey, openAIBaseURL);
+		const openai = getOpenAIClient(modelInformation);
+		const model = getModelForRequest(modelInformation);
 
 		try {
 			const model = getModelForRequest();
@@ -285,7 +284,8 @@ Your instructions:
 					),
 				});
 			} else {
-				res.status(200).json({});
+				res.status(200).json({ type: ActionType.Code });
+				// res.status(200).json({});
 			}
 		} catch (error) {
 			captureException(error);

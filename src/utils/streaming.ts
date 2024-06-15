@@ -1,10 +1,10 @@
 import { ToolCall } from "ai";
 import { parse } from "best-effort-json-parser";
 import { useCallback, useEffect, useState } from "react";
-import { useSettingsStore } from "../components/modals/server-settings/SettingsStore";
+import { useModelSettingsModalStore } from "../components/modals/model-settings/ModelSettingsModalStore";
 import { threadFetch } from "./utils";
 
-const { getAdditionalRequestMetadata } = useSettingsStore.getState();
+const { getAdditionalRequestMetadata } = useModelSettingsModalStore.getState();
 
 interface MakeStreamingRequestParams {
 	url: string;

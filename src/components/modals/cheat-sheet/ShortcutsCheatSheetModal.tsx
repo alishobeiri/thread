@@ -67,7 +67,7 @@ export default function ShortcutsCheatSheetModal() {
 						<Text>Keyboard Shortcuts</Text>
 					</HStack>
 				</ModalHeader>
-				<ModalBody>
+				<ModalBody overflow={"auto"}>
 					<Heading as="h3" fontSize="md" mb="4">
 						General actions
 					</Heading>

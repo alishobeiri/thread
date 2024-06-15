@@ -10,6 +10,7 @@ import {
 } from "../../cell/actions/actions";
 import useCellStore, { CellStatus } from "../../cell/store/CellStore";
 import { useMagicInputStore } from "../../input/MagicInputStore";
+import { useSettingsStore } from "../../modals/server-settings/SettingsStore";
 import { useSidebarStore } from "../../sidebar/store/SidebarStore";
 import { useNotebookStore } from "../store/NotebookStore";
 
@@ -151,6 +152,13 @@ export const useNotebookHotkeys = () => {
 		},
 		250,
 	);
+
+	// Define hotkeys for code auto-execution toggle
+	useHotkeys("mod+j", (event: KeyboardEvent, hotkeysEvent: HotkeysEvent) => {
+		const { setAutoExecuteGeneratedCode, autoExecuteGeneratedCode } =
+			useSettingsStore.getState();
+		setAutoExecuteGeneratedCode(!autoExecuteGeneratedCode);
+	});
 
 	// Define hotkeys for 'spotlight' search
 	useHotkeys("mod+k", (event: KeyboardEvent, hotkeysEvent: HotkeysEvent) => {

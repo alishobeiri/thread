@@ -8,17 +8,24 @@ import {
 import { HStack, IconButton, Tooltip } from "@chakra-ui/react";
 import { captureException } from "@sentry/nextjs";
 import React, { useState } from "react";
-import { useNotebookStore } from "../../notebook/store/NotebookStore";
 import {
 	InsertCellAboveIcon,
 	InsertCellBelowIcon,
+	MarkdownIcon,
+	PythonIcon,
 } from "../../../assets/icons";
+import {
+	ICellTypes,
+	useNotebookStore,
+} from "../../notebook/store/NotebookStore";
 
 interface InputAreaToolbarProps {
 	active: boolean;
 	source: boolean | string;
 	index: number;
 	cmRef: React.MutableRefObject<any>; // Add cmRef prop
+	type: ICellTypes;
+	id: string;
 }
 
 const InputAreaToolbar: React.FC<InputAreaToolbarProps> = ({
@@ -26,6 +33,8 @@ const InputAreaToolbar: React.FC<InputAreaToolbarProps> = ({
 	source,
 	index,
 	cmRef,
+	type,
+	id,
 }) => {
 	const defaultCopyButtonProps = {
 		label: "Copy",
@@ -68,6 +77,32 @@ const InputAreaToolbar: React.FC<InputAreaToolbarProps> = ({
 	return (
 		active && (
 			<HStack mt="0.5px" mr={"1px"} gap={1}>
+				<Tooltip
+					label={`Switch to ${type === "code" ? "markdown" : "code"}`}
+					size="sm"
+					fontSize={"small"}
+					hasArrow
+				>
+					<IconButton
+						size="xs"
+						aria-label={`Switch to ${
+							type === "code" ? "markdown" : "code"
+						}`}
+						icon={
+							type === "code" ? <MarkdownIcon /> : <PythonIcon />
+						}
+						onClick={() => {
+							useNotebookStore
+								.getState()
+								.setCellType(
+									id,
+									type === "code" ? "markdown" : "code",
+								);
+						}}
+						variant="ghost"
+						colorScheme="orange"
+					/>
+				</Tooltip>
 				<Tooltip
 					label="Move cell up"
 					size="sm"

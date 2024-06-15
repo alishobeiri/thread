@@ -9,7 +9,7 @@ import {
 	createTraceAndGeneration,
 } from "../../_shared/langfuse";
 import { formatMessages } from "../../_shared/message";
-import { getModelForRequest } from "../../_shared/model";
+import { ModelInformation, getModelForRequest } from "../../_shared/model";
 import { getOpenAIClient } from "../../_shared/openai";
 
 export const CODE_FUNCTION_NAME = "code";
@@ -42,12 +42,11 @@ export const runtime = "edge";
 
 export default async function handler(req: Request, res: NextApiResponse) {
 	if (req.method === "POST") {
-		const { actionState, uniqueId, openAIKey, openAIBaseURL } =
+		const { actionState, uniqueId, modelInformation } =
 			(await req.json()) as {
 				actionState: ActionState;
 				uniqueId?: string;
-				openAIKey?: string;
-				openAIBaseURL?: string;
+				modelInformation?: ModelInformation;
 			};
 
 		const systemPrompt = `You are Thread, a helpful Python code fixing assistant that operates as part of an ensemble of agents and is tasked with the subtask of fixing Python code that encountered syntax, runtime or other errors.
@@ -67,8 +66,8 @@ Your instructions:
 		];
 
 		try {
-			const openai = getOpenAIClient(openAIKey, openAIBaseURL);
-			const model = getModelForRequest(req);
+			const openai = getOpenAIClient(modelInformation);
+			const model = getModelForRequest(modelInformation);
 
 			const { trace, generation } = createTraceAndGeneration(
 				"fixError",
