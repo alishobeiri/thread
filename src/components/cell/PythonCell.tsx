@@ -1,4 +1,3 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
 	Box,
 	Button,
@@ -24,11 +23,11 @@ import {
 	CELL_GUTTER_WIDTH,
 	CELL_MINIMUM_HEIGHT,
 } from "../../utils/constants/constants";
+import { isPlatformMac } from "../../utils/utils";
 import { useNotebookStore } from "../notebook/store/NotebookStore";
 import InputArea from "./input/InputArea";
 import OutputArea from "./output/OutputArea";
 import useCellStore, { CellStatus } from "./store/CellStore";
-import { isPlatformMac } from "../../utils/utils";
 
 interface CellContainerProps {
 	index: number;
@@ -282,7 +281,7 @@ const CellExecutionContainer = ({
 			onMouseLeave={() => setIsHovering(false)}
 		>
 			<Flex />
-			<Box>{iconElement}</Box>
+			<Box mr={1}>{iconElement}</Box>
 		</HStack>
 	);
 };

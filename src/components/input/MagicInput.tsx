@@ -31,10 +31,10 @@ import { isInViewport, isPlatformMac } from "../../utils/utils";
 import { enableCommandMode } from "../cell/actions/actions";
 import useCellStore, { CellStatus } from "../cell/store/CellStore";
 import SpinnerWithStopButton from "../misc/SpinnerWithStopButton";
+import { useSettingsStore } from "../modals/server-settings/SettingsStore";
 import { useNotebookStore } from "../notebook/store/NotebookStore";
 import { useChatStore } from "../sidebar/chat/store/ChatStore";
 import { MagicInputSelections, useMagicInputStore } from "./MagicInputStore";
-import { useSettingsStore } from "../modals/server-settings/SettingsStore";
 
 const goToActiveCell = (mainPanelRef: React.RefObject<HTMLDivElement>) => {
 	const activeCell = document.querySelector(".active-cell");
@@ -195,7 +195,6 @@ export const MagicInput = ({
 	};
 
 	const getCommandKey = () => {
-		const isMac = isPlatformMac();
 		let commandKey;
 
 		if (isGeneratingCells) {
@@ -349,7 +348,7 @@ export const MagicInput = ({
 					<Text
 						fontFamily="Space Grotesk"
 						fontSize="xs"
-						color="gray.500"
+						color="var(--chakra-colors-chakra-placeholder-color)"
 						m={0}
 						p={0}
 					>
@@ -433,7 +432,8 @@ export const MagicInput = ({
 						gap={2}
 					>
 						<Tooltip
-							label={`Automatically Exexcute Generated Code (${getCtrlKey()} + J)`}
+							label={`Automatically execute generated code (${getCtrlKey()} + J)`}
+							fontSize={"small"}
 							placement="top"
 						>
 							<Switch
@@ -452,7 +452,7 @@ export const MagicInput = ({
 							fontSize={"xs"}
 							color="gray.500"
 						>
-							{`Auto Execute Code (${getCtrlKey()} + J)`}
+							{`Auto-execute code (${getCtrlKey()} + J)`}
 						</Text>
 					</HStack>
 				)}
@@ -460,15 +460,17 @@ export const MagicInput = ({
 				<HStack width={"100%"}>
 					<Menu>
 						<MenuButton
+							flexShrink={0}
 							as={Button}
 							colorScheme="orange"
 							size="md"
-							rightIcon={<ChevronUpIcon />}
 							variant="ghost"
 							fontFamily="Space Grotesk"
-							px={4}
 						>
-							<Text pr={4}>{selectedOption}</Text>
+							<HStack width="100%">
+								<Text>{selectedOption}</Text>
+								<ChevronUpIcon />
+							</HStack>
 						</MenuButton>
 						<MenuList fontFamily="Space Grotesk">
 							{availableSelections.map((option) => (
