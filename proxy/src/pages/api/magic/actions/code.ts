@@ -1,9 +1,13 @@
 import { captureException } from "@sentry/nextjs";
-import { OpenAIStream, StreamingTextResponse } from "ai";
+import { StreamingTextResponse } from "ai";
 import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { FunctionDefinition } from "openai/resources";
 import { ActionState } from "../../../../types/messages";
+import {
+	captureOpenAIStream,
+	createTraceAndGeneration,
+} from "../../_shared/langfuse";
 import { formatMessages } from "../../_shared/message";
 import { getModelForRequest } from "../../_shared/model";
 import { getOpenAIClient } from "../../_shared/openai";
@@ -83,6 +87,15 @@ Data analysis instructions:
 
 		try {
 			const model = getModelForRequest(req);
+
+			const { trace, generation } = createTraceAndGeneration(
+				"code",
+				actionState,
+				messages,
+				model,
+				uniqueId,
+			);
+
 			const response = await openai.chat.completions.create({
 				model: model,
 				messages: messages,
@@ -95,7 +108,7 @@ Data analysis instructions:
 				stream: true,
 			});
 
-			const stream = OpenAIStream(response);
+			const stream = captureOpenAIStream(response, trace, generation);
 			return new StreamingTextResponse(stream);
 		} catch (error) {
 			captureException(error);

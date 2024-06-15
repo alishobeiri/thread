@@ -18,9 +18,11 @@
 		"ai": "3.0.19",
 		"codemirror": "^6.0.0",
 		"flat": ">=5.0.1",
+		"langfuse": "^3.11.2",
 		"lodash": "^4.17.21",
 		"next": ">=14.1.1",
 		"next-sitemap": "^4.2.3",
+		"openai": "^4.33.0",
 		"postcss": ">=8.4.31",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
@@ -28,8 +30,7 @@
 		"socket.io-parser": ">=3.3.3",
 		"uuid": "^9.0.1",
 		"vscode-languageserver-protocol": "^3.17.5",
-		"zustand": "^4.4.6",
-		"openai": "^4.33.0"
+		"zustand": "^4.4.6"
 	},
 	"devDependencies": {
 		"@types/react": "^18",

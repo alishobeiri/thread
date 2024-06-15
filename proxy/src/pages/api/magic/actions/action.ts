@@ -3,6 +3,7 @@ import { cloneDeep } from "lodash";
 import { NextApiRequest, NextApiResponse } from "next";
 import { FunctionDefinition } from "openai/resources";
 import { ActionState } from "../../../../types/messages";
+import { createTraceAndGeneration } from "../../_shared/langfuse";
 import { formatMessages } from "../../_shared/message";
 import { getModelForRequest } from "../../_shared/model";
 import { getOpenAIClient } from "../../_shared/openai";
@@ -99,9 +100,8 @@ const actionProperty: ActionProperty<typeof isDevelopment> = {
 			type: "object",
 			description: `Conditions you should return '${ActionType.Stop}':
 - The assistant has generated the necessary code to answer the users request.
-- The user must answer the assistant's question before you can proceed.
 - You are awaiting for the user's input. You must return '${ActionType.Stop}' in this case.
-- The user's answer has been completely answered and a result summary has been provided.
+- The user's answer has been completely addressed. If code execution is not enabled, return stop even if the code was not executed.
 - If you are about to repeat yourself. Because you shouldn't repeat yourself, you must return '${ActionType.Stop}'.
 - If you have already discussed having insufficient information from the user, you must return '${ActionType.Stop}'.`,
 			properties: {
@@ -216,7 +216,6 @@ Your instructions:
 - If the assistant has started to repeat themselves without making any progress, you must stop.
 - If the assistant has faced an error that it can't recover from without user intervention, please notify the user of the issue using markdown.
 - The user has set auto execute generated code to ${autoExecuteGeneratedCode}. If they do not want automatically executed code, do not continue just because the code was not executed.`;
-
 		const messages = formatMessages(systemPrompt, actionState, 5e3);
 
 		const maskedActionFunction = maskActions(actionState);
@@ -229,6 +228,13 @@ Your instructions:
 
 		try {
 			const model = getModelForRequest();
+			const { trace, generation } = createTraceAndGeneration(
+				"action",
+				actionState,
+				messages,
+				model,
+				uniqueId,
+			);
 
 			const response = await openai.chat.completions.create({
 				model: model,
@@ -271,6 +277,13 @@ Your instructions:
 				}
 
 				res.status(200).json(action);
+
+				generation.end({
+					output: JSON.parse(
+						response.choices[0].message.tool_calls[0].function
+							.arguments,
+					),
+				});
 			} else {
 				res.status(200).json({});
 			}
