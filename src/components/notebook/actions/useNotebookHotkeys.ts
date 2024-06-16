@@ -10,7 +10,7 @@ import {
 } from "../../cell/actions/actions";
 import useCellStore, { CellStatus } from "../../cell/store/CellStore";
 import { useMagicInputStore } from "../../input/MagicInputStore";
-import { useSettingsStore } from "../../modals/server-settings/SettingsStore";
+import { useSettingsStore } from "../../settings/SettingsStore";
 import { useSidebarStore } from "../../sidebar/store/SidebarStore";
 import { useNotebookStore } from "../store/NotebookStore";
 

@@ -1,8 +1,8 @@
-import { useSettingsStore } from "../../../components/modals/server-settings/SettingsStore";
+import { useSettingsStore } from "../../../components/settings/SettingsStore";
 import { ActionState } from "../magicQuery";
 import { sharedAction } from "./shared/utils";
 
-const { getServerProxyUrl } = useSettingsStore.getState();
+const { getServerProxyURL } = useSettingsStore.getState();
 
 export async function* codeAction(
 	actionState: ActionState,
@@ -11,7 +11,7 @@ export async function* codeAction(
 	yield* sharedAction(
 		actionState,
 		wasAborted,
-		`${getServerProxyUrl()}/api/magic/actions/code`,
+		`${getServerProxyURL()}/api/magic/actions/code`,
 		"code",
 	);
 }

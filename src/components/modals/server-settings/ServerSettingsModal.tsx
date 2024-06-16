@@ -16,7 +16,7 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useSettingsStore } from "./SettingsStore";
+import { useSettingsStore } from "../../settings/SettingsStore";
 
 const ServerSettingsModal = () => {
 	const isOpen = useSettingsStore((state) => state.showServerSettingsModal);
@@ -32,7 +32,7 @@ const ServerSettingsModal = () => {
 	}, []);
 
 	const serverProxyURL = useSettingsStore((state) => state.serverProxyURL);
-	const { setSettings } = useSettingsStore.getState();
+	const { setServerProxyURL } = useSettingsStore.getState();
 	const [tempServerURL, setTempServerURL] = useState("");
 	const toast = useToast();
 
@@ -41,9 +41,7 @@ const ServerSettingsModal = () => {
 	};
 
 	const saveSettings = async () => {
-		await setSettings({
-			serverProxyURL: tempServerURL,
-		});
+		await setServerProxyURL(tempServerURL);
 		handleClose();
 	};
 

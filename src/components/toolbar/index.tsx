@@ -20,7 +20,7 @@ import {
 } from "../../assets/icons";
 import ConnectionManager from "../../services/connection/connectionManager";
 import { getCellTypesWithHandlers } from "../../utils/cellOptions";
-import { useModelSettingsModalStore } from "../modals/model-settings/ModelSettingsModalStore";
+import { useSettingsStore } from "../settings/SettingsStore";
 import { ICellTypes, useNotebookStore } from "../notebook/store/NotebookStore";
 import { triggerCellActionFailureToast } from "../toasts";
 
@@ -84,7 +84,7 @@ const RunModeSelector = () => {
 };
 
 function ModelTypeSwitcher() {
-	const modelType = useModelSettingsModalStore((state) => state.modelType);
+	const modelType = useSettingsStore((state) => state.modelType);
 
 	return (
 		<Tooltip
@@ -103,9 +103,7 @@ function ModelTypeSwitcher() {
 				colorScheme="orange"
 				fontFamily={"Space Grotesk"}
 				onClick={() => {
-					useModelSettingsModalStore
-						.getState()
-						.setShowModelSettingsModal(true);
+					useSettingsStore.getState().setShowModelSettingsModal(true);
 				}}
 				rightIcon={
 					modelType === "openai" ? undefined : (

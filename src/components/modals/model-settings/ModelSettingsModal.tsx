@@ -22,13 +22,11 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { OllamaIcon, OpenAIIcon } from "../../../assets/icons";
-import { useModelSettingsModalStore } from "./ModelSettingsModalStore"; // adjust the import based on your file structure
+import { useSettingsStore } from "../../settings/SettingsStore"; // adjust the import based on your file structure
 
 const ModelSettingsModal = () => {
-	const isOpen = useModelSettingsModalStore(
-		(state) => state.showModelSettingsModal,
-	);
-	const setIsOpen = useModelSettingsModalStore(
+	const isOpen = useSettingsStore((state) => state.showModelSettingsModal);
+	const setIsOpen = useSettingsStore(
 		(state) => state.setShowModelSettingsModal,
 	);
 	const handleClose = () => {
@@ -36,29 +34,23 @@ const ModelSettingsModal = () => {
 	};
 
 	useEffect(() => {
-		useModelSettingsModalStore.getState().fetchSettings();
+		useSettingsStore.getState().fetchSettings();
 	}, []);
 
-	const openaiKey = useModelSettingsModalStore((state) => state.openAIKey);
-	const openAIBaseUrl = useModelSettingsModalStore(
-		(state) => state.openAIBaseURL,
-	);
-	const serverProxyURL = useModelSettingsModalStore(
-		(state) => state.serverProxyURL,
-	);
-	const modelType = useModelSettingsModalStore((state) => state.modelType);
-	const ollamaUrl = useModelSettingsModalStore((state) => state.ollamaUrl);
-	const ollamaModel = useModelSettingsModalStore(
-		(state) => state.ollamaModel,
-	);
-	const { setSettings, setModelType } = useModelSettingsModalStore.getState();
+	const openaiKey = useSettingsStore((state) => state.openAIKey);
+	const openAIBaseUrl = useSettingsStore((state) => state.openAIBaseURL);
+	const serverProxyURL = useSettingsStore((state) => state.serverProxyURL);
+	const modelType = useSettingsStore((state) => state.modelType);
+	const ollamaUrl = useSettingsStore((state) => state.ollamaURL);
+	const ollamaModel = useSettingsStore((state) => state.ollamaModel);
+	const { setSettings, setModelType } = useSettingsStore.getState();
 	const [show, setShow] = useState(false);
 	const [tempOpenAIKey, setTempOpenAIKey] = useState("");
 	const [tempServerURL, setTempServerURL] = useState("");
 	const [tempBaseOpenAIURL, setTempBaseOpenAIURL] = useState("");
 	const [isValid, setIsValid] = useState(true);
 	const [tempModelType, setTempModelType] = useState(modelType);
-	const [tempOllamaUrl, setTempOllamaUrl] = useState("");
+	const [tempOllamaURL, setTempOllamaURL] = useState("");
 	const [tempOllamaModel, setTempOllamaModel] = useState("");
 	const toast = useToast();
 
@@ -66,7 +58,7 @@ const ModelSettingsModal = () => {
 		setTempOpenAIKey(openaiKey || "");
 		setTempServerURL(serverProxyURL || "");
 		setTempBaseOpenAIURL(openAIBaseUrl || "");
-		setTempOllamaUrl(ollamaUrl || "");
+		setTempOllamaURL(ollamaUrl || "");
 		setTempOllamaModel(ollamaModel || "");
 		setTempModelType(modelType || "openai");
 	};
@@ -94,7 +86,7 @@ const ModelSettingsModal = () => {
 			openAIBaseURL: tempBaseOpenAIURL,
 			openAIKey: tempOpenAIKey,
 			serverProxyURL: tempServerURL,
-			ollamaUrl: tempOllamaUrl,
+			ollamaURL: tempOllamaURL,
 			ollamaModel: tempOllamaModel,
 			modelType: tempModelType,
 		});
@@ -246,9 +238,9 @@ const ModelSettingsModal = () => {
 									</FormLabel>
 									<Input
 										placeholder="Enter your Ollama URL"
-										value={tempOllamaUrl}
+										value={tempOllamaURL}
 										onChange={(e) =>
-											setTempOllamaUrl(e.target.value)
+											setTempOllamaURL(e.target.value)
 										}
 									/>
 									<Text

@@ -1,16 +1,15 @@
 import useCellStore, {
 	CellStatus,
 } from "../../components/cell/store/CellStore";
-import { useModelSettingsModalStore } from "../../components/modals/model-settings/ModelSettingsModalStore";
-import { useSettingsStore } from "../../components/modals/server-settings/SettingsStore";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
+import { useSettingsStore } from "../../components/settings/SettingsStore";
 import ConnectionManager from "../../services/connection/connectionManager";
 import { ThreadCell } from "../../types/code.types";
 import { mostRelevantCellsForQuery } from "../embeddings";
 import { makeStreamingFunctionRequest } from "../streaming";
 import { getAppTheme, multilineStringToString } from "../utils";
 
-const { getServerProxyUrl } = useSettingsStore.getState();
+const { getServerProxyURL } = useSettingsStore.getState();
 
 export const editCell = async (cell: ThreadCell, query: string) => {
 	const setPreviousQuery = useCellStore.getState().setPreviousQuery;
@@ -18,7 +17,7 @@ export const editCell = async (cell: ThreadCell, query: string) => {
 	const setCellStatus = useCellStore.getState().setCellStatus;
 	setCellStatus(cell.id as string, CellStatus.Generating);
 	const stream = makeStreamingFunctionRequest({
-		url: `${getServerProxyUrl()}/api/magic/actions/editCell`,
+		url: `${getServerProxyURL()}/api/magic/actions/editCell`,
 		method: "POST",
 		payload: {
 			userRequest: query,
@@ -26,9 +25,7 @@ export const editCell = async (cell: ThreadCell, query: string) => {
 			currentNamespace: ConnectionManager.getInstance().currentNamespace,
 			mostRelevantCellsForQuery: await mostRelevantCellsForQuery(query),
 			theme: getAppTheme(),
-			...useModelSettingsModalStore
-				.getState()
-				.getAdditionalRequestMetadata(),
+			...useSettingsStore.getState().getAdditionalRequestMetadata(),
 		},
 		shouldCancel: () =>
 			useNotebookStore.getState().userAbortedMagicQueryController.signal

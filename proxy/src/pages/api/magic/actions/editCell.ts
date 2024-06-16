@@ -88,7 +88,7 @@ ${themePrompt}`,
 		const model = getModelForRequest(modelInformation);
 
 		try {
-			const model = getModelForRequest(req);
+			const model = getModelForRequest(modelInformation);
 			const trace = LangfuseClient.getInstance().trace({
 				id: uuidv4(),
 				name: `editCell`,

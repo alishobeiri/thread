@@ -31,7 +31,7 @@ import { isInViewport, isPlatformMac } from "../../utils/utils";
 import { enableCommandMode } from "../cell/actions/actions";
 import useCellStore, { CellStatus } from "../cell/store/CellStore";
 import SpinnerWithStopButton from "../misc/SpinnerWithStopButton";
-import { useSettingsStore } from "../modals/server-settings/SettingsStore";
+import { useSettingsStore } from "../settings/SettingsStore";
 import { useNotebookStore } from "../notebook/store/NotebookStore";
 import { useChatStore } from "../sidebar/chat/store/ChatStore";
 import { MagicInputSelections, useMagicInputStore } from "./MagicInputStore";

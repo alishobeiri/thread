@@ -143,7 +143,7 @@ class ConnectionManager {
 				},
 			);
 			const uniqueId = await response.text();
-			this.uniqueId = uniqueId;
+			this.setUniqueId(uniqueId);
 			if (uniqueId) {
 				// Identify the user based on the unique ID
 				posthog.identify(uniqueId);

@@ -4,9 +4,8 @@ import {
 	MagicInputSelections,
 	useMagicInputStore,
 } from "../../components/input/MagicInputStore";
-import { useModelSettingsModalStore } from "../../components/modals/model-settings/ModelSettingsModalStore";
-import { useSettingsStore } from "../../components/modals/server-settings/SettingsStore";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
+import { useSettingsStore } from "../../components/settings/SettingsStore";
 import { useChatStore } from "../../components/sidebar/chat/store/ChatStore";
 import ConnectionManager, {
 	useConnectionManagerStore,
@@ -52,7 +51,7 @@ export type ActionState = {
 };
 
 const getCells = () => useNotebookStore.getState().cells;
-const { getServerProxyUrl } = useSettingsStore.getState();
+const { getServerProxyURL } = useSettingsStore.getState();
 
 type Actions = {
 	[key: string]: (
@@ -339,7 +338,7 @@ const generateCells = async (query: string, followUpRetries: number) => {
 			break;
 		}
 		const fetchAction = await threadFetch(
-			`${getServerProxyUrl()}/api/magic/actions/action`,
+			`${getServerProxyURL()}/api/magic/actions/action`,
 			{
 				method: "POST",
 				headers: {
@@ -347,7 +346,7 @@ const generateCells = async (query: string, followUpRetries: number) => {
 				},
 				body: JSON.stringify({
 					actionState: actionState,
-					...useModelSettingsModalStore
+					...useSettingsStore
 						.getState()
 						.getAdditionalRequestMetadata(),
 				}),
