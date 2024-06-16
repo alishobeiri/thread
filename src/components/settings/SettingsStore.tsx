@@ -17,12 +17,13 @@ const saveDefaultSettingsFile = async () => {
 			format: "text",
 			content: JSON.stringify(
 				{
-					openAIBaseURL: "",
 					openAIKey: "",
+					openAIBaseURL: "",
 					serverProxyURL: "",
-					ollamaUrl: "",
+					ollamaURL: "",
 					ollamaModel: "",
 					modelType: "openai",
+					autoExecuteGeneratedCode: false,
 				},
 				null,
 				2,
