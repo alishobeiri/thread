@@ -1,6 +1,6 @@
 export type ModelInformation = {
 	openAIKey?: string;
-	openAIBaseURL?: string;
+	openAIBaseUrl?: string;
 	ollamaUrl?: string;
 	ollamaModel?: string;
 	modelType?: string;

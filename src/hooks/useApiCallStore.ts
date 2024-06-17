@@ -31,9 +31,9 @@ const useApiCallStore = create<ApiCallState>((set) => ({
 		const { apiCallCount, incrementApiCallCount } =
 			useApiCallStore.getState();
 		const openaiApiKey = useSettingsStore.getState().openAIKey;
-		const serverProxyURL = useSettingsStore.getState().serverProxyURL;
+		const serverProxyUrl = useSettingsStore.getState().serverProxyUrl;
 
-		if (openaiApiKey || serverProxyURL != "") {
+		if (openaiApiKey || serverProxyUrl != "") {
 			return true;
 		}
 

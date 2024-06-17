@@ -148,11 +148,11 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 				},
 			);
 
-			const { getServerProxyURL } = useSettingsStore.getState();
+			const { getServerProxyUrl } = useSettingsStore.getState();
 
 			let assistantMessageId;
 			const stream = makeStreamingRequest({
-				url: `${getServerProxyURL()}/api/chat/assistant`,
+				url: `${getServerProxyUrl()}/api/chat/assistant`,
 				method: "POST",
 				payload: {
 					query,

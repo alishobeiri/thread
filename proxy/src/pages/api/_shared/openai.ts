@@ -39,7 +39,7 @@ export const azure_openai = new OpenAI(AZURE_CONFIG);
 
 // shoutout ollama compatibility with openai: https://ollama.com/blog/openai-compatibility
 export const getOpenAIClient = (modelInformation?: ModelInformation) => {
-	const { openAIKey, openAIBaseURL, ollamaUrl, modelType } =
+	const { openAIKey, openAIBaseUrl, ollamaUrl, modelType } =
 		modelInformation || {};
 
 	const config =
@@ -50,7 +50,7 @@ export const getOpenAIClient = (modelInformation?: ModelInformation) => {
 			  }
 			: {
 					apiKey: openAIKey || OPENAI_API_KEY,
-					baseURL: openAIBaseURL || OPENAI_BASE_URL,
+					baseURL: openAIBaseUrl || OPENAI_BASE_URL,
 			  };
 
 	if (!config.apiKey) {

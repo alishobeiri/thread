@@ -38,33 +38,33 @@ const ModelSettingsModal = () => {
 	}, []);
 
 	const openaiKey = useSettingsStore((state) => state.openAIKey);
-	const openAIBaseUrl = useSettingsStore((state) => state.openAIBaseURL);
-	const serverProxyURL = useSettingsStore((state) => state.serverProxyURL);
+	const openAIBaseUrl = useSettingsStore((state) => state.openAIBaseUrl);
+	const serverProxyUrl = useSettingsStore((state) => state.serverProxyUrl);
 	const modelType = useSettingsStore((state) => state.modelType);
-	const ollamaUrl = useSettingsStore((state) => state.ollamaURL);
+	const ollamaUrl = useSettingsStore((state) => state.ollamaUrl);
 	const ollamaModel = useSettingsStore((state) => state.ollamaModel);
 	const { setSettings, setModelType } = useSettingsStore.getState();
 	const [show, setShow] = useState(false);
 	const [tempOpenAIKey, setTempOpenAIKey] = useState("");
-	const [tempServerURL, setTempServerURL] = useState("");
-	const [tempBaseOpenAIURL, setTempBaseOpenAIURL] = useState("");
+	const [tempServerUrl, setTempServerUrl] = useState("");
+	const [tempBaseOpenAIUrl, setTempBaseOpenAIUrl] = useState("");
 	const [isValid, setIsValid] = useState(true);
 	const [tempModelType, setTempModelType] = useState(modelType);
-	const [tempOllamaURL, setTempOllamaURL] = useState("");
+	const [tempOllamaUrl, setTempOllamaUrl] = useState("");
 	const [tempOllamaModel, setTempOllamaModel] = useState("");
 	const toast = useToast();
 
 	const loadSettings = () => {
 		setTempOpenAIKey(openaiKey || "");
-		setTempServerURL(serverProxyURL || "");
-		setTempBaseOpenAIURL(openAIBaseUrl || "");
-		setTempOllamaURL(ollamaUrl || "");
+		setTempServerUrl(serverProxyUrl || "");
+		setTempBaseOpenAIUrl(openAIBaseUrl || "");
+		setTempOllamaUrl(ollamaUrl || "");
 		setTempOllamaModel(ollamaModel || "");
 		setTempModelType(modelType || "openai");
 	};
 
 	const validate = () => {
-		if (tempBaseOpenAIURL && !tempOpenAIKey) {
+		if (tempBaseOpenAIUrl && !tempOpenAIKey) {
 			setIsValid(false);
 		} else {
 			setIsValid(true);
@@ -83,10 +83,10 @@ const ModelSettingsModal = () => {
 			return;
 		}
 		await setSettings({
-			openAIBaseURL: tempBaseOpenAIURL,
+			openAIBaseUrl: tempBaseOpenAIUrl,
 			openAIKey: tempOpenAIKey,
-			serverProxyURL: tempServerURL,
-			ollamaURL: tempOllamaURL,
+			serverProxyUrl: tempServerUrl,
+			ollamaUrl: tempOllamaUrl,
 			ollamaModel: tempOllamaModel,
 			modelType: tempModelType,
 		});
@@ -102,7 +102,7 @@ const ModelSettingsModal = () => {
 
 	useEffect(() => {
 		validate();
-	}, [tempOpenAIKey, tempServerURL, tempBaseOpenAIURL]);
+	}, [tempOpenAIKey, tempServerUrl, tempBaseOpenAIUrl]);
 
 	useEffect(() => {
 		setTempModelType(modelType);
@@ -159,7 +159,7 @@ const ModelSettingsModal = () => {
 								<FormControl
 									id="api-key"
 									isInvalid={Boolean(
-										tempBaseOpenAIURL && !tempOpenAIKey,
+										tempBaseOpenAIUrl && !tempOpenAIKey,
 									)}
 								>
 									<FormLabel fontWeight="bold" fontSize="lg">
@@ -186,7 +186,7 @@ const ModelSettingsModal = () => {
 											</Button>
 										</InputRightElement>
 									</InputGroup>
-									{!isValid && tempBaseOpenAIURL && (
+									{!isValid && tempBaseOpenAIUrl && (
 										<Text
 											mt="2"
 											fontSize="small"
@@ -212,9 +212,9 @@ const ModelSettingsModal = () => {
 									</FormLabel>
 									<Input
 										placeholder="Enter your OpenAI Base URL"
-										value={tempBaseOpenAIURL}
+										value={tempBaseOpenAIUrl}
 										onChange={(e) =>
-											setTempBaseOpenAIURL(e.target.value)
+											setTempBaseOpenAIUrl(e.target.value)
 										}
 									/>
 									<Text
@@ -238,9 +238,9 @@ const ModelSettingsModal = () => {
 									</FormLabel>
 									<Input
 										placeholder="Enter your Ollama URL"
-										value={tempOllamaURL}
+										value={tempOllamaUrl}
 										onChange={(e) =>
-											setTempOllamaURL(e.target.value)
+											setTempOllamaUrl(e.target.value)
 										}
 									/>
 									<Text

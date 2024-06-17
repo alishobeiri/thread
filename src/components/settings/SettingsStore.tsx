@@ -18,9 +18,9 @@ const saveDefaultSettingsFile = async () => {
 			content: JSON.stringify(
 				{
 					openAIKey: "",
-					openAIBaseURL: "",
-					serverProxyURL: "",
-					ollamaURL: "",
+					openAIBaseUrl: "",
+					serverProxyUrl: "",
+					ollamaUrl: "",
 					ollamaModel: "",
 					modelType: "openai",
 					autoExecuteGeneratedCode: false,
@@ -65,19 +65,19 @@ interface SettingsState {
 	showModelSettingsModal: boolean;
 	showServerSettingsModal: boolean;
 	openAIKey: string;
-	openAIBaseURL: string;
-	serverProxyURL: string;
-	ollamaURL: string;
+	openAIBaseUrl: string;
+	serverProxyUrl: string;
+	ollamaUrl: string;
 	ollamaModel: string;
 	modelType: ModelType;
 	autoExecuteGeneratedCode: boolean;
 	setShowModelSettingsModal: (show: boolean) => void;
 	setShowServerSettingsModal: (show: boolean) => void;
 	setOpenAIKey: (key: string) => void;
-	setOpenAIBaseURL: (url: string) => void;
-	setServerProxyURL: (url: string) => void;
-	getServerProxyURL: () => string;
-	setOllamaURL: (url: string) => void;
+	setOpenAIBaseUrl: (url: string) => void;
+	setServerProxyUrl: (url: string) => void;
+	getServerProxyUrl: () => string;
+	setOllamaUrl: (url: string) => void;
 	setOllamaModel: (model: string) => void;
 	setModelType: (type: ModelType) => void;
 	fetchSettings: () => Promise<void>;
@@ -92,9 +92,9 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 	showServerSettingsModal: false,
 	autoExecuteGeneratedCode: false,
 	openAIKey: "",
-	openAIBaseURL: "",
-	serverProxyURL: "",
-	ollamaURL: "",
+	openAIBaseUrl: "",
+	serverProxyUrl: "",
+	ollamaUrl: "",
 	ollamaModel: "",
 	modelType: "openai",
 	setShowModelSettingsModal: (show) => set({ showModelSettingsModal: show }),
@@ -104,24 +104,24 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 		set({ openAIKey: key });
 		get().saveSettings({ openAIKey: key });
 	},
-	setOpenAIBaseURL: (url) => {
-		set({ openAIBaseURL: url });
-		get().saveSettings({ openAIBaseURL: url });
+	setOpenAIBaseUrl: (url) => {
+		set({ openAIBaseUrl: url });
+		get().saveSettings({ openAIBaseUrl: url });
 	},
-	setServerProxyURL: (url) => {
-		set({ serverProxyURL: url });
-		get().saveSettings({ serverProxyURL: url });
+	setServerProxyUrl: (url) => {
+		set({ serverProxyUrl: url });
+		get().saveSettings({ serverProxyUrl: url });
 	},
-	getServerProxyURL: () => {
-		const serverProxyURL = get().serverProxyURL;
-		if (!serverProxyURL || serverProxyURL == "") {
+	getServerProxyUrl: () => {
+		const serverProxyUrl = get().serverProxyUrl;
+		if (!serverProxyUrl || serverProxyUrl == "") {
 			return API_URL;
 		}
-		return serverProxyURL;
+		return serverProxyUrl;
 	},
-	setOllamaURL: (url) => {
-		set({ ollamaURL: url });
-		get().saveSettings({ ollamaURL: url });
+	setOllamaUrl: (url) => {
+		set({ ollamaUrl: url });
+		get().saveSettings({ ollamaUrl: url });
 	},
 	setOllamaModel: (model) => {
 		set({ ollamaModel: model });
@@ -144,10 +144,12 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 				const fileContent = JSON.parse(file.content);
 
 				set({
+					autoExecuteGeneratedCode:
+						fileContent.autoExecuteGeneratedCode || false,
 					openAIKey: fileContent.openAIKey || "",
-					openAIBaseURL: fileContent.openAIBaseURL || "",
-					serverProxyURL: fileContent.serverProxyURL || "",
-					ollamaURL: fileContent.ollamaURL || "",
+					openAIBaseUrl: fileContent.openAIBaseUrl || "",
+					serverProxyUrl: fileContent.serverProxyUrl || "",
+					ollamaUrl: fileContent.ollamaUrl || "",
 					ollamaModel: fileContent.ollamaModel || "",
 					modelType: fileContent.modelType || "openai",
 				});
@@ -186,8 +188,8 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 		return {
 			modelInformation: {
 				openAIKey: get().openAIKey,
-				openAIBaseURL: get().openAIBaseURL,
-				ollamaUrl: get().ollamaURL,
+				openAIBaseUrl: get().openAIBaseUrl,
+				ollamaUrl: get().ollamaUrl,
 				ollamaModel: get().ollamaModel,
 				modelType: get().modelType,
 			},
@@ -216,10 +218,10 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 			}
 
 			const updatedSettings: Partial<SettingsState> = {
-				openAIBaseURL: prevSettings.openAIBaseURL || "",
+				openAIBaseUrl: prevSettings.openAIBaseUrl || "",
 				openAIKey: prevSettings.openAIKey || "",
-				serverProxyURL: prevSettings.serverProxyURL || "",
-				ollamaURL: prevSettings.ollamaURL || "",
+				serverProxyUrl: prevSettings.serverProxyUrl || "",
+				ollamaUrl: prevSettings.ollamaUrl || "",
 				ollamaModel: prevSettings.ollamaModel || "",
 				modelType: prevSettings.modelType || "openai",
 				autoExecuteGeneratedCode:

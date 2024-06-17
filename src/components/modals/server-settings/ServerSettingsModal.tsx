@@ -31,17 +31,17 @@ const ServerSettingsModal = () => {
 		useSettingsStore.getState().fetchSettings();
 	}, []);
 
-	const serverProxyURL = useSettingsStore((state) => state.serverProxyURL);
-	const { setServerProxyURL } = useSettingsStore.getState();
-	const [tempServerURL, setTempServerURL] = useState("");
+	const serverProxyUrl = useSettingsStore((state) => state.serverProxyUrl);
+	const { setServerProxyUrl } = useSettingsStore.getState();
+	const [tempServerUrl, setTempServerUrl] = useState("");
 	const toast = useToast();
 
 	const loadSettings = () => {
-		setTempServerURL(serverProxyURL || "");
+		setTempServerUrl(serverProxyUrl || "");
 	};
 
 	const saveSettings = async () => {
-		await setServerProxyURL(tempServerURL);
+		await setServerProxyUrl(tempServerUrl);
 		handleClose();
 	};
 
@@ -69,9 +69,9 @@ const ServerSettingsModal = () => {
 							</FormLabel>
 							<Input
 								placeholder="Enter your Server Proxy URL"
-								value={tempServerURL}
+								value={tempServerUrl}
 								onChange={(e) =>
-									setTempServerURL(e.target.value)
+									setTempServerUrl(e.target.value)
 								}
 							/>
 							<Text mt="2" fontSize="small" color="gray.500">

@@ -51,7 +51,7 @@ export type ActionState = {
 };
 
 const getCells = () => useNotebookStore.getState().cells;
-const { getServerProxyURL } = useSettingsStore.getState();
+const { getServerProxyUrl } = useSettingsStore.getState();
 
 type Actions = {
 	[key: string]: (
@@ -338,7 +338,7 @@ const generateCells = async (query: string, followUpRetries: number) => {
 			break;
 		}
 		const fetchAction = await threadFetch(
-			`${getServerProxyURL()}/api/magic/actions/action`,
+			`${getServerProxyUrl()}/api/magic/actions/action`,
 			{
 				method: "POST",
 				headers: {
