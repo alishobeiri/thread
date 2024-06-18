@@ -48,6 +48,7 @@
 		"next-sitemap": "^4.2.3",
 		"next-transpile-modules": "^10.0.1",
 		"openai": "^4.51.0",
+		"langfuse": "^3.11.2",
 		"papaparse": "^5.4.1",
 		"postcss": ">=8.4.31",
 		"posthog-js": "^1.93.2",
