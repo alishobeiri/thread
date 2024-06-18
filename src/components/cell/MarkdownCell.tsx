@@ -145,6 +145,7 @@ const MarkdownCell = ({
 					alignItems={"flex-start"}
 					height="100%"
 					backgroundColor={"var(--jp-layout-color1)"}
+					position="relative"
 				>
 					<CodeMirror
 						ref={cmRef}

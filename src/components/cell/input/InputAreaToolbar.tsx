@@ -76,7 +76,13 @@ const InputAreaToolbar: React.FC<InputAreaToolbarProps> = ({
 
 	return (
 		active && (
-			<HStack mt="0.5px" mr={"1px"} gap={1}>
+			<HStack
+				backgroundColor={"var(--jp-layout-color1)"}
+				position="absolute"
+				right={"1px"}
+				top={"1px"}
+				gap={1}
+			>
 				<Tooltip
 					label={`Switch to ${type === "code" ? "markdown" : "code"}`}
 					size="sm"
