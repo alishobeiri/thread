@@ -76,6 +76,7 @@
 		"remark-math": "^6.0.0",
 		"socket.io": ">=2.4.0",
 		"socket.io-parser": ">=3.3.3",
+		"shared-thread-utils": "file:./shared-thread-utils",
 		"uuid": "^9.0.1",
 		"vscode-languageserver-protocol": "^3.17.5",
 		"xmlhttprequest-ssl": ">=1.6.2",

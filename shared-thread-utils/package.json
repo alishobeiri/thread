@@ -1,0 +1,21 @@
+{
+	"name": "shared-thread-utils",
+	"version": "1.0.0",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "tsc"
+	},
+	"dependencies": {
+		"ai": "^3.0.19",
+		"openai": "^4.33.0"
+	},
+	"devDependencies": {
+		"@types/webpack": "^5.28.5",
+		"typescript": "^4.0.0"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": ""
+}
