@@ -12,10 +12,16 @@ import { ISessionConnection } from "@jupyterlab/services/lib/session/session";
 import { PartialJSONObject } from "@lumino/coreutils/types";
 import { ISignal, Signal } from "@lumino/signaling";
 import { captureException } from "@sentry/nextjs";
+import {
+	IPYWIDGET_STATE_MIMETYPE,
+	IPYWIDGET_VIEW_MIMETYPE,
+} from "../../components/cell/output/mimeTypes";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
 import { ThreadCell } from "../../types/code.types";
 import { multilineStringToString } from "../../utils/utils";
 import TextEmbeddingModel from "../embedding/TextEmbedder";
+
+let widgetUpdateBuffer: { view: any; state: any } = { view: null, state: {} };
 
 export class KernelModel {
 	// Initialize an empty queue
@@ -223,6 +229,12 @@ export class KernelModel {
 				this._output = msg.content as IOutput;
 				this._stateChanged.emit();
 				break;
+			case "comm_open":
+				this._onCommOpen(msg);
+				break;
+			case "status":
+				this._onStatusChange(msg);
+				break;
 			default:
 				break;
 		}
@@ -265,6 +277,86 @@ export class KernelModel {
 	private _setExecutionCount = useNotebookStore.getState().setExecutionCount;
 	private _clearCellOutputs = useNotebookStore.getState().clearCellOutputs;
 	private _addCellOutput = useNotebookStore.getState().addCellOutput;
+
+	private _getCellOutput(): any {
+		if (!this.cell!.outputs || (this.cell!.outputs as any).length === 0) {
+			const output = {
+				data: {},
+				metadata: {},
+				output_type: "display_data",
+			};
+			(this.cell as any).outputs = [output];
+			return output;
+		}
+
+		return (this.cell?.outputs as any)?.[0];
+	}
+
+	private _onCommOpen = (msg: KernelMessage.IIOPubMessage): void => {
+		const messageContent = msg.content as any;
+		const commId = messageContent.comm_id;
+		const modelData = messageContent.data;
+
+		// Buffer the view data
+		widgetUpdateBuffer.view = {
+			model_id: commId,
+			version_major: modelData.state._view_module_version.split(".")[0],
+			version_minor: modelData.state._view_module_version.split(".")[1],
+		};
+
+		// Buffer the state data
+		widgetUpdateBuffer.state[commId] = {
+			model_name: modelData.state._model_name,
+			model_module: modelData.state._model_module,
+			model_module_version: modelData.state._model_module_version,
+			state: {
+				...modelData.state,
+			},
+		};
+	};
+
+	private _onStatusChange = (msg: KernelMessage.IIOPubMessage): void => {
+		if ((msg.content as any).execution_state === "idle") {
+			this._applyBufferedUpdates();
+		}
+	};
+
+	private _applyBufferedUpdates = (): void => {
+		// Check if the buffer is empty
+		if (
+			!widgetUpdateBuffer.view &&
+			Object.keys(widgetUpdateBuffer.state).length === 0
+		) {
+			return;
+		}
+
+		const cellOutput = {} as any;
+
+		if (!cellOutput.data) {
+			cellOutput.data = {};
+		}
+
+		// Apply view data
+		cellOutput.data[IPYWIDGET_VIEW_MIMETYPE] = widgetUpdateBuffer.view;
+
+		// Apply state data
+		cellOutput.data[IPYWIDGET_STATE_MIMETYPE] = {
+			version_major: 2,
+			version_minor: 0,
+			state: widgetUpdateBuffer.state,
+		};
+
+		// Clear the buffer
+		widgetUpdateBuffer = { view: null, state: {} };
+
+		this._addCellOutput(this.cellId, {
+			...this._getCellOutput(),
+			output_type: "execute_result",
+			...cellOutput,
+		});
+
+		this._stateChanged.emit();
+	};
 
 	// Currently processing cell
 	private _currentlyProcessingCell: ThreadCell | null | undefined;

@@ -18,6 +18,10 @@ export const EXCEL_MIME_TYPE = "application/vnd.ms-excel";
 export const APPLICATION_PDF = "application/pdf";
 export const LATEX = "text/latex";
 export const IMAGE_GIF = "image/gif";
+export const IPYWIDGET_VIEW_MIMETYPE =
+	"application/vnd.jupyter.widget-view+json";
+export const IPYWIDGET_STATE_MIMETYPE =
+	"application/vnd.jupyter.widget-state+json";
 
 export const PNG_MIME_TYPE = `${IMG_PNG};${TEXT_PLAIN}`;
 export const PNG_JPG_MIME_TYPE = `${IMG_JPEG};${IMG_PNG};${TEXT_PLAIN}`;
@@ -25,6 +29,7 @@ export const GIF_MIME_TYPE = `${IMAGE_GIF};${TEXT_PLAIN}`;
 export const IMG_SVG_TEXT_PLAIN = `${IMG_SVG};${TEXT_PLAIN}`;
 export const IMG_PNG_IMG_SVG = `${IMG_PNG};${IMG_SVG}`;
 export const IMG_PNG_IMG_SVG_TEXT_PLAIN = `${IMG_PNG};${IMG_SVG};${TEXT_PLAIN}`;
+export const IPYWIDGET_VIEW_PLAIN_MIMETYPE = `${IPYWIDGET_VIEW_MIMETYPE};${TEXT_PLAIN}`;
 
 export const APP_JS_MIME_TYPE = `${APPLICATION_JAVASCRIPT};${TEXT_PLAIN}`;
 export const TEXT_HTML_TEXT_PLAIN_MIME_TYPE = `${TEXT_HTML};${TEXT_PLAIN}`;

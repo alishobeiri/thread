@@ -5,6 +5,10 @@ import "../styles/cm-light.css";
 import "../styles/globals.css";
 import theme from "../theme";
 
+// Required for IPython widgets
+import "@jupyter-widgets/controls/css/widgets.css";
+import "font-awesome/css/font-awesome.css";
+
 declare global {
 	interface Window {
 		gapi: any;
