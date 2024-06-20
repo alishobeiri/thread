@@ -18,7 +18,6 @@ export const editCell = async (cell: ThreadCell, query: string) => {
 	const setCellStatus = useCellStore.getState().setCellStatus;
 	setCellStatus(cell.id as string, CellStatus.Generating);
 
-	const metadata = useSettingsStore.getState().getAdditionalRequestMetadata();
 	const isLocal = useSettingsStore.getState().isLocal();
 	const payload = {
 		userRequest: query,
@@ -44,7 +43,6 @@ export const editCell = async (cell: ThreadCell, query: string) => {
 		  });
 
 	for await (const data of stream) {
-		console.log(data);
 		if (typeof data === "string") {
 			const trimmedData = data.replace(/^```|```$/g, "");
 			setProposedSource(cell.id as string, trimmedData);

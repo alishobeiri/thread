@@ -45,7 +45,7 @@ export async function* parseStream(
 	}
 }
 
-interface StreamWrapperParams<P> {
+export interface StreamWrapperParams<P> {
 	streamGenerator: (params: P) => Promise<StreamingTextResponse>;
 	params: P;
 	shouldCancel?: () => boolean;

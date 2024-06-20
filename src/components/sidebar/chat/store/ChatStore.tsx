@@ -13,6 +13,7 @@ import { useSettingsStore } from "../../../settings/SettingsStore";
 import { useNotebookStore } from "../../../notebook/store/NotebookStore";
 import { useSidebarStore } from "../../store/SidebarStore";
 import { getMessagesPayload, handleChatRequest } from "shared-thread-utils";
+import { ThreadCell } from "../../../../types/code.types";
 export type UserType = "assistant" | "user";
 
 export interface ChatMessage {
@@ -162,8 +163,8 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 				currentChatNamespace,
 				activeCellSource,
 				mostRelevantContextualCellsForQuery:
-					mostRelevantCellsWithFormattedOutputs.map((cell) =>
-						JSON.stringify(cell),
+					mostRelevantCellsWithFormattedOutputs.map(
+						(cell: ThreadCell) => JSON.stringify(cell),
 					),
 			});
 

@@ -1,4 +1,5 @@
 import { captureException } from "@sentry/nextjs";
+import { processActionRequest } from "../../../shared-thread-utils/dist";
 import useCellStore from "../../components/cell/store/CellStore";
 import {
 	MagicInputSelections,
@@ -337,25 +338,37 @@ const generateCells = async (query: string, followUpRetries: number) => {
 		if (wasAborted()) {
 			break;
 		}
-		const fetchAction = await threadFetch(
-			`${getServerProxyUrl()}/api/magic/actions/action`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					actionState: actionState,
-					...useSettingsStore
-						.getState()
-						.getAdditionalRequestMetadata(),
-				}),
-			},
-			get().userAbortedMagicQueryController.signal,
-		);
+		const isLocal = useSettingsStore.getState().isLocal();
+		const metadata = useSettingsStore
+			.getState()
+			.getAdditionalRequestMetadata();
+		const payload = {
+			actionState: actionState,
+			...metadata,
+		};
+		const fetchAction = isLocal
+			? await processActionRequest(
+					actionState,
+					metadata.modelInformation,
+					metadata.uniqueId,
+			  )
+			: await threadFetch(
+					`${getServerProxyUrl()}/api/magic/actions/action`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(payload),
+					},
+					get().userAbortedMagicQueryController.signal,
+			  );
 
 		try {
-			const action = await fetchAction.json();
+			let action = fetchAction;
+			if (!isLocal) {
+				action = await fetchAction.json();
+			}
 			const actionStr = getAction(action);
 			const actionInfo = getActionInfo(action);
 			console.debug("actionStr: ", actionStr);

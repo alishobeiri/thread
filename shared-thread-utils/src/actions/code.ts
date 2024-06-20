@@ -7,7 +7,7 @@ import {
 } from "../utils/langfuse";
 import { formatMessages } from "../utils/message";
 import { ModelInformation, getModelForRequest } from "../utils/model";
-import { getOpenAIClient } from "../utils/openai";
+import { getOpenAIClient, isBrowser } from "../utils/openai";
 import { ActionState } from "../utils/types/messages";
 
 // Constants for Code Function
@@ -36,7 +36,7 @@ export const CODE_FUNCTION: FunctionDefinition = {
 	},
 };
 
-const systemPrompt: string = `You are Thread, a helpful Python code generating assistant that operates as part of an ensemble of agents and is tasked with the subtask of generating syntactically correct Python code.
+let systemPrompt: string = `You are Thread, a helpful Python code generating assistant that operates as part of an ensemble of agents and is tasked with the subtask of generating syntactically correct Python code.
 - The Python code you generate will be executed in order in a Jupyter Notebook environment.
 - You are able to do anything that is possible in a Python environment, that means installing packages, visualizing data, making external web requests, training machine learning models and much more.
 - If the next cell should also be a Python cell, you can continue generating, however, if the next cell is a different type of cell, please complete your generation to allow them to take over.
@@ -68,6 +68,14 @@ Data analysis instructions:
 
 - When creating a Plotly plot, please use 'fig.show()' to display the plot.`;
 
+if (isBrowser()) {
+	systemPrompt += `
+- Do not generate any explanation other than the Python code
+- Only return the Python code and no other preamble
+- Only return one Python cell at a time
+- Do not surround code with back ticks`;
+}
+
 export async function handleCodeGeneration(data: {
 	actionState: ActionState;
 	modelInformation?: ModelInformation;
@@ -91,11 +99,15 @@ export async function handleCodeGeneration(data: {
 		model: model,
 		messages: messages,
 		temperature: 0.5,
-		tools: [{ type: "function", function: CODE_FUNCTION }],
-		tool_choice: {
-			type: "function",
-			function: { name: CODE_FUNCTION_NAME },
-		},
+		...(isBrowser()
+			? {}
+			: {
+					tools: [{ type: "function", function: CODE_FUNCTION }],
+					tool_choice: {
+						type: "function",
+						function: { name: CODE_FUNCTION_NAME },
+					},
+			  }),
 		stream: true,
 	});
 

@@ -6,10 +6,10 @@ import {
 } from "../utils/langfuse";
 import { formatMessages } from "../utils/message";
 import { ModelInformation, getModelForRequest } from "../utils/model";
-import { getOpenAIClient } from "../utils/openai";
-import { ActionState, NoterousMessage } from "../utils/types/messages";
+import { getOpenAIClient, isBrowser } from "../utils/openai";
+import { ActionState } from "../utils/types/messages";
 
-// Constants for Code Function
+// Constants for Fix Function
 export const FIX_FUNCTION_NAME = "code";
 export const FIX_FUNCTION: FunctionDefinition = {
 	name: FIX_FUNCTION_NAME,
@@ -35,12 +35,20 @@ export const FIX_FUNCTION: FunctionDefinition = {
 	},
 };
 
-const systemPrompt: string = `You are Thread, a helpful Python code fixing assistant that operates as part of an ensemble of agents and is tasked with the subtask of fixing Python code that encountered syntax, runtime or other errors.
+let systemPrompt: string = `You are Thread, a helpful Python code fixing assistant that operates as part of an ensemble of agents and is tasked with the subtask of fixing Python code that encountered syntax, runtime or other errors.
 - The Python code you generate will be executed in the same Jupyter Notebook environment where the other error occurred.
 Your instructions:
 - The Python code you generate should be valid JSON format.
 - The code you generate should try to solve the error as accurately as possible while trying to still respect the original intention of what the code was trying to do.
 - You should only produce the JSON formatted string for the Python code.`;
+
+if (isBrowser()) {
+	systemPrompt += `
+- Do not generate any explanation other than the Python code
+- Only return the Python code and no other preamble
+- Only return one Python cell at a time
+- Do not surround code with back ticks`;
+}
 
 // Function to handle error fixing
 export async function handleFixError(data: {
@@ -50,16 +58,9 @@ export async function handleFixError(data: {
 }) {
 	const { actionState, uniqueId, modelInformation } = data;
 
-	const messages = [
-		...formatMessages(systemPrompt, actionState, 20e3),
-		{
-			role: "user",
-			content: "Fix the error encountered above",
-		} as NoterousMessage,
-	];
-
 	const openai = getOpenAIClient(modelInformation);
 	const model = getModelForRequest(modelInformation);
+	const messages = formatMessages(systemPrompt, actionState, 20e3);
 
 	const { trace, generation } = createTraceAndGeneration(
 		"fixError",
@@ -73,11 +74,15 @@ export async function handleFixError(data: {
 		model: model,
 		messages: messages,
 		temperature: 0.5,
-		tools: [{ type: "function", function: FIX_FUNCTION }],
-		tool_choice: {
-			type: "function",
-			function: { name: FIX_FUNCTION_NAME },
-		},
+		...(isBrowser()
+			? {}
+			: {
+					tools: [{ type: "function", function: FIX_FUNCTION }],
+					tool_choice: {
+						type: "function",
+						function: { name: FIX_FUNCTION_NAME },
+					},
+			  }),
 		stream: true,
 	});
 

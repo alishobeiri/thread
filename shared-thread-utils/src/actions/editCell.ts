@@ -61,22 +61,17 @@ General working principles:
 - Wherever possible, use the existing Python code as much as possible, only making small edits where necessary
 - Do not make assumptions about variables or functions unless the assumption is supported by the variables in the namespace
 - When displaying dataframes, use the 'display' function instead of print
-${themePrompt}`;
-
-	if (!isBrowser()) {
-		systemPrompt += `
-- Only return the Python code and no other preamble
-- Do not surround code with back ticks`;
-	}
-
-	// Add additional context for browsers
-	if (isBrowser()) {
-		systemPrompt += `
 You will be given:
 - A user request
 - Current Python code that the user wants to edit
 - List of files the user has uploaded
-- Current Python namespace`;
+- Current Python namespace
+${themePrompt}`;
+
+	if (isBrowser()) {
+		systemPrompt += `
+- Only return the Python code and no other preamble
+- Do not surround code with back ticks`;
 	}
 
 	const messages: ChatCompletionMessageParam[] = [
