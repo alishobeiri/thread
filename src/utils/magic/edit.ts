@@ -1,4 +1,4 @@
-import { handleCellEdit } from "../../../shared-thread-utils/dist";
+import { handleCellEdit } from "shared-thread-utils";
 import useCellStore, {
 	CellStatus,
 } from "../../components/cell/store/CellStore";

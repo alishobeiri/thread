@@ -1,5 +1,5 @@
 import { captureException } from "@sentry/nextjs";
-import { processActionRequest } from "../../../shared-thread-utils/dist";
+import { processActionRequest } from "shared-thread-utils";
 import useCellStore from "../../components/cell/store/CellStore";
 import {
 	MagicInputSelections,
