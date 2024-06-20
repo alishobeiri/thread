@@ -1,15 +1,11 @@
 import { StreamingTextResponse } from "ai";
-import {
-	ChatCompletionChunk,
-	ChatCompletionMessageParam,
-} from "openai/resources/chat/completions";
-import { Stream } from "openai/streaming";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { v4 as uuidv4 } from "uuid";
-import { LangfuseClient, captureOpenAIStream } from "./utils/langfuse";
-import { ModelInformation, getModelForRequest } from "./utils/model";
-import { getOpenAIClient } from "./utils/openai";
-import { getChatContextPrompt } from "./utils/promptUtils";
-import { ChatMessage } from "./utils/types/messages";
+import { LangfuseClient, captureOpenAIStream } from "../utils/langfuse";
+import { ModelInformation, getModelForRequest } from "../utils/model";
+import { getOpenAIClient } from "../utils/openai";
+import { getChatContextPrompt } from "../utils/promptUtils";
+import { ChatMessage } from "../utils/types/messages";
 
 // Instructions
 const instructions = `As an expert AI programming assistant, your role is to assist in Python programming tasks.
@@ -81,7 +77,7 @@ export const getMessagesPayload = ({
 	return messages;
 };
 
-export const callOpenAI = async (params: {
+export const handleChatRequest = async (params: {
 	messages: ChatCompletionMessageParam[];
 	modelInformation?: ModelInformation;
 	uniqueId?: string;
@@ -106,11 +102,11 @@ export const callOpenAI = async (params: {
 	});
 
 	// Call OpenAI
-	const response = (await openai.chat.completions.create({
+	const response = await openai.chat.completions.create({
 		model: model,
 		messages: messages,
 		stream: true,
-	})) as unknown as Stream<ChatCompletionChunk>;
+	});
 
 	// Handle aborting the response
 	response.controller.signal.addEventListener("abort", () => {

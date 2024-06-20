@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { processActionRequest } from "shared-thread-utils/dist/action";
+import { processActionRequest } from "shared-thread-utils";
 import { ActionState } from "../../../../types/messages";
 import { ModelInformation } from "../../_shared/model";
 

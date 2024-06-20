@@ -1,7 +1,7 @@
 import { captureException } from "@sentry/nextjs";
 import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
-import { callOpenAI, getMessagesPayload } from "shared-thread-utils/dist/chat";
+import { getMessagesPayload, handleChatRequest } from "shared-thread-utils";
 import { ChatMessage } from "../../../types/messages";
 import { ModelInformation } from "../_shared/model";
 
@@ -45,7 +45,7 @@ export default async function handler(req: Request, res: NextApiResponse) {
 		});
 
 		try {
-			return await callOpenAI({
+			return handleChatRequest({
 				messages,
 				modelInformation,
 				uniqueId,

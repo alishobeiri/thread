@@ -1,11 +1,11 @@
 import { captureException } from "@sentry/nextjs";
 import { cloneDeep } from "lodash";
 import { FunctionDefinition } from "openai/resources";
-import { createTraceAndGeneration } from "./utils/langfuse";
-import { formatMessages } from "./utils/message";
-import { ModelInformation, getModelForRequest } from "./utils/model";
-import { getOpenAIClient } from "./utils/openai";
-import { ActionState } from "./utils/types/messages";
+import { createTraceAndGeneration } from "../utils/langfuse";
+import { formatMessages } from "../utils/message";
+import { ModelInformation, getModelForRequest } from "../utils/model";
+import { getOpenAIClient } from "../utils/openai";
+import { ActionState } from "../utils/types/messages";
 
 // Action Types
 export enum ActionType {

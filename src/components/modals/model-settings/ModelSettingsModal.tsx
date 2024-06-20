@@ -22,7 +22,7 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { OllamaIcon, OpenAIIcon } from "../../../assets/icons";
-import { useSettingsStore } from "../../settings/SettingsStore"; // adjust the import based on your file structure
+import { useSettingsStore } from "../../settings/SettingsStore";
 
 const ModelSettingsModal = () => {
 	const isOpen = useSettingsStore((state) => state.showModelSettingsModal);
