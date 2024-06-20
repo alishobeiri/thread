@@ -82,9 +82,19 @@ interface SettingsState {
 	setModelType: (type: ModelType) => void;
 	fetchSettings: () => Promise<void>;
 	setSettings: (settings: Partial<SettingsState>) => Promise<void>;
-	getAdditionalRequestMetadata: () => Object;
+	getAdditionalRequestMetadata: () => {
+		modelInformation: {
+			openAIKey?: string;
+			openAIBaseUrl?: string;
+			ollamaUrl?: string;
+			ollamaModel?: string;
+			modelType?: string;
+		};
+		uniqueId?: string;
+	};
 	setAutoExecuteGeneratedCode: (autoExecuteGeneratedCode: boolean) => void;
 	saveSettings: (newSettings: Partial<SettingsState>) => Promise<void>;
+	isLocal: () => boolean;
 }
 
 export const useSettingsStore = create<SettingsState>((set, get) => ({
@@ -237,5 +247,8 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 		} catch (error) {
 			console.error("Error saving settings: ", error);
 		}
+	},
+	isLocal: () => {
+		return get().modelType === "ollama";
 	},
 }));

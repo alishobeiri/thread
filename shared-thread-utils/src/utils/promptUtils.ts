@@ -1,4 +1,4 @@
-import { NoterousMessage, UserSettings } from "../../../types/messages";
+import { NoterousMessage, UserSettings } from "./types/messages";
 
 const themeBackgroundColors = {
 	dark: "#111",

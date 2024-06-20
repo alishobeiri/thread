@@ -1,4 +1,4 @@
-import { ToolCall } from "ai";
+import { StreamingTextResponse, ToolCall } from "ai";
 import { parse } from "best-effort-json-parser";
 import { useCallback, useEffect, useState } from "react";
 import { useSettingsStore } from "../components/settings/SettingsStore";
@@ -22,6 +22,51 @@ interface RunManuallyParams {
 	payload: any;
 }
 
+export async function* parseStream(
+	data: ReadableStream<Uint8Array>,
+	shouldCancel: () => boolean,
+) {
+	const reader = data.getReader();
+	const decoder = new TextDecoder();
+
+	let done = false;
+	let buffer = "";
+
+	while (!done) {
+		if (shouldCancel()) {
+			reader.cancel();
+			break;
+		}
+		const { value, done: doneReading } = await reader.read();
+		done = doneReading;
+		const chunkValue = decoder.decode(value);
+		buffer += chunkValue;
+		yield buffer;
+	}
+}
+
+export interface StreamWrapperParams<P> {
+	streamGenerator: (params: P) => Promise<StreamingTextResponse>;
+	params: P;
+	shouldCancel?: () => boolean;
+}
+
+export async function* parseStreamWrapper<T, P>({
+	streamGenerator,
+	params,
+	shouldCancel = () => false,
+}: StreamWrapperParams<P>) {
+	const stream = await streamGenerator(params);
+
+	for await (const chunk of parseStream(stream.body!, shouldCancel)) {
+		try {
+			yield chunk;
+		} catch (error) {
+			console.error("Error parsing stream chunk:", error);
+		}
+	}
+}
+
 export async function* makeStreamingRequest({
 	url,
 	method,
@@ -43,25 +88,7 @@ export async function* makeStreamingRequest({
 		const data = res.body;
 
 		if (data && res.status == 200) {
-			const reader = data.getReader();
-			const decoder = new TextDecoder();
-			let done = false;
-
-			let buffer = "";
-
-			while (!done) {
-				if (shouldCancel()) {
-					reader.cancel();
-					break;
-				}
-				const { value, done: doneReading } = await reader.read();
-				done = doneReading;
-				const chunkValue = decoder.decode(value);
-
-				buffer += chunkValue;
-
-				yield buffer;
-			}
+			yield* parseStream(data, shouldCancel);
 		}
 	} catch (error: unknown) {
 		if (error instanceof Error) {

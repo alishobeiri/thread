@@ -26,6 +26,7 @@
 		"postcss": ">=8.4.31",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
+		"shared-thread-utils": "file:../shared-thread-utils",
 		"socket.io": ">=2.4.0",
 		"socket.io-parser": ">=3.3.3",
 		"uuid": "^9.0.1",

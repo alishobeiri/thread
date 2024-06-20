@@ -5,10 +5,15 @@ import ConnectionManager from "../../../../services/connection/connectionManager
 import { CHAT_PANEL_ID } from "../../../../utils/constants/constants";
 import { mostRelevantCellsForQuery } from "../../../../utils/embeddings";
 import { formatCellOutputs } from "../../../../utils/magic/messages";
-import { makeStreamingRequest } from "../../../../utils/streaming";
+import {
+	makeStreamingRequest,
+	parseStreamWrapper,
+} from "../../../../utils/streaming";
 import { useSettingsStore } from "../../../settings/SettingsStore";
 import { useNotebookStore } from "../../../notebook/store/NotebookStore";
 import { useSidebarStore } from "../../store/SidebarStore";
+import { getMessagesPayload, handleChatRequest } from "shared-thread-utils";
+import { ThreadCell } from "../../../../types/code.types";
 export type UserType = "assistant" | "user";
 
 export interface ChatMessage {
@@ -151,25 +156,44 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 			const { getServerProxyUrl } = useSettingsStore.getState();
 
 			let assistantMessageId;
-			const stream = makeStreamingRequest({
-				url: `${getServerProxyUrl()}/api/chat/assistant`,
-				method: "POST",
-				payload: {
-					query,
-					previousMessages: messages,
-					currentChatContext,
-					currentChatNamespace,
-					activeCellSource,
-					mostRelevantContextualCellsForQuery:
-						mostRelevantCellsWithFormattedOutputs,
-					uniqueId: ConnectionManager.getInstance().uniqueId,
-				},
-				shouldCancel: () => {
-					const aborted = abortController.signal.aborted;
-					console.log("aborted: ", aborted);
-					return aborted;
-				},
+			const messagesPayload = getMessagesPayload({
+				query,
+				previousMessages: messages,
+				currentChatContext,
+				currentChatNamespace,
+				activeCellSource,
+				mostRelevantContextualCellsForQuery:
+					mostRelevantCellsWithFormattedOutputs.map(
+						(cell: ThreadCell) => JSON.stringify(cell),
+					),
 			});
+
+			const metadata = useSettingsStore
+				.getState()
+				.getAdditionalRequestMetadata();
+			const isLocal = useSettingsStore.getState().isLocal();
+
+			const stream = isLocal
+				? parseStreamWrapper({
+						streamGenerator: handleChatRequest,
+						params: {
+							messages: messagesPayload,
+							modelInformation: metadata.modelInformation,
+							uniqueId: metadata.uniqueId,
+						},
+				  })
+				: makeStreamingRequest({
+						url: `${getServerProxyUrl()}/api/chat/assistant`,
+						method: "POST",
+						payload: {
+							messages: messagesPayload,
+						},
+						shouldCancel: () => {
+							const aborted = abortController.signal.aborted;
+							console.log("aborted: ", aborted);
+							return aborted;
+						},
+				  });
 
 			let errorCount = 0;
 			for await (const chunk of stream) {

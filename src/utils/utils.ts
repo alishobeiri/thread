@@ -1,5 +1,6 @@
 import { captureException } from "@sentry/nextjs";
 import { v4 as uuidv4 } from "uuid";
+import { useInvalidConnectionModalStore } from "../components/modals/invalid-connection/InvalidConnectionStore";
 import { ThreadCell } from "../types/code.types";
 import { ThreadFile } from "../types/file.types";
 import { trackEventData } from "./posthog";
@@ -37,8 +38,10 @@ export const partitionChatItems = (
 	);
 };
 
-export function getAppTheme(): string {
-	return localStorage.getItem("chakra-ui-color-mode") ?? "dark";
+export function getAppTheme(): "dark" | "light" {
+	return (localStorage.getItem("chakra-ui-color-mode") ?? "dark") as
+		| "dark"
+		| "light";
 }
 
 export function canBeInteger(str: string) {
@@ -140,6 +143,11 @@ export async function threadFetch(
 ) {
 	trackEventData("threadFetch", { url });
 	const response: any = await fetch(url, { ...body, signal }).then((res) => {
+		if (res.status == 401) {
+			useInvalidConnectionModalStore
+				.getState()
+				.setShowInvalidConnectionModal(true);
+		}
 		return res;
 	});
 

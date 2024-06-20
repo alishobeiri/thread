@@ -8,7 +8,7 @@ import {
 } from "langfuse";
 import { ChatCompletionChunk } from "openai/resources";
 import { Stream } from "openai/streaming";
-import { ActionState } from "../../../types/messages";
+import { ActionState } from "./types/messages";
 
 export class LangfuseClient {
 	private static instance: Langfuse;

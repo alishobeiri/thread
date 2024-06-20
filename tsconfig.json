@@ -20,9 +20,16 @@
 			}
 		],
 		"paths": {
-			"react": ["./node_modules/@types/react"]
+			"react": ["./node_modules/@types/react"],
+			"shared-thread-utils": ["./shared-thread-utils"]
 		}
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-sitemap.config.js"],
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		".next/types/**/*.ts",
+		"next-sitemap.config.js"
+	],
 	"exclude": ["node_modules", "supabase"]
 }

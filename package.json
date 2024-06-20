@@ -1,11 +1,12 @@
 {
-	"name": "Vizly-Notebook",
+	"name": "Thread",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev",
+		"vercel-build": "cd shared-thread-utils && npm run build && cd .. && next build",
+		"dev": "cd shared-thread-utils && npm run build && next dev",
 		"clean": "rimraf node_modules lib dist build tsconfig.tsbuildinfo",
-		"build:prod": "next build",
+		"build:prod": "cd shared-thread-utils && npm run build && cd .. && next build",
 		"start": "next start",
 		"lint": "next lint",
 		"format": "npx prettier --write \"src/**/*\"",
@@ -74,6 +75,7 @@
 		"remark-breaks": "^4.0.0",
 		"remark-gfm": "^4.0.0",
 		"remark-math": "^6.0.0",
+		"shared-thread-utils": "file:./shared-thread-utils",
 		"socket.io": ">=2.4.0",
 		"socket.io-parser": ">=3.3.3",
 		"uuid": "^9.0.1",
@@ -82,7 +84,7 @@
 		"xterm": "^5.3.0",
 		"zod": "^3.22.4",
 		"zundo": "^2.0.3",
-		"zustand": "^4.4.6"
+		"zustand": "^4.5.2"
 	},
 	"devDependencies": {
 		"@types/lodash.debounce": "^4.0.9",

@@ -10,6 +10,7 @@ import ServerSettingsModal from "./modals/server-settings/ServerSettingsModal";
 import { initializeServerConnection } from "./notebook/Notebook";
 import { useNotebookStore } from "./notebook/store/NotebookStore";
 import Sidebar from "./sidebar";
+import InvalidConnectionModal from "./modals/invalid-connection/InvalidConnectionModal";
 interface AppLayoutProps {
 	children: ReactNode;
 }
@@ -45,6 +46,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 				<KernelSelectionModal />
 				<FileViewModal />
 				<QueryLimitModal />
+				<InvalidConnectionModal />
 				<ServerSettingsModal />
 				<ModelSettingsModal />
 				{children}

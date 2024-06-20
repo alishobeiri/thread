@@ -1,0 +1,28 @@
+{
+	"name": "shared-thread-utils",
+	"version": "1.0.0",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "tsc"
+	},
+	"dependencies": {
+		"@sentry/nextjs": "^8.10.0",
+		"ai": "3.0.19",
+		"best-effort-json-parser": "^1.0.1",
+		"langfuse": "^3.11.2",
+		"lodash": "^4.17.21",
+		"openai": "^4.33.0",
+		"uuid": "^10.0.0"
+	},
+	"devDependencies": {
+		"@types/lodash": "^4.17.5",
+		"@types/uuid": "^9.0.8",
+		"@types/webpack": "^5.28.5",
+		"typescript": "^4.0.0"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": ""
+}
