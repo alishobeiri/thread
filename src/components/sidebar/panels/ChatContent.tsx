@@ -30,8 +30,6 @@ import { useSidebarStore } from "../store/SidebarStore";
 import { useHotkeys } from "react-hotkeys-hook";
 import SidebarIcon from "../buttons/SidebarIcon";
 
-import { getMessagesPayload } from "shared-thread-utils/dist/chat";
-
 // If the context is in a user message, then color differently and don't allow for deletion
 const ContextContainer = ({
 	context,

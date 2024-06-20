@@ -1,8 +1,11 @@
 import { captureException } from "@sentry/nextjs";
 import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
-import { handleCodeGeneration, ModelInformation } from "shared-thread-utils";
-import { ActionState } from "shared-thread-utils/dist/utils/types/messages";
+import {
+	ActionState,
+	handleCodeGeneration,
+	ModelInformation,
+} from "shared-thread-utils";
 
 /* This is required to use OpenAIStream. */
 export const runtime = "edge";
