@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"preinstall": "cd shared-thread-utils && npm run build:prod",
+		"vercel-build": "cd shared-thread-utils && npm run build:prod && cd .. && next build",
 		"dev": "cd shared-thread-utils && npm run build:prod && next dev",
 		"clean": "rimraf node_modules lib dist build tsconfig.tsbuildinfo",
 		"build:prod": "next build",
