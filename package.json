@@ -3,7 +3,8 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev",
+		"preinstall": "cd shared-thread-utils && npm run build:prod",
+		"dev": "cd shared-thread-utils && npm run build:prod && next dev",
 		"clean": "rimraf node_modules lib dist build tsconfig.tsbuildinfo",
 		"build:prod": "next build",
 		"start": "next start",
