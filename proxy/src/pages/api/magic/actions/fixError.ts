@@ -15,6 +15,10 @@ export default async function handler(req: Request, res: NextApiResponse) {
 				uniqueId?: string;
 				modelInformation?: ModelInformation;
 			};
+		if (!uniqueId) {
+			NextResponse.json({ status: 401 });
+			return;
+		}
 
 		try {
 			return await handleFixError({

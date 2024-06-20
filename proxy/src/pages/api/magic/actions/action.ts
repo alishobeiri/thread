@@ -18,6 +18,10 @@ export default async function handler(
 			uniqueId?: string;
 			autoExecuteGeneratedCode?: boolean;
 		} = req.body;
+		if (!uniqueId) {
+			res.status(401).json({});
+			return;
+		}
 
 		try {
 			const action = await processActionRequest(

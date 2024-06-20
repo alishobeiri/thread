@@ -14,6 +14,10 @@ export default async function handler(req: Request, res: NextApiResponse) {
 			modelInformation: ModelInformation;
 			uniqueId?: string;
 		};
+		if (!uniqueId) {
+			NextResponse.json({ status: 401 });
+			return;
+		}
 
 		try {
 			return handleChatRequest({
