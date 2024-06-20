@@ -1,7 +1,7 @@
 import { captureException } from "@sentry/nextjs";
 import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
-import { ModelInformation } from "shared-thread-utils";
+import { ModelInformation, handleFixError } from "shared-thread-utils";
 import { ActionState } from "../../../../types/messages";
 
 /* This is required to use OpenAIStream. */
@@ -21,11 +21,11 @@ export default async function handler(req: Request, res: NextApiResponse) {
 		}
 
 		try {
-			// return await handleFixError({
-			// 	actionState,
-			// 	uniqueId,
-			// 	modelInformation,
-			// });
+			return await handleFixError({
+				actionState,
+				uniqueId,
+				modelInformation,
+			});
 		} catch (error) {
 			captureException(error);
 			console.error("Error calling OpenAI API:", error);
