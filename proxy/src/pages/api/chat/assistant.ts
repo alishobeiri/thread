@@ -2,7 +2,7 @@ import { captureException } from "@sentry/nextjs";
 import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { ChatCompletionMessageParam } from "openai/resources";
-import { handleChatRequest, ModelInformation } from "shared-thread-utils";
+import { ModelInformation, handleChatRequest } from "shared-thread-utils";
 
 /* This is required to use OpenAIStream. */
 export const runtime = "edge";

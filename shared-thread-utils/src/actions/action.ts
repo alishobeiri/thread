@@ -1,5 +1,4 @@
 import { captureException } from "@sentry/nextjs";
-import { cloneDeep } from "lodash";
 import { FunctionDefinition } from "openai/resources";
 import { createTraceAndGeneration } from "../utils/langfuse";
 import { formatMessages } from "../utils/message";
@@ -80,8 +79,19 @@ const filterActionByType = (
 	return actionFunction;
 };
 
+// Polyfill or fallback for structuredClone if not natively available
+const deepClone = (obj: any): any => {
+	if (typeof structuredClone === "function") {
+		return structuredClone(obj);
+	} else {
+		// Simple deep clone implementation fallback
+		return JSON.parse(JSON.stringify(obj));
+	}
+};
+
 const maskActions = (actionState: ActionState) => {
-	const maskedActionFunction = cloneDeep(ACTION_FUNCTION);
+	// Replace cloneDeep with deepClone
+	const maskedActionFunction = deepClone(ACTION_FUNCTION);
 
 	if (actionState.firstQuery) {
 		filterActionByType(maskedActionFunction, ActionType.Stop);

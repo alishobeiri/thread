@@ -3,8 +3,8 @@ import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import {
 	ActionState,
-	handleCodeGeneration,
 	ModelInformation,
+	handleCodeGeneration,
 } from "shared-thread-utils";
 
 /* This is required to use OpenAIStream. */
