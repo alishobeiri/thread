@@ -1,9 +1,7 @@
-// editCell.ts
 import { captureException } from "@sentry/nextjs";
 import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
-import { handleCellEdit } from "shared-thread-utils";
-import { ModelInformation } from "../../_shared/model";
+import { handleCellEdit, ModelInformation } from "shared-thread-utils";
 
 /* This is required to use OpenAIStream. */
 export const runtime = "edge";

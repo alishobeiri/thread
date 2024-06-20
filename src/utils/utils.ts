@@ -37,8 +37,10 @@ export const partitionChatItems = (
 	);
 };
 
-export function getAppTheme(): string {
-	return localStorage.getItem("chakra-ui-color-mode") ?? "dark";
+export function getAppTheme(): "dark" | "light" {
+	return (localStorage.getItem("chakra-ui-color-mode") ?? "dark") as
+		| "dark"
+		| "light";
 }
 
 export function canBeInteger(str: string) {

@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { processActionRequest } from "shared-thread-utils";
+import { ModelInformation, processActionRequest } from "shared-thread-utils";
 import { ActionState } from "../../../../types/messages";
-import { ModelInformation } from "../../_shared/model";
 
 export default async function handler(
 	req: NextApiRequest,
