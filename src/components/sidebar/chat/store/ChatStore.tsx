@@ -9,6 +9,7 @@ import { makeStreamingRequest } from "../../../../utils/streaming";
 import { useSettingsStore } from "../../../settings/SettingsStore";
 import { useNotebookStore } from "../../../notebook/store/NotebookStore";
 import { useSidebarStore } from "../../store/SidebarStore";
+import { getMessagesPayload, handleChatRequest } from "shared-thread-utils";
 export type UserType = "assistant" | "user";
 
 export interface ChatMessage {
@@ -151,18 +152,23 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 			const { getServerProxyUrl } = useSettingsStore.getState();
 
 			let assistantMessageId;
+			const messagesPayload = getMessagesPayload({
+				query,
+				previousMessages: messages,
+				currentChatContext,
+				currentChatNamespace,
+				activeCellSource,
+				mostRelevantContextualCellsForQuery:
+					mostRelevantCellsWithFormattedOutputs.map((cell) =>
+						JSON.stringify(cell),
+					),
+			});
+
 			const stream = makeStreamingRequest({
 				url: `${getServerProxyUrl()}/api/chat/assistant`,
 				method: "POST",
 				payload: {
-					query,
-					previousMessages: messages,
-					currentChatContext,
-					currentChatNamespace,
-					activeCellSource,
-					mostRelevantContextualCellsForQuery:
-						mostRelevantCellsWithFormattedOutputs,
-					uniqueId: ConnectionManager.getInstance().uniqueId,
+					messages: messagesPayload,
 				},
 				shouldCancel: () => {
 					const aborted = abortController.signal.aborted;
