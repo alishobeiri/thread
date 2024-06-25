@@ -54,7 +54,8 @@ export async function handleFixError(data: {
 		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
 		client = openai(model);
 	} else {
-		throw new Error("Model type not supported");
+		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
+		client = openai(model);
 	}
 	if (isBrowser()) {
 		systemPrompt += `- Do not generate any explanation other than the Python code

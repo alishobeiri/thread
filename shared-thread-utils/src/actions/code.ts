@@ -85,7 +85,8 @@ export async function handleCodeGeneration(data: {
 		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
 		client = openai(model);
 	} else {
-		throw new Error("Model type not supported");
+		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
+		client = openai(model);
 	}
 	const messages = formatMessages(systemPrompt, actionState, 20e3);
 

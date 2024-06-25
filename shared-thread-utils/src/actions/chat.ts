@@ -97,7 +97,8 @@ export const handleChatRequest = async (params: {
 		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
 		client = openai(model);
 	} else {
-		throw new Error("Model type not supported");
+		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
+		client = openai(model);
 	}
 
 	// Create a trace for Langfuse
