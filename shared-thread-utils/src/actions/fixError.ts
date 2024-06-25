@@ -1,38 +1,32 @@
-import { StreamingTextResponse } from "ai";
-import { FunctionDefinition } from "openai/resources";
-import {
-	captureOpenAIStream,
-	createTraceAndGeneration,
-} from "../utils/langfuse";
+import { createOpenAI } from "@ai-sdk/openai";
+import { CoreTool, StreamingTextResponse, streamObject, streamText } from "ai";
+import { z } from "zod";
+import { createTraceAndGeneration } from "../utils/langfuse";
 import { formatMessages } from "../utils/message";
-import { ModelInformation, getModelForRequest } from "../utils/model";
-import { getOpenAIClient, isBrowser } from "../utils/openai";
+import {
+	ModelInformation,
+	getAPIKeyForRequest,
+	getBaseURLForRequest,
+	getModelForRequest,
+} from "../utils/model";
 import { ActionState } from "../utils/types/messages";
+import { isBrowser } from "../utils/utils";
 
 // Constants for Fix Function
 export const FIX_FUNCTION_NAME = "code";
-export const FIX_FUNCTION: FunctionDefinition = {
-	name: FIX_FUNCTION_NAME,
+export const FIX_FUNCTION: CoreTool = {
 	description: "The function to call when generating Python cells.",
-	parameters: {
-		type: "object",
-		properties: {
-			cells: {
-				type: "array",
-				items: {
-					type: "object",
-					properties: {
-						source: {
-							type: "string",
-							description:
-								"JSON formatted string of Python source code to execute. Must be valid Python code and valid JSON. The `cell_type` of each generated cell will already be `code`, do not generate `cell_type` as a key. Each item you generate in the array will be a separate cell in the Jupyter notebook.",
-						},
-					},
-				},
-			},
-		},
-		required: ["cells"],
-	},
+	parameters: z.object({
+		cells: z.array(
+			z.object({
+				source: z
+					.string()
+					.describe(
+						"JSON formatted string of Python source code to execute. Must be valid Python code and valid JSON. The `cell_type` of each generated cell will already be `code`, do not generate `cell_type` as a key. Each item you generate in the array will be a separate cell in the Jupyter notebook.",
+					),
+			}),
+		),
+	}),
 };
 
 let systemPrompt: string = `You are Thread, a helpful Python code fixing assistant that operates as part of an ensemble of agents and is tasked with the subtask of fixing Python code that encountered syntax, runtime or other errors.
@@ -42,14 +36,6 @@ Your instructions:
 - The code you generate should try to solve the error as accurately as possible while trying to still respect the original intention of what the code was trying to do.
 - You should only produce the JSON formatted string for the Python code.`;
 
-if (isBrowser()) {
-	systemPrompt += `
-- Do not generate any explanation other than the Python code
-- Only return the Python code and no other preamble
-- Only return one Python cell at a time
-- Do not surround code with back ticks`;
-}
-
 // Function to handle error fixing
 export async function handleFixError(data: {
 	actionState: ActionState;
@@ -58,8 +44,25 @@ export async function handleFixError(data: {
 }) {
 	const { actionState, uniqueId, modelInformation } = data;
 
-	const openai = getOpenAIClient(modelInformation);
+	const modelType = modelInformation?.modelType;
 	const model = getModelForRequest(modelInformation);
+	const apiKey = getAPIKeyForRequest(modelInformation);
+	const baseURL = getBaseURLForRequest(modelInformation);
+
+	let client: any;
+	if (modelType === "openai" || modelType === "ollama") {
+		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
+		client = openai(model);
+	} else {
+		throw new Error("Model type not supported");
+	}
+	if (isBrowser()) {
+		systemPrompt += `- Do not generate any explanation other than the Python code
+- Only return the Python code and no other preamble
+- Only return one Python cell at a time
+- Do not surround code with back ticks`;
+	}
+
 	const messages = formatMessages(systemPrompt, actionState, 20e3);
 
 	const { trace, generation } = createTraceAndGeneration(
@@ -70,22 +73,38 @@ export async function handleFixError(data: {
 		uniqueId,
 	);
 
-	const response = await openai.chat.completions.create({
-		model: model,
-		messages: messages,
-		temperature: 0.5,
-		...(isBrowser()
-			? {}
-			: {
-					tools: [{ type: "function", function: FIX_FUNCTION }],
-					tool_choice: {
-						type: "function",
-						function: { name: FIX_FUNCTION_NAME },
-					},
-			  }),
-		stream: true,
-	});
+	let response;
+	if (isBrowser()) {
+		response = await streamText({
+			model: client,
+			messages: messages,
+			temperature: 0.5,
+			onFinish(event) {
+				generation.end({
+					output: event.text,
+				});
+				trace.update({
+					output: event.text,
+				});
+			},
+		});
+	} else {
+		response = await streamObject({
+			model: client,
+			messages: messages,
+			temperature: 0.5,
+			schema: FIX_FUNCTION.parameters,
+			mode: "tool",
+			onFinish(event) {
+				generation.end({
+					output: event.object,
+				});
+				trace.update({
+					output: event.object,
+				});
+			},
+		});
+	}
 
-	const stream = captureOpenAIStream(response, trace, generation);
-	return new StreamingTextResponse(stream);
+	return new StreamingTextResponse(response.textStream);
 }

@@ -1,21 +1,18 @@
 import { limitMessages } from "./promptUtils";
-import { ActionState, NoterousMessage } from "./types/messages";
+import { ActionState, MessageType } from "./types/messages";
 
 export const formatMessages = (
 	systemPrompt: string,
 	actionState: ActionState,
 	characterLimit: number,
 ) => {
-	const systemMessage: NoterousMessage = {
-		role: "system",
-		content: systemPrompt,
-	};
+	const systemMessage: String = systemPrompt;
 	const prevMessages = actionState.prevMessages;
 	const messagesAfterQuery = actionState.messagesAfterQuery;
 	const userMessage = {
 		role: "user",
 		content: actionState.userRequest,
-	} as NoterousMessage;
+	} as MessageType;
 
 	return limitMessages(
 		prevMessages,

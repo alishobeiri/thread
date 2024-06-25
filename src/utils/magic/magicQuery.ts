@@ -8,9 +8,7 @@ import {
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
 import { useSettingsStore } from "../../components/settings/SettingsStore";
 import { useChatStore } from "../../components/sidebar/chat/store/ChatStore";
-import ConnectionManager, {
-	useConnectionManagerStore,
-} from "../../services/connection/connectionManager";
+import ConnectionManager from "../../services/connection/connectionManager";
 import { MESSAGES_LOOKBACK_WINDOW } from "../constants/constants";
 import { trackEventData } from "../posthog";
 import {
@@ -314,12 +312,6 @@ const generateCells = async (query: string, followUpRetries: number) => {
 	const get = useNotebookStore.getState;
 	const set = useNotebookStore.setState;
 
-	const connectionManager = ConnectionManager.getInstance();
-	if (!connectionManager || !connectionManager.kernel) {
-		useConnectionManagerStore.getState().openKernelSelectionModal();
-		return;
-	}
-
 	set({ isGeneratingCells: true });
 
 	query = query.trim();
@@ -379,6 +371,14 @@ const generateCells = async (query: string, followUpRetries: number) => {
 
 			// Run the action the agent has perscribed
 			await executeAction(actionStr, actionState, wasAborted);
+
+			if (
+				actionState.currentCellGenerationIndex ===
+				actionState.initialCellGenerationIndex
+			) {
+				// No action was produced
+				break;
+			}
 
 			// We update the action state for the next step, therefore we use i + 1
 			actionState = await getActionState({

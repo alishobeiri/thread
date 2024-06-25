@@ -1,13 +1,11 @@
 import { captureException } from "@sentry/nextjs";
-import { OpenAIStream } from "ai";
+import { StreamTextResult } from "ai";
 import { parse } from "best-effort-json-parser";
 import {
 	Langfuse,
 	LangfuseGenerationClient,
 	LangfuseTraceClient,
 } from "langfuse";
-import { ChatCompletionChunk } from "openai/resources";
-import { Stream } from "openai/streaming";
 import { ActionState } from "./types/messages";
 
 export class LangfuseClient {
@@ -29,12 +27,12 @@ export class LangfuseClient {
 	}
 }
 
-export const captureOpenAIStream = (
-	response: Stream<ChatCompletionChunk>,
+export const captureAIStream = (
+	response: StreamTextResult<any>,
 	trace: LangfuseTraceClient,
 	generation: LangfuseGenerationClient,
 ) => {
-	return OpenAIStream(response, {
+	return response.toAIStream({
 		onStart: () => {
 			generation.update({
 				completionStartTime: new Date(),

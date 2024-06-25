@@ -1,6 +1,6 @@
 import {
 	StreamWrapperParams,
-	makeStreamingFunctionRequest,
+	makeStreamingJsonRequest,
 	parseStreamWrapper,
 } from "../../../streaming";
 import { ActionState } from "../../magicQuery";
@@ -11,7 +11,7 @@ export async function* sharedAction(
 	actionUrl: string,
 	cellType: string,
 ): AsyncGenerator<any, void, unknown> {
-	const stream = makeStreamingFunctionRequest({
+	const stream = makeStreamingJsonRequest({
 		url: actionUrl,
 		method: "POST",
 		payload: {
@@ -60,6 +60,11 @@ interface StreamWrapperParamsWithCellType<P> extends StreamWrapperParams<P> {
 	cellType: string;
 }
 
+interface Cell {
+	cell_type?: string;
+	source?: string;
+}
+
 export async function* sharedLocalAction<P>({
 	streamGenerator,
 	params,
@@ -72,26 +77,41 @@ export async function* sharedLocalAction<P>({
 		shouldCancel,
 	});
 
-	for await (const data of stream) {
-		console.log("Data: ", data);
-
-		let trimmedData = data;
-		const backtickBlockRegex = /^```([\s\S]*?)```$/;
-		const match = data.match(backtickBlockRegex);
-
-		if (match) {
-			trimmedData = match[1]; // Capture text inside the triple backticks
+	for await (let data of stream) {
+		data = data.trim();
+		if (data.startsWith("9:")) {
+			try {
+				const jsonData = JSON.parse(
+					data.slice(2).replace(/\n/g, "\\n"),
+				);
+				if (jsonData.args && jsonData.args.cells) {
+					const cells = jsonData.args.cells.map((cell: Cell) => ({
+						...cell,
+						cell_type: cellType,
+					}));
+					yield { cells };
+				}
+			} catch (error) {
+				console.error("Error parsing JSON:", error);
+			}
 		} else {
-			trimmedData = data.replace(/^```|```$/g, ""); // Remove leading or trailing backticks if present
+			let trimmedData = data;
+			const backtickBlockRegex = /^```([\s\S]*?)```$/;
+			const match = data.match(backtickBlockRegex);
+
+			if (match) {
+				trimmedData = match[1];
+				trimmedData = data.replace(/^```|```$/g, "");
+			}
+
+			const cells: Cell[] = [
+				{
+					cell_type: cellType,
+					source: trimmedData,
+				},
+			];
+
+			yield { cells };
 		}
-
-		const cells = [
-			{
-				cell_type: cellType,
-				source: trimmedData,
-			},
-		];
-
-		yield { cells };
 	}
 }

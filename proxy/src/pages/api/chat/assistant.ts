@@ -1,8 +1,8 @@
 import { captureException } from "@sentry/nextjs";
 import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
-import { ChatCompletionMessageParam } from "openai/resources";
 import { ModelInformation, handleChatRequest } from "shared-thread-utils";
+import { MessageType } from "../../../types/messages";
 
 /* This is required to use OpenAIStream. */
 export const runtime = "edge";
@@ -10,7 +10,7 @@ export const runtime = "edge";
 export default async function handler(req: Request, res: NextApiResponse) {
 	if (req.method === "POST") {
 		const { messages, modelInformation, uniqueId } = (await req.json()) as {
-			messages: ChatCompletionMessageParam[];
+			messages: MessageType[];
 			modelInformation: ModelInformation;
 			uniqueId?: string;
 		};
@@ -18,7 +18,6 @@ export default async function handler(req: Request, res: NextApiResponse) {
 			NextResponse.json({ status: 401 });
 			return;
 		}
-
 		try {
 			return handleChatRequest({
 				messages,

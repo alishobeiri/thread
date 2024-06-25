@@ -1,4 +1,4 @@
-import { NoterousMessage, UserSettings } from "./types/messages";
+import { MessageType, UserSettings } from "./types/messages";
 
 const themeBackgroundColors = {
 	dark: "#111",
@@ -47,45 +47,42 @@ export const getChatContextPrompt = (chatContext: string[]) => {
 };
 
 export const limitMessages = (
-	prevMessages: NoterousMessage[],
-	systemMessage: NoterousMessage,
-	userMessage: NoterousMessage,
-	messagesAfterQuery: NoterousMessage[],
+	prevMessages: MessageType[],
+	systemMessage: String,
+	userMessage: MessageType,
+	messagesAfterQuery: MessageType[],
 	maxCharCount: number = 40000,
 ) => {
 	// Construct initial messages array with the required format
 	let messages = [
-		systemMessage,
 		...prevMessages,
 		userMessage,
 		...messagesAfterQuery,
 	];
 
 	// Calculate the total character count of messages
-	let totalCharacters = JSON.stringify(messages).length;
+	let totalCharacters = JSON.stringify(messages).length + systemMessage.length;
 
 	// Trim prevMessages first until totalCharacters is under maxCharCount
 	while (totalCharacters > maxCharCount && prevMessages.length > 0) {
 		prevMessages.shift();
 		messages = [
-			systemMessage,
 			...prevMessages,
 			userMessage,
 			...messagesAfterQuery,
 		];
-		totalCharacters = JSON.stringify(messages).length;
+		totalCharacters = JSON.stringify(messages).length + systemMessage.length;
 	}
 
 	// If still over maxCharCount, trim messagesAfterQuery
 	while (totalCharacters > maxCharCount && messagesAfterQuery.length > 0) {
 		messagesAfterQuery.shift();
 		messages = [
-			systemMessage,
 			...prevMessages,
 			userMessage,
 			...messagesAfterQuery,
 		];
-		totalCharacters = JSON.stringify(messages).length;
+		totalCharacters = JSON.stringify(messages).length + systemMessage.length;
 	}
 
 	return messages;

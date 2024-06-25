@@ -1,4 +1,4 @@
-import { StreamingTextResponse, ToolCall } from "ai";
+import { StreamingTextResponse } from "ai";
 import { parse } from "best-effort-json-parser";
 import { useCallback, useEffect, useState } from "react";
 import { useSettingsStore } from "../components/settings/SettingsStore";
@@ -23,12 +23,11 @@ interface RunManuallyParams {
 }
 
 export async function* parseStream(
-	data: ReadableStream<Uint8Array>,
+	data: ReadableStream<Uint8Array | string>,
 	shouldCancel: () => boolean,
 ) {
 	const reader = data.getReader();
 	const decoder = new TextDecoder();
-
 	let done = false;
 	let buffer = "";
 
@@ -39,8 +38,12 @@ export async function* parseStream(
 		}
 		const { value, done: doneReading } = await reader.read();
 		done = doneReading;
-		const chunkValue = decoder.decode(value);
-		buffer += chunkValue;
+		if (value instanceof Uint8Array) {
+			const chunkValue = decoder.decode(value);
+			buffer += chunkValue;
+		} else if (typeof value === "string") {
+			buffer += value;
+		}
 		yield buffer;
 	}
 }
@@ -101,49 +104,6 @@ export async function* makeStreamingRequest({
 		} else {
 			console.error("An unexpected error occurred:", error);
 		}
-	}
-}
-
-export async function* makeStreamingFunctionRequest<T>({
-	url,
-	method,
-	payload,
-	shouldCancel = () => false,
-}: MakeStreamingRequestParams) {
-	const stream = makeStreamingJsonRequest({
-		url,
-		method,
-		payload,
-		shouldCancel: () => shouldCancel(),
-	});
-
-	for await (const data of stream) {
-		if (
-			!(
-				"tool_calls" in data &&
-				data["tool_calls"] != undefined &&
-				Array.isArray(data["tool_calls"]) &&
-				data["tool_calls"].length > 0
-			)
-		) {
-			continue;
-		}
-
-		const toolCalls: ToolCall[] = data["tool_calls"];
-		const functionCall = toolCalls[0].function;
-		const rawArgs = functionCall.arguments;
-
-		if (!rawArgs || rawArgs.length == 0) {
-			continue;
-		}
-
-		let args;
-		try {
-			args = parse(rawArgs);
-		} catch (e) {
-			continue;
-		}
-		yield args;
 	}
 }
 

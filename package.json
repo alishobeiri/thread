@@ -1,5 +1,5 @@
 {
-	"name": "Thread",
+	"name": "thread",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
@@ -14,6 +14,7 @@
 		"test": "jest"
 	},
 	"dependencies": {
+		"@ai-sdk/openai": "^0.0.33",
 		"@blueprintjs/core": "^5.10.2",
 		"@blueprintjs/table": "^5.1.4",
 		"@chakra-ui/icon": "^3.2.0",
@@ -38,7 +39,7 @@
 		"@tanstack/react-table": "^8.10.7",
 		"@uiw/codemirror-extensions-hyper-link": "^4.21.21",
 		"@uiw/react-codemirror": "^4.21.20",
-		"ai": "3.0.19",
+		"ai": "^3.2.5",
 		"ansi-to-html": "^0.7.2",
 		"best-effort-json-parser": "^1.0.1",
 		"codemirror": "^6.0.0",

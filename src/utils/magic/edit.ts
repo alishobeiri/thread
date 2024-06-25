@@ -7,7 +7,7 @@ import { useSettingsStore } from "../../components/settings/SettingsStore";
 import ConnectionManager from "../../services/connection/connectionManager";
 import { ThreadCell } from "../../types/code.types";
 import { mostRelevantCellsForQuery } from "../embeddings";
-import { makeStreamingFunctionRequest, parseStreamWrapper } from "../streaming";
+import { makeStreamingJsonRequest, parseStreamWrapper } from "../streaming";
 import { getAppTheme, multilineStringToString } from "../utils";
 
 const { getServerProxyUrl } = useSettingsStore.getState();
@@ -33,7 +33,7 @@ export const editCell = async (cell: ThreadCell, query: string) => {
 				streamGenerator: handleCellEdit,
 				params: payload,
 		  })
-		: makeStreamingFunctionRequest({
+		: makeStreamingJsonRequest({
 				url: `${getServerProxyUrl()}/api/magic/actions/editCell`,
 				method: "POST",
 				payload: payload,
@@ -42,13 +42,13 @@ export const editCell = async (cell: ThreadCell, query: string) => {
 						.signal.aborted,
 		  });
 
-	for await (const data of stream) {
-		if (typeof data === "string") {
+	for await (let data of stream) {
+		console.log("data: ", data);
+		if (data && typeof data === "object" && "source" in data) {
+			setProposedSource(cell.id as string, data.source);
+		} else if (typeof data === "string") {
 			const trimmedData = data.replace(/^```|```$/g, "");
 			setProposedSource(cell.id as string, trimmedData);
-		} else if (data && typeof data === "object" && "source" in data) {
-			const source = data.source.replace(/^```|```$/g, "");
-			setProposedSource(cell.id as string, source);
 		}
 	}
 

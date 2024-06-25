@@ -1,9 +1,15 @@
+import { createOpenAI } from "@ai-sdk/openai";
 import { captureException } from "@sentry/nextjs";
-import { FunctionDefinition } from "openai/resources";
+import { CoreTool, generateText } from "ai";
+import { z } from "zod";
 import { createTraceAndGeneration } from "../utils/langfuse";
 import { formatMessages } from "../utils/message";
-import { ModelInformation, getModelForRequest } from "../utils/model";
-import { getOpenAIClient } from "../utils/openai";
+import {
+	ModelInformation,
+	getAPIKeyForRequest,
+	getBaseURLForRequest,
+	getModelForRequest,
+} from "../utils/model";
 import { ActionState } from "../utils/types/messages";
 
 // Action Types
@@ -14,84 +20,103 @@ export enum ActionType {
 }
 
 // Action Function Definition
-const ACTION_FUNCTION: FunctionDefinition = {
-	name: "NextAction",
+export const ACTION_FUNCTION: CoreTool = {
 	description:
 		"The function to call after deciding what action to take in the conversation.",
-	parameters: {
-		type: "object",
-		properties: {
-			action: {
-				oneOf: [
-					{
-						type: "object",
-						description: `Conditions you should return '${ActionType.Code}': 
-                        The user has asked you to complete an action that can be completed using code.`,
-						properties: {
-							type: {
-								type: "string",
-								const: ActionType.Code,
-							},
-						},
-						required: ["type"],
-					},
-					{
-						type: "object",
-						description: `Conditions you should return '${ActionType.FixError}': 
-                        The previous cell execution ran into an error.`,
-						properties: {
-							type: {
-								type: "string",
-								const: ActionType.FixError,
-							},
-						},
-						required: ["type"],
-					},
-					{
-						type: "object",
-						description: `Conditions you should return '${ActionType.Stop}': 
-                        You are waiting for the user's input.`,
-						properties: {
-							type: {
-								type: "string",
-								const: ActionType.Stop,
-							},
-						},
-						required: ["type"],
-					},
-				],
-				description: "The action to be performed",
-			},
-		},
-		required: ["action"],
-	},
+	parameters: z.object({
+		action: z.discriminatedUnion("type", [
+			z
+				.object({
+					type: z.literal(ActionType.Code),
+				})
+				.describe(
+					`Conditions you should return '${ActionType.Code}': The user has asked you to complete an action that can be completed using code.`,
+				),
+			z
+				.object({
+					type: z.literal(ActionType.FixError),
+				})
+				.describe(
+					`Conditions you should return '${ActionType.FixError}': The previous cell execution ran into an error.`,
+				),
+			z
+				.object({
+					type: z.literal(ActionType.Stop),
+				})
+				.describe(
+					`Conditions you should return '${ActionType.Stop}': You are waiting for the user's input.`,
+				),
+		]),
+	}),
 };
 
 const filterActionByType = (
-	actionFunction: FunctionDefinition,
-	actionType: string,
-): FunctionDefinition => {
-	const parameters = actionFunction.parameters as any;
-	parameters.properties.action.oneOf =
-		parameters.properties.action.oneOf.filter(
-			(obj: any) => obj.properties.type.const !== actionType,
-		);
-	return actionFunction;
+	actionFunction: CoreTool,
+	actionType: ActionType,
+): CoreTool => {
+	const clonedFunction = {
+		description: actionFunction.description,
+		parameters: cloneZodSchema(actionFunction.parameters),
+	};
+	const parameters = clonedFunction.parameters as z.ZodObject<any>;
+	const actionSchema = parameters.shape.action as z.ZodDiscriminatedUnion<
+		"type",
+		[z.ZodObject<any>, z.ZodObject<any>, z.ZodObject<any>]
+	>;
+
+	// Create a new discriminated union with filtered options
+	const filteredOptions = actionSchema.options.filter(
+		(obj: z.ZodObject<any>) => obj.shape.type.value !== actionType,
+	);
+
+	// Replace the action schema with the new filtered discriminated union
+	parameters.shape.action = z.discriminatedUnion(
+		"type",
+		filteredOptions as any,
+	);
+
+	return clonedFunction;
 };
 
-// Polyfill or fallback for structuredClone if not natively available
-const deepClone = (obj: any): any => {
-	if (typeof structuredClone === "function") {
-		return structuredClone(obj);
+function cloneZodSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
+	if (schema instanceof z.ZodObject) {
+		const newShape: { [k: string]: z.ZodTypeAny } = {};
+		for (const [key, value] of Object.entries(schema.shape)) {
+			newShape[key] = cloneZodSchema(value as z.ZodTypeAny);
+		}
+		return z.object(newShape).describe(schema.description || "");
+	} else if (schema instanceof z.ZodEnum) {
+		return z.enum(schema.options).describe(schema.description || "");
+	} else if (schema instanceof z.ZodLiteral) {
+		return z.literal(schema.value).describe(schema.description || "");
+	} else if (schema instanceof z.ZodUnion) {
+		return z
+			.union(
+				schema.options.map((option: z.ZodTypeAny) =>
+					cloneZodSchema(option),
+				),
+			)
+			.describe(schema.description || "");
+	} else if (schema instanceof z.ZodDiscriminatedUnion) {
+		const options = schema.options.map((option: z.ZodTypeAny) =>
+			cloneZodSchema(option),
+		);
+		return z
+			.discriminatedUnion(schema.discriminator, options as any)
+			.describe(schema.description || "");
 	} else {
-		// Simple deep clone implementation fallback
-		return JSON.parse(JSON.stringify(obj));
+		// For other types, we'll return a new instance of the same type
+		return schema.constructor();
 	}
-};
+}
 
 const maskActions = (actionState: ActionState) => {
 	// Replace cloneDeep with deepClone
-	const maskedActionFunction = deepClone(ACTION_FUNCTION);
+	const clonedActionFunction = {
+		description: ACTION_FUNCTION.description,
+		parameters: cloneZodSchema(ACTION_FUNCTION.parameters),
+	};
+	const maskedActionFunction = clonedActionFunction;
 
 	if (actionState.firstQuery) {
 		filterActionByType(maskedActionFunction, ActionType.Stop);
@@ -109,12 +134,26 @@ const maskActions = (actionState: ActionState) => {
 		(lastMessage && lastMessage.role != "assistant") ||
 		(lastMessage &&
 			lastMessage.role == "assistant" &&
-			!lastMessage.content.includes(`"error_occurred":true`))
+			!lastMessage?.content
+				.toString()
+				.includes(`\"error_occurred\":true`))
 	) {
 		filterActionByType(maskedActionFunction, ActionType.FixError);
 	}
 
 	return maskedActionFunction;
+};
+
+const getAvailableActions = (actionFunction: CoreTool): ActionType[] => {
+	const schema = actionFunction.parameters as z.ZodObject<any>;
+	const actionSchema = schema.shape.action as z.ZodDiscriminatedUnion<
+		"type",
+		[z.ZodObject<any>, z.ZodObject<any>, z.ZodObject<any>]
+	>;
+
+	return actionSchema.options.map(
+		(option) => option.shape.type.value as ActionType,
+	);
 };
 
 export const processActionRequest = async (
@@ -131,12 +170,20 @@ export const processActionRequest = async (
 
 	const messages = formatMessages(systemPrompt, actionState, 5e3);
 	const maskedActionFunction = maskActions(actionState);
-	const availableActions = (
-		maskedActionFunction.parameters!.properties as any
-	).action.oneOf.map((action: any) => action.properties.type.const);
+	const availableActions = getAvailableActions(maskedActionFunction);
 
-	const openai = getOpenAIClient(modelInformation);
+	const modelType = modelInformation?.modelType;
 	const model = getModelForRequest(modelInformation);
+	const apiKey = getAPIKeyForRequest(modelInformation);
+	const baseURL = getBaseURLForRequest(modelInformation);
+
+	let client: any;
+	if (modelType === "openai" || modelType === "ollama") {
+		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
+		client = openai(model);
+	} else {
+		throw new Error("Model type not supported");
+	}
 
 	try {
 		const { trace, generation } = createTraceAndGeneration(
@@ -147,27 +194,17 @@ export const processActionRequest = async (
 			uniqueId,
 		);
 
-		const response = await openai.chat.completions.create({
-			model: model,
+		const response = await generateText({
+			model: client,
 			messages: messages,
-			tools: [{ type: "function", function: maskedActionFunction }],
-			tool_choice: {
-				type: "function",
-				function: { name: "NextAction" },
-			},
-			temperature: 0.0,
-			max_tokens: 256,
+			temperature: 0.5,
+			system: systemPrompt,
+			tools: { NextAction: ACTION_FUNCTION },
+			toolChoice: "required",
 		});
 
-		if (
-			response.choices &&
-			response.choices.length > 0 &&
-			response.choices[0].message.tool_calls &&
-			response.choices[0].message.tool_calls.length > 0
-		) {
-			const action = JSON.parse(
-				response.choices[0].message.tool_calls[0].function.arguments,
-			);
+		if (response.toolCalls.length > 0) {
+			const action = response.toolCalls[0].args.action;
 
 			if (
 				!availableActions.includes(action.type) &&
@@ -190,6 +227,6 @@ export const processActionRequest = async (
 		}
 	} catch (error) {
 		captureException(error);
-		throw new Error("Error calling OpenAI API");
+		throw new Error("Error calling LLM API");
 	}
 };

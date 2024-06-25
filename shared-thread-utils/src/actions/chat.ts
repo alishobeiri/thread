@@ -1,11 +1,15 @@
-import { StreamingTextResponse } from "ai";
-import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
+import { createOpenAI } from "@ai-sdk/openai";
+import { StreamingTextResponse, streamText } from "ai";
 import { v4 as uuidv4 } from "uuid";
-import { LangfuseClient, captureOpenAIStream } from "../utils/langfuse";
-import { ModelInformation, getModelForRequest } from "../utils/model";
-import { getOpenAIClient } from "../utils/openai";
+import { LangfuseClient } from "../utils/langfuse";
+import {
+	ModelInformation,
+	getAPIKeyForRequest,
+	getBaseURLForRequest,
+	getModelForRequest,
+} from "../utils/model";
 import { getChatContextPrompt } from "../utils/promptUtils";
-import { ChatMessage } from "../utils/types/messages";
+import { ChatMessage, MessageType } from "../utils/types/messages";
 
 // Instructions
 const instructions = `As an expert AI programming assistant, your role is to assist in Python programming tasks.
@@ -56,9 +60,8 @@ export const getMessagesPayload = ({
 	currentChatNamespace: string;
 	activeCellSource: string;
 	mostRelevantContextualCellsForQuery: string[];
-}): ChatCompletionMessageParam[] => {
-	const messages: ChatCompletionMessageParam[] = [
-		{ role: "system", content: instructions },
+}): MessageType[] => {
+	const messages: MessageType[] = [
 		...previousMessages.map((d) => ({
 			role: d.user,
 			content: d.text,
@@ -78,13 +81,24 @@ export const getMessagesPayload = ({
 };
 
 export const handleChatRequest = async (params: {
-	messages: ChatCompletionMessageParam[];
+	messages: MessageType[];
 	modelInformation?: ModelInformation;
 	uniqueId?: string;
 }): Promise<StreamingTextResponse> => {
 	const { messages, modelInformation, uniqueId } = params;
-	const openai = getOpenAIClient(modelInformation);
+
+	const modelType = modelInformation?.modelType;
 	const model = getModelForRequest(modelInformation);
+	const apiKey = getAPIKeyForRequest(modelInformation);
+	const baseURL = getBaseURLForRequest(modelInformation);
+
+	let client: any;
+	if (modelType === "openai" || modelType === "ollama") {
+		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
+		client = openai(model);
+	} else {
+		throw new Error("Model type not supported");
+	}
 
 	// Create a trace for Langfuse
 	const trace = LangfuseClient.getInstance().trace({
@@ -101,20 +115,21 @@ export const handleChatRequest = async (params: {
 		model: model,
 	});
 
-	// Call OpenAI
-	const response = await openai.chat.completions.create({
-		model: model,
+	// Call LLM
+	const response = await streamText({
+		model: client,
 		messages: messages,
-		stream: true,
+		system: instructions,
+		temperature: 0.5,
+		onFinish(event) {
+			generation.end({
+				output: event.text,
+			});
+			trace.update({
+				output: event.text,
+			});
+		},
 	});
 
-	// Handle aborting the response
-	response.controller.signal.addEventListener("abort", () => {
-		console.log("openai.chat.completions aborted");
-		throw new Error("Response generation was aborted");
-	});
-
-	// Capture the OpenAI stream
-	const stream = captureOpenAIStream(response, trace, generation);
-	return new StreamingTextResponse(stream);
+	return new StreamingTextResponse(response.textStream);
 };

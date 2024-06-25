@@ -7,6 +7,5 @@ export * from "./actions/fixError";
 export * from "./utils/langfuse";
 export * from "./utils/message";
 export * from "./utils/model";
-export * from "./utils/openai";
 export * from "./utils/promptUtils";
 export * from "./utils/types/messages";

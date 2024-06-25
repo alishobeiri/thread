@@ -4,16 +4,18 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"build": "tsc"
+		"build": "if [ -d dist ]; then rm -r dist; fi && if [ -d node_modules ]; then rm -r node_modules; fi && yarn install && tsc"
 	},
 	"dependencies": {
+		"@ai-sdk/openai": "^0.0.33",
 		"@sentry/nextjs": "^8.10.0",
-		"ai": "3.0.19",
+		"ai": "^3.2.5",
 		"best-effort-json-parser": "^1.0.1",
 		"langfuse": "^3.11.2",
 		"lodash": "^4.17.21",
 		"openai": "^4.33.0",
-		"uuid": "^10.0.0"
+		"uuid": "^10.0.0",
+		"zod": "^3.23.8"
 	},
 	"devDependencies": {
 		"@types/lodash": "^4.17.5",

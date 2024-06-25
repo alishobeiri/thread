@@ -1,3 +1,5 @@
+import { CoreMessage } from "ai";
+
 export interface UserSettings {
 	context: string;
 	responseStyle: string;
@@ -8,8 +10,8 @@ export interface UserSettings {
 // Keeps track of all the action states that
 export type ActionState = {
 	userRequest: string;
-	prevMessages: NoterousMessage[];
-	messagesAfterQuery: NoterousMessage[];
+	prevMessages: MessageType[];
+	messagesAfterQuery: MessageType[];
 	firstQuery: boolean;
 
 	// The index where cell generation has begun
@@ -33,6 +35,8 @@ export type NoterousMessage = {
 };
 
 export type UserType = "assistant" | "user";
+
+export type MessageType = CoreMessage;
 
 export interface ChatMessage {
 	id: string;
