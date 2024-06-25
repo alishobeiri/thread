@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "next dev",
 		"clean": "rimraf node_modules lib dist build tsconfig.tsbuildinfo",
-		"build:prod": "cd ../shared-thread-utils && npm run build && cd ./proxy && next build",
+		"build:prod": "cd ../shared-thread-utils && npm run build && cd ../proxy && yarn install && next build",
 		"start": "next start",
 		"lint": "next lint",
 		"format": "npx prettier --write \"src/**/*\"",
