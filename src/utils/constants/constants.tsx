@@ -6,7 +6,7 @@ export const PH_PROJECT_API_KEY =
 	"phc_Pqhxx9TL3YeiBss7OfaIMdj1K8X7kjzeUUg7XsM3zpP";
 export const API_URL =
 	process.env.NODE_ENV == "production"
-		? "https://vizly-notebook-server.onrender.com"
+		? "https://thread-41s7.onrender.com"
 		: "http://localhost:5001";
 
 export const CELL_ACTIVE_COLOR = "var(--chakra-colors-orange-500)";
