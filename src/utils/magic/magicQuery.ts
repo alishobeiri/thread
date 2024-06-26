@@ -365,6 +365,8 @@ const generateCells = async (query: string, followUpRetries: number) => {
 			const actionInfo = getActionInfo(action);
 			console.debug("actionStr: ", actionStr);
 			console.debug("actionInfo: ", actionInfo);
+			const prevCurrentCellGenerationIndex =
+				actionState.currentCellGenerationIndex;
 			if (actionStr == "stop") {
 				break;
 			}
@@ -374,7 +376,7 @@ const generateCells = async (query: string, followUpRetries: number) => {
 
 			if (
 				actionState.currentCellGenerationIndex ===
-				actionState.initialCellGenerationIndex
+				prevCurrentCellGenerationIndex
 			) {
 				// No action was produced
 				break;

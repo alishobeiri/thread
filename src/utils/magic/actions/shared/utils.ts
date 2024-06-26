@@ -79,21 +79,52 @@ export async function* sharedLocalAction<P>({
 
 	for await (let data of stream) {
 		data = data.trim();
+		let cells = [];
 
-		let extractedData = data;
-		const codeMatch = data.match(/```(?:python)?\s*[\s\S]*?\s*```/);
-		if (codeMatch) {
-			extractedData = codeMatch[0]
-				.replace(/^```(?:python)?\s*/, "")
-				.replace(/\s*```$/, "");
+		// Check for JSON objects with 'cell_type' and 'source'
+		const jsonMatch = data.match(
+			/\{.*"cell_type"\s*:\s*".*?",\s*"source"\s*:\s*".*?".*\}/,
+		);
+		if (jsonMatch) {
+			try {
+				const jsonObject = JSON.parse(jsonMatch[0]);
+				cells.push(jsonObject);
+			} catch (error) {
+				console.error("Failed to parse JSON:", error);
+
+				// Extract the "source" value from the matched JSON string
+				const sourceMatch = jsonMatch[0].match(
+					/"source"\s*:\s*"([^"]*)"/,
+				);
+				if (sourceMatch && sourceMatch[1]) {
+					cells.push({
+						cell_type: cellType,
+						source: sourceMatch[1],
+					});
+				}
+			}
 		}
 
-		const cells: Cell[] = [
-			{
+		// Improved regex to capture any fenced code block optionally with a language specifier
+		const codeMatch = data.match(/```(?:\w+)?\s*([\s\S]*?)\s*```/);
+
+		if (codeMatch && codeMatch[1]) {
+			const extractedData = codeMatch[1].trim();
+			if (extractedData) {
+				cells.push({
+					cell_type: cellType,
+					source: extractedData,
+				});
+			}
+		}
+
+		if (cells.length === 0 && data) {
+			// Fallback to adding the raw data if no JSON or code block is found
+			cells.push({
 				cell_type: cellType,
-				source: extractedData,
-			},
-		];
+				source: data,
+			});
+		}
 
 		yield { cells };
 	}

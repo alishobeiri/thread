@@ -53,7 +53,6 @@ export interface StreamWrapperParams<P> {
 	streamGenerator: (params: P) => Promise<StreamingTextResponse>;
 	params: P;
 	shouldCancel?: () => boolean;
-	onError: (error: string | unknown) => void;
 }
 
 export async function* parseStreamWrapper<T, P>({

@@ -46,12 +46,10 @@ export const editCell = async (cell: ThreadCell, query: string) => {
 		if (data && typeof data === "object" && "source" in data) {
 			setProposedSource(cell.id as string, data.source);
 		} else if (typeof data === "string") {
-			const codeMatch = data.match(/```(?:python)?\s*[\s\S]*?\s*```/);
-			if (codeMatch) {
-				const extractedData = codeMatch[0]
-					.replace(/^```(?:python)?\s*/, "")
-					.replace(/\s*```$/, "");
-				setProposedSource(cell.id as string, extractedData.trim());
+			// Improved regex to capture any fenced code block optionally with a language specifier
+			const codeMatch = data.match(/```(?:\w+)?\s*([\s\S]*?)\s*```/);
+			if (codeMatch && codeMatch[1]) {
+				setProposedSource(cell.id as string, codeMatch[1].trim());
 			} else {
 				setProposedSource(cell.id as string, data.trim());
 			}
