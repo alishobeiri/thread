@@ -45,7 +45,21 @@ jupyter thread
 
 # Using Thread with Ollama
 
-With Thread, you can use Ollama for a fully offline AI experience. To begin, install and run thread using the commands above.
+You can use [Ollama](https://github.com/ollama/ollama) for a fully offline AI experience. To begin, install and run thread using the commands above. 
+
+Once you have run thread, in the bottom left, select the Settings icon:
+![Screenshot 2024-06-26 at 4 13 45 PM](https://github.com/squaredtechnologies/thread/assets/18422723/7b1c3066-dac7-4d53-a0c3-54dde183d736)
+
+Next, select the Model Settings setting:
+![Screenshot 2024-06-26 at 4 14 36 PM](https://github.com/squaredtechnologies/thread/assets/18422723/5fa9b42c-1fdc-496a-b323-6bc7b0a9cfe2)
+
+This is what you will see:
+![image](https://github.com/squaredtechnologies/thread/assets/18422723/b218f005-afa4-40d6-835e-d2b6e14757b5)
+
+Navigate to Ollama and enter your model details:
+![image](https://github.com/squaredtechnologies/thread/assets/18422723/8b5cc906-d261-409d-b843-068be69ed410)
+
+Use Ctrl / Cmd + K and try running a query to see how it looks!
 
 # Demo
 
