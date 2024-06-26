@@ -53,7 +53,7 @@ Once you have run thread, in the bottom left, select the Settings icon:
 
 Next, select the Model Settings setting:
 
-![Screenshot 2024-06-26 at 4 14 36 PM](https://github.com/squaredtechnologies/thread/assets/18422723/5fa9b42c-1fdc-496a-b323-6bc7b0a9cfe2)
+![image](https://github.com/squaredtechnologies/thread/assets/18422723/47e9f1f2-dd81-4aa1-9290-5e8c9445766a)
 
 This is what you will see:
 
