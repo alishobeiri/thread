@@ -4,13 +4,12 @@
  <a href="https://www.thread.dev">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://www.thread.dev/favicon.png"/>
-    <img height="120" src="https://www.thread.dev/favicon.png"/>
+    <img height="40" src="https://www.thread.dev/favicon.png"/>
   </picture>
  </a>
- <br />
 </h1>
 <p align="center">
-🧵 AI-powered Jupyter Notebook built using React 🧵
+AI-powered Jupyter Notebook built using React
 </p>
 <p align="center">
   <a href="https://www.thread.dev/"><img src="https://img.shields.io/badge/Website-blue?logo=googlechrome&logoColor=orange"/></a>
@@ -22,7 +21,7 @@
   <a href="https://github.com/squaredtechnologies/thread"><img src="https://img.shields.io/github/stars/squaredtechnologies/thread" /></a>
 </p>
 
-[Thread](https://www.thread.dev) is a Jupyter Notebook that combines the experience of OpenAI's code interpreter with the familiar development environment of a Python notebook. With Thread, you can use natural language to generate cells, edit code, ask questions or fix errors all while being able to edit or re-run code as you would in a regular Jupyter Notebook.
+[Thread](https://www.thread.dev) is a Jupyter alternative that combines the experience of OpenAI's code interpreter with the familiar development environment of a Python notebook. With Thread, you can use natural language to generate cells, edit code, ask questions or fix errors all while being able to edit or re-run code as you would in a regular Jupyter Notebook.
 
 Best of all, Thread runs locally, and can be used for free with your own API key. To start:
 
@@ -43,6 +42,10 @@ jupyter thread
 ```
 
 ![ThreadIntro](https://github.com/squaredtechnologies/thread/assets/18422723/ac49e65b-e8f7-4e7b-a349-76cf533178df)
+
+# Using Thread with Ollama
+
+With Thread, you can use Ollama for a fully offline AI experience. To begin, install and run thread using the commands above.
 
 # Demo
 

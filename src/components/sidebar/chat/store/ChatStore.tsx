@@ -1,4 +1,4 @@
-import { useChat } from 'ai/react';
+import { useChat } from "ai/react";
 import { v4 as uuidv4 } from "uuid";
 import { create } from "zustand";
 import useApiCallStore from "../../../../hooks/useApiCallStore";
@@ -197,9 +197,8 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 				  });
 
 			let errorCount = 0;
-			
+
 			for await (const chunk of stream) {
-				console.log(chunk);
 				if (chunk) {
 					try {
 						if (!assistantMessageId) {

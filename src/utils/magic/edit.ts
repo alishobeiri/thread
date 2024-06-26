@@ -43,12 +43,18 @@ export const editCell = async (cell: ThreadCell, query: string) => {
 		  });
 
 	for await (let data of stream) {
-		console.log("data: ", data);
 		if (data && typeof data === "object" && "source" in data) {
 			setProposedSource(cell.id as string, data.source);
 		} else if (typeof data === "string") {
-			const trimmedData = data.replace(/^```|```$/g, "");
-			setProposedSource(cell.id as string, trimmedData);
+			const codeMatch = data.match(/```(?:python)?\s*[\s\S]*?\s*```/);
+			if (codeMatch) {
+				const extractedData = codeMatch[0]
+					.replace(/^```(?:python)?\s*/, "")
+					.replace(/\s*```$/, "");
+				setProposedSource(cell.id as string, extractedData.trim());
+			} else {
+				setProposedSource(cell.id as string, data.trim());
+			}
 		}
 	}
 

@@ -79,39 +79,22 @@ export async function* sharedLocalAction<P>({
 
 	for await (let data of stream) {
 		data = data.trim();
-		if (data.startsWith("9:")) {
-			try {
-				const jsonData = JSON.parse(
-					data.slice(2).replace(/\n/g, "\\n"),
-				);
-				if (jsonData.args && jsonData.args.cells) {
-					const cells = jsonData.args.cells.map((cell: Cell) => ({
-						...cell,
-						cell_type: cellType,
-					}));
-					yield { cells };
-				}
-			} catch (error) {
-				console.error("Error parsing JSON:", error);
-			}
-		} else {
-			let trimmedData = data;
-			const backtickBlockRegex = /^```([\s\S]*?)```$/;
-			const match = data.match(backtickBlockRegex);
 
-			if (match) {
-				trimmedData = match[1];
-				trimmedData = data.replace(/^```|```$/g, "");
-			}
-
-			const cells: Cell[] = [
-				{
-					cell_type: cellType,
-					source: trimmedData,
-				},
-			];
-
-			yield { cells };
+		let extractedData = data;
+		const codeMatch = data.match(/```(?:python)?\s*[\s\S]*?\s*```/);
+		if (codeMatch) {
+			extractedData = codeMatch[0]
+				.replace(/^```(?:python)?\s*/, "")
+				.replace(/\s*```$/, "");
 		}
+
+		const cells: Cell[] = [
+			{
+				cell_type: cellType,
+				source: extractedData,
+			},
+		];
+
+		yield { cells };
 	}
 }

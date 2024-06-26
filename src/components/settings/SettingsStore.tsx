@@ -20,7 +20,7 @@ const saveDefaultSettingsFile = async () => {
 					openAIKey: "",
 					openAIBaseUrl: "",
 					serverProxyUrl: "",
-					ollamaUrl: "",
+					ollamaUrl: "http://127.0.0.1:11434/v1",
 					ollamaModel: "",
 					modelType: "openai",
 					autoExecuteGeneratedCode: false,
