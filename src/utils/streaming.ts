@@ -2,6 +2,7 @@ import { StreamingTextResponse } from "ai";
 import { parse } from "best-effort-json-parser";
 import { useCallback, useEffect, useState } from "react";
 import { useSettingsStore } from "../components/settings/SettingsStore";
+import { standaloneToast } from "../theme";
 import { threadFetch } from "./utils";
 
 const { getAdditionalRequestMetadata } = useSettingsStore.getState();
@@ -52,6 +53,7 @@ export interface StreamWrapperParams<P> {
 	streamGenerator: (params: P) => Promise<StreamingTextResponse>;
 	params: P;
 	shouldCancel?: () => boolean;
+	onError: (error: string | unknown) => void;
 }
 
 export async function* parseStreamWrapper<T, P>({
@@ -59,14 +61,21 @@ export async function* parseStreamWrapper<T, P>({
 	params,
 	shouldCancel = () => false,
 }: StreamWrapperParams<P>) {
-	const stream = await streamGenerator(params);
-
-	for await (const chunk of parseStream(stream.body!, shouldCancel)) {
-		try {
+	try {
+		const stream = await streamGenerator(params);
+		for await (const chunk of parseStream(stream.body!, shouldCancel)) {
 			yield chunk;
-		} catch (error) {
-			console.error("Error parsing stream chunk:", error);
 		}
+	} catch (error: any) {
+		standaloneToast({
+			title: "Error occurred:",
+			description: error.message,
+			status: "error",
+			duration: 5000,
+			isClosable: true,
+			position: "top",
+		});
+		console.error("Error parsing stream chunk:", error);
 	}
 }
 
@@ -98,11 +107,27 @@ export async function* makeStreamingRequest({
 			if (error.name === "AbortError") {
 				throw Error("Fetch aborted");
 			} else {
+				standaloneToast({
+					title: "Error occurred:",
+					description: error.message,
+					status: "error",
+					duration: 5000,
+					isClosable: true,
+					position: "top",
+				});
 				console.error("Fetch error:", error.message);
 				throw Error("Error fetching: " + error.message);
 			}
 		} else {
 			console.error("An unexpected error occurred:", error);
+			standaloneToast({
+				title: "Error occurred:",
+				description: error as any,
+				status: "error",
+				duration: 5000,
+				isClosable: true,
+				position: "top",
+			});
 		}
 	}
 }
