@@ -43,28 +43,6 @@ jupyter thread
 
 ![ThreadIntro](https://github.com/squaredtechnologies/thread/assets/18422723/ac49e65b-e8f7-4e7b-a349-76cf533178df)
 
-# Using Thread with Ollama
-
-You can use [Ollama](https://github.com/ollama/ollama) for a fully offline AI experience. To begin, install and run thread using the commands above. 
-
-Once you have run thread, in the bottom left, select the Settings icon:
-
-![image](https://github.com/squaredtechnologies/thread/assets/18422723/b7dd8546-9aaa-47fe-b241-4f9ed085b633)
-
-Next, select the Model Settings setting:
-
-![image](https://github.com/squaredtechnologies/thread/assets/18422723/47e9f1f2-dd81-4aa1-9290-5e8c9445766a)
-
-This is what you will see:
-
-![image](https://github.com/squaredtechnologies/thread/assets/18422723/b218f005-afa4-40d6-835e-d2b6e14757b5)
-
-Navigate to Ollama and enter your model details:
-
-![image](https://github.com/squaredtechnologies/thread/assets/18422723/8b5cc906-d261-409d-b843-068be69ed410)
-
-Use Ctrl / Cmd + K and try running a query to see how it looks!
-
 # Demo
 
 https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad-b293-217b940385fb
@@ -147,6 +125,28 @@ Then:
 ```
 yarn dev --port 5001
 ```
+
+# Using Thread with Ollama
+
+You can use [Ollama](https://github.com/ollama/ollama) for a fully offline AI experience. To begin, install and run thread using the commands above. 
+
+Once you have run thread, in the bottom left, select the Settings icon:
+
+![image](https://github.com/squaredtechnologies/thread/assets/18422723/b7dd8546-9aaa-47fe-b241-4f9ed085b633)
+
+Next, select the Model Settings setting:
+
+![image](https://github.com/squaredtechnologies/thread/assets/18422723/47e9f1f2-dd81-4aa1-9290-5e8c9445766a)
+
+This is what you will see:
+
+![image](https://github.com/squaredtechnologies/thread/assets/18422723/b218f005-afa4-40d6-835e-d2b6e14757b5)
+
+Navigate to Ollama and enter your model details:
+
+![image](https://github.com/squaredtechnologies/thread/assets/18422723/8b5cc906-d261-409d-b843-068be69ed410)
+
+Use Ctrl / Cmd + K and try running a query to see how it looks!
 
 # Why we built Thread
 
