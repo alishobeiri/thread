@@ -61,12 +61,11 @@ thread
 
 -   Thread is built from the ground up using React, hopefully making it more accessible to build on top of for a wider range of developers.
 
-
-![ThreadIntro](https://github.com/squaredtechnologies/thread/assets/18422723/ac49e65b-e8f7-4e7b-a349-76cf533178df)
-
 # Demo
 
 https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad-b293-217b940385fb
+
+![ThreadIntro](https://github.com/squaredtechnologies/thread/assets/18422723/ac49e65b-e8f7-4e7b-a349-76cf533178df)
 
 # Feature Roadmap
 
