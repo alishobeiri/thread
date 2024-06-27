@@ -57,10 +57,6 @@ thread
 
 <img width="1112" alt="image" src="https://github.com/squaredtechnologies/thread/assets/18422723/93a16931-4236-4ab0-b5b5-673100af2ca0">
 
-### 6. React frontend
-
--   Thread is built from the ground up using React, hopefully making it more accessible to build on top of for a wider range of developers.
-
 # Demo
 
 https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad-b293-217b940385fb
