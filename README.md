@@ -23,7 +23,7 @@ AI-powered Jupyter Notebook built using React
 
 [Thread](https://www.thread.dev) is a Jupyter alternative that combines the experience of OpenAI's code interpreter with the familiar development environment of a Python notebook. With Thread, you can use natural language to generate cells, edit code, ask questions or fix errors all while being able to edit or re-run code as you would in a regular Jupyter Notebook.
 
-Best of all, Thread runs locally, and can be used for free with your own API key. To start:
+Best of all, Thread runs locally and can be used for free with [Ollama](https://github.com/ollama/ollama) or your own API key. To start:
 
 ```
 pip install thread-dev
@@ -34,18 +34,6 @@ To start thread-dev, run the following
 ```
 thread
 ```
-
-or
-
-```
-jupyter thread
-```
-
-![ThreadIntro](https://github.com/squaredtechnologies/thread/assets/18422723/ac49e65b-e8f7-4e7b-a349-76cf533178df)
-
-# Demo
-
-https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad-b293-217b940385fb
 
 # Key features
 
@@ -73,6 +61,13 @@ https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad
 
 -   Thread is built from the ground up using React, hopefully making it more accessible to build on top of for a wider range of developers.
 
+
+![ThreadIntro](https://github.com/squaredtechnologies/thread/assets/18422723/ac49e65b-e8f7-4e7b-a349-76cf533178df)
+
+# Demo
+
+https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad-b293-217b940385fb
+
 # Feature Roadmap
 
 These are some of the features we are hoping to launch in the next few month. If you have any suggestions or would like to see a feature added, please don't hesitate to open an issue or reach out to us [via email](mailto:ali@vizlylabs.com) or [discord](https://discord.gg/ZuHq9hDs2y).
@@ -83,7 +78,7 @@ These are some of the features we are hoping to launch in the next few month. If
 -   [ ] UI based chart creation
 -   [ ] Ability to collaborate on notebooks
 -   [ ] Publish notebooks as shareable webapps
--   [ ] Add support for Jupyter Widgets
+-   [x] Add support for Jupyter Widgets
 -   [ ] Add file preview for all file types
 
 # Thread.dev Cloud
