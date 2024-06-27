@@ -21,7 +21,7 @@ AI-powered Jupyter Notebook built using React
   <a href="https://github.com/squaredtechnologies/thread"><img src="https://img.shields.io/github/stars/squaredtechnologies/thread" /></a>
 </p>
 
-[Thread](https://www.thread.dev) is a Jupyter alternative that combines the experience of OpenAI's code interpreter with the familiar development environment of a Python notebook. With Thread, you can use natural language to generate cells, edit code, ask questions or fix errors all while being able to edit or re-run code as you would in a regular Jupyter Notebook.
+[Thread](https://www.thread.dev) is a Jupyter alternative that integrates an AI copilot into your Jupyter Notebook experience.
 
 Best of all, Thread runs locally and can be used for free with [Ollama](https://github.com/ollama/ollama) or your own API key. To start:
 
