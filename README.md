@@ -9,7 +9,7 @@
  </a>
 </h1>
 <p align="center">
-AI-powered Jupyter Notebook built using React
+AI-powered Jupyter Notebook
 </p>
 <p align="center">
   <a href="https://www.thread.dev/"><img src="https://img.shields.io/badge/Website-blue?logo=googlechrome&logoColor=orange"/></a>
@@ -21,7 +21,7 @@ AI-powered Jupyter Notebook built using React
   <a href="https://github.com/squaredtechnologies/thread"><img src="https://img.shields.io/github/stars/squaredtechnologies/thread" /></a>
 </p>
 
-[Thread](https://www.thread.dev) is a Jupyter alternative that integrates a locally run AI copilot into your Jupyter Notebook experience.
+[Thread](https://www.thread.dev) is a Jupyter alternative that integrates an AI copilot into your Jupyter Notebook editing experience.
 
 Best of all, Thread runs locally and can be used for free with [Ollama](https://github.com/ollama/ollama) or your own API key. To start:
 
