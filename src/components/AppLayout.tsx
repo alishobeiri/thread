@@ -6,7 +6,6 @@ import FileViewModal from "./modals/file-view/FileViewModal";
 import KernelSelectionModal from "./modals/kernel-selection/KernelSelectionModal";
 import ModelSettingsModal from "./modals/model-settings/ModelSettingsModal";
 import QueryLimitModal from "./modals/query-limit/QueryLimitModal";
-import ServerSettingsModal from "./modals/server-settings/ServerSettingsModal";
 import { initializeServerConnection } from "./notebook/Notebook";
 import { useNotebookStore } from "./notebook/store/NotebookStore";
 import Sidebar from "./sidebar";
@@ -47,7 +46,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 				<FileViewModal />
 				<QueryLimitModal />
 				<InvalidConnectionModal />
-				<ServerSettingsModal />
 				<ModelSettingsModal />
 				{children}
 			</HStack>

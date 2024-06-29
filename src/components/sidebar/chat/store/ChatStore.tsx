@@ -172,7 +172,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 			const metadata = useSettingsStore
 				.getState()
 				.getAdditionalRequestMetadata();
-			const isLocal = useSettingsStore.getState().isLocal();
+			const isLocal = useSettingsStore.getState().isLocal;
 
 			const stream = isLocal
 				? parseStreamWrapper({

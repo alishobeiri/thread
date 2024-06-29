@@ -18,7 +18,7 @@ export const editCell = async (cell: ThreadCell, query: string) => {
 	const setCellStatus = useCellStore.getState().setCellStatus;
 	setCellStatus(cell.id as string, CellStatus.Generating);
 
-	const isLocal = useSettingsStore.getState().isLocal();
+	const isLocal = useSettingsStore.getState().isLocal;
 	const payload = {
 		userRequest: query,
 		currentCellSource: multilineStringToString(cell.source),
