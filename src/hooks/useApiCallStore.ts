@@ -30,7 +30,7 @@ const useApiCallStore = create<ApiCallState>((set) => ({
 	checkAndIncrementApiCallCount: () => {
 		const { apiCallCount, incrementApiCallCount } =
 			useApiCallStore.getState();
-		const isLocal = useSettingsStore.getState().isLocal();
+		const isLocal = useSettingsStore.getState().isLocal;
 		const openaiApiKey = useSettingsStore.getState().openAIKey;
 		const serverProxyUrl = useSettingsStore.getState().serverProxyUrl;
 

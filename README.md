@@ -9,7 +9,7 @@
  </a>
 </h1>
 <p align="center">
-AI-powered Jupyter Notebook built using React
+AI-powered Jupyter Notebook
 </p>
 <p align="center">
   <a href="https://www.thread.dev/"><img src="https://img.shields.io/badge/Website-blue?logo=googlechrome&logoColor=orange"/></a>
@@ -21,9 +21,9 @@ AI-powered Jupyter Notebook built using React
   <a href="https://github.com/squaredtechnologies/thread"><img src="https://img.shields.io/github/stars/squaredtechnologies/thread" /></a>
 </p>
 
-[Thread](https://www.thread.dev) is a Jupyter alternative that combines the experience of OpenAI's code interpreter with the familiar development environment of a Python notebook. With Thread, you can use natural language to generate cells, edit code, ask questions or fix errors all while being able to edit or re-run code as you would in a regular Jupyter Notebook.
+[Thread](https://www.thread.dev) is a Jupyter alternative that integrates an AI copilot into your Jupyter Notebook editing experience.
 
-Best of all, Thread runs locally, and can be used for free with your own API key. To start:
+Best of all, Thread runs locally and can be used for free with [Ollama](https://github.com/ollama/ollama) or your own API key. To start:
 
 ```
 pip install thread-dev
@@ -34,22 +34,6 @@ To start thread-dev, run the following
 ```
 thread
 ```
-
-or
-
-```
-jupyter thread
-```
-
-![ThreadIntro](https://github.com/squaredtechnologies/thread/assets/18422723/ac49e65b-e8f7-4e7b-a349-76cf533178df)
-
-# Using Thread with Ollama
-
-With Thread, you can use Ollama for a fully offline AI experience. To begin, install and run thread using the commands above.
-
-# Demo
-
-https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad-b293-217b940385fb
 
 # Key features
 
@@ -73,9 +57,11 @@ https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad
 
 <img width="1112" alt="image" src="https://github.com/squaredtechnologies/thread/assets/18422723/93a16931-4236-4ab0-b5b5-673100af2ca0">
 
-### 6. React frontend
+# Demo
 
--   Thread is built from the ground up using React, hopefully making it more accessible to build on top of for a wider range of developers.
+https://github.com/squaredtechnologies/thread/assets/18422723/b0ef0d7d-bae5-48ad-b293-217b940385fb
+
+![ThreadIntro](https://github.com/squaredtechnologies/thread/assets/18422723/ac49e65b-e8f7-4e7b-a349-76cf533178df)
 
 # Feature Roadmap
 
@@ -87,7 +73,7 @@ These are some of the features we are hoping to launch in the next few month. If
 -   [ ] UI based chart creation
 -   [ ] Ability to collaborate on notebooks
 -   [ ] Publish notebooks as shareable webapps
--   [ ] Add support for Jupyter Widgets
+-   [x] Add support for Jupyter Widgets
 -   [ ] Add file preview for all file types
 
 # Thread.dev Cloud
@@ -129,6 +115,28 @@ Then:
 ```
 yarn dev --port 5001
 ```
+
+# Using Thread with Ollama
+
+You can use [Ollama](https://github.com/ollama/ollama) for a fully offline AI experience. To begin, install and run thread using the commands above. 
+
+Once you have run thread, in the bottom left, select the Settings icon:
+
+![image](https://github.com/squaredtechnologies/thread/assets/18422723/b7dd8546-9aaa-47fe-b241-4f9ed085b633)
+
+Next, select the Model Settings setting:
+
+![image](https://github.com/squaredtechnologies/thread/assets/18422723/47e9f1f2-dd81-4aa1-9290-5e8c9445766a)
+
+This is what you will see:
+
+![image](https://github.com/squaredtechnologies/thread/assets/18422723/b218f005-afa4-40d6-835e-d2b6e14757b5)
+
+Navigate to Ollama and enter your model details:
+
+![image](https://github.com/squaredtechnologies/thread/assets/18422723/8b5cc906-d261-409d-b843-068be69ed410)
+
+Use Ctrl / Cmd + K and try running a query to see how it looks!
 
 # Why we built Thread
 

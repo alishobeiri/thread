@@ -9,7 +9,7 @@ export async function* codeAction(
 	actionState: ActionState,
 	wasAborted: () => boolean,
 ): AsyncGenerator<any, void, unknown> {
-	const isLocal = useSettingsStore.getState().isLocal();
+	const isLocal = useSettingsStore.getState().isLocal;
 	if (isLocal) {
 		const metadata = useSettingsStore
 			.getState()

@@ -330,7 +330,7 @@ const generateCells = async (query: string, followUpRetries: number) => {
 		if (wasAborted()) {
 			break;
 		}
-		const isLocal = useSettingsStore.getState().isLocal();
+		const isLocal = useSettingsStore.getState().isLocal;
 		const metadata = useSettingsStore
 			.getState()
 			.getAdditionalRequestMetadata();

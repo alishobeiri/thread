@@ -1,7 +1,9 @@
+import React, { useEffect, useState } from "react";
 import {
 	Badge,
 	Button,
 	ButtonGroup,
+	Divider,
 	FormControl,
 	FormLabel,
 	HStack,
@@ -15,35 +17,36 @@ import {
 	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
+	Switch,
 	Text,
 	VStack,
 	useToast,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { OllamaIcon, OpenAIIcon } from "../../../assets/icons";
 import { useSettingsStore } from "../../settings/SettingsStore";
+import { API_URL } from "../../../utils/constants/constants";
 
 const ModelSettingsModal = () => {
 	const isOpen = useSettingsStore((state) => state.showModelSettingsModal);
 	const setIsOpen = useSettingsStore(
 		(state) => state.setShowModelSettingsModal,
 	);
-	const handleClose = () => {
-		setIsOpen(false);
-	};
+	const handleClose = () => setIsOpen(false);
 
-	useEffect(() => {
-		useSettingsStore.getState().fetchSettings();
-	}, []);
+	const {
+		openAIKey,
+		openAIBaseUrl,
+		serverProxyUrl,
+		modelType,
+		ollamaUrl,
+		ollamaModel,
+		isLocal,
+		setSettings,
+		setModelType,
+		fetchSettings,
+	} = useSettingsStore.getState();
 
-	const openaiKey = useSettingsStore((state) => state.openAIKey);
-	const openAIBaseUrl = useSettingsStore((state) => state.openAIBaseUrl);
-	const serverProxyUrl = useSettingsStore((state) => state.serverProxyUrl);
-	const modelType = useSettingsStore((state) => state.modelType);
-	const ollamaUrl = useSettingsStore((state) => state.ollamaUrl);
-	const ollamaModel = useSettingsStore((state) => state.ollamaModel);
-	const { setSettings, setModelType } = useSettingsStore.getState();
 	const [show, setShow] = useState(false);
 	const [tempOpenAIKey, setTempOpenAIKey] = useState("");
 	const [tempServerUrl, setTempServerUrl] = useState("");
@@ -52,19 +55,42 @@ const ModelSettingsModal = () => {
 	const [tempModelType, setTempModelType] = useState(modelType);
 	const [tempOllamaUrl, setTempOllamaUrl] = useState("");
 	const [tempOllamaModel, setTempOllamaModel] = useState("");
+	const [tempIsLocal, setTempIsLocal] = useState(false);
 	const toast = useToast();
 
+	useEffect(() => {
+		fetchSettings();
+	}, []);
+
+	useEffect(() => {
+		if (isOpen) {
+			loadSettings();
+		}
+	}, [isOpen]);
+
+	useEffect(() => {
+		validate();
+	}, [tempOpenAIKey, tempServerUrl, tempBaseOpenAIUrl, tempIsLocal]);
+
+	useEffect(() => {
+		setTempModelType(modelType);
+	}, [modelType]);
+
 	const loadSettings = () => {
-		setTempOpenAIKey(openaiKey || "");
-		setTempServerUrl(serverProxyUrl || "");
+		setTempOpenAIKey(openAIKey || "");
+		setTempServerUrl(serverProxyUrl || API_URL);
 		setTempBaseOpenAIUrl(openAIBaseUrl || "");
 		setTempOllamaUrl(ollamaUrl || "");
 		setTempOllamaModel(ollamaModel || "");
 		setTempModelType(modelType || "openai");
+		setTempIsLocal(isLocal || modelType === "ollama" || false);
 	};
 
 	const validate = () => {
-		if (tempBaseOpenAIUrl && !tempOpenAIKey) {
+		if (
+			(tempBaseOpenAIUrl && !tempOpenAIKey) ||
+			(!tempIsLocal && !tempServerUrl)
+		) {
 			setIsValid(false);
 		} else {
 			setIsValid(true);
@@ -75,38 +101,26 @@ const ModelSettingsModal = () => {
 		if (!isValid) {
 			toast({
 				title: "Error",
-				description: "API key must be set if base URL is provided.",
+				description: "Please check your settings and try again.",
 				status: "error",
 				duration: 4000,
 				isClosable: true,
 			});
 			return;
 		}
+
 		await setSettings({
 			openAIBaseUrl: tempBaseOpenAIUrl,
 			openAIKey: tempOpenAIKey,
-			serverProxyUrl: tempServerUrl,
+			serverProxyUrl: !tempIsLocal ? tempServerUrl : "",
 			ollamaUrl: tempOllamaUrl,
 			ollamaModel: tempOllamaModel,
+			isLocal: tempIsLocal || tempModelType === "ollama",
 			modelType: tempModelType,
 		});
 		setModelType(tempModelType);
 		handleClose();
 	};
-
-	useEffect(() => {
-		if (isOpen) {
-			loadSettings();
-		}
-	}, [isOpen]);
-
-	useEffect(() => {
-		validate();
-	}, [tempOpenAIKey, tempServerUrl, tempBaseOpenAIUrl]);
-
-	useEffect(() => {
-		setTempModelType(modelType);
-	}, [modelType]);
 
 	const toggleShowKey = () => setShow(!show);
 
@@ -114,46 +128,51 @@ const ModelSettingsModal = () => {
 		<Modal isOpen={isOpen} onClose={handleClose} size={["sm", "md", "lg"]}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Model Settings</ModalHeader>
+				<ModalHeader>Settings</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody>
-					<ButtonGroup
-						colorScheme="orange"
-						width="100%"
-						isAttached
-						fontFamily={"Space Grotesk"}
-					>
-						<Button
-							width="50%"
-							variant={
-								tempModelType === "openai" ? "solid" : "outline"
-							}
-							leftIcon={<OpenAIIcon />}
-							onClick={() => setTempModelType("openai")}
+					<VStack spacing={6} fontFamily="Space Grotesk">
+						<ButtonGroup
+							colorScheme="orange"
+							width="100%"
+							isAttached
+							fontFamily="Space Grotesk"
 						>
-							OpenAI
-						</Button>
-						<Button
-							width="50%"
-							variant={
-								tempModelType === "ollama" ? "solid" : "outline"
-							}
-							leftIcon={<OllamaIcon />}
-							onClick={() => setTempModelType("ollama")}
-							rightIcon={
-								<Badge
-									fontSize="smaller"
-									colorScheme="blue"
-									_dark={{ background: "blue.100" }}
-								>
-									Beta
-								</Badge>
-							}
-						>
-							Ollama
-						</Button>
-					</ButtonGroup>
-					<VStack spacing={6} mt={5} fontFamily={"Space Grotesk"}>
+							<Button
+								width="50%"
+								variant={
+									tempModelType === "openai"
+										? "solid"
+										: "outline"
+								}
+								leftIcon={<OpenAIIcon />}
+								onClick={() => setTempModelType("openai")}
+							>
+								OpenAI
+							</Button>
+							<Button
+								width="50%"
+								variant={
+									tempModelType === "ollama"
+										? "solid"
+										: "outline"
+								}
+								leftIcon={<OllamaIcon />}
+								onClick={() => setTempModelType("ollama")}
+								rightIcon={
+									<Badge
+										fontSize="smaller"
+										colorScheme="blue"
+										_dark={{ background: "blue.100" }}
+									>
+										Beta
+									</Badge>
+								}
+							>
+								Ollama
+							</Button>
+						</ButtonGroup>
+
 						{tempModelType === "openai" ? (
 							<>
 								<FormControl
@@ -193,7 +212,7 @@ const ModelSettingsModal = () => {
 											color="red.500"
 										>
 											API key must be set if base URL or
-											proxy URL is provided.
+											proxy server URL is provided.
 										</Text>
 									)}
 									<Text
@@ -229,11 +248,7 @@ const ModelSettingsModal = () => {
 						) : (
 							<>
 								<FormControl id="ollama-url">
-									<FormLabel
-										fontWeight="bold"
-										fontSize="lg"
-										fontFamily={"Space Grotesk"}
-									>
+									<FormLabel fontWeight="bold" fontSize="lg">
 										Ollama URL
 									</FormLabel>
 									<Input
@@ -254,11 +269,7 @@ const ModelSettingsModal = () => {
 									</Text>
 								</FormControl>
 								<FormControl id="ollama-model">
-									<FormLabel
-										fontWeight="bold"
-										fontSize="lg"
-										fontFamily={"Space Grotesk"}
-									>
+									<FormLabel fontWeight="bold" fontSize="lg">
 										Ollama Model Name
 									</FormLabel>
 									<Input
@@ -278,11 +289,9 @@ const ModelSettingsModal = () => {
 										current purposes,{" "}
 										<Text
 											as={Link}
-											href={
-												"https://ollama.com/library/codestral"
-											}
-											target={"_blank"}
-											cursor={"pointer"}
+											href="https://ollama.com/library/codestral"
+											target="_blank"
+											cursor="pointer"
 											color="blue.500"
 										>
 											codestral
@@ -292,6 +301,81 @@ const ModelSettingsModal = () => {
 								</FormControl>
 							</>
 						)}
+
+						{tempModelType !== "ollama" ? (
+							<>
+								<Divider></Divider>
+
+								<FormControl
+									display="flex"
+									flexDirection="column"
+									alignItems="start"
+								>
+									<HStack
+										width="100%"
+										justifyContent="space-between"
+										alignItems="center"
+									>
+										<FormLabel
+											htmlFor="is-local"
+											mb="0"
+											fontWeight="bold"
+											fontSize="lg"
+										>
+											Send API Calls Locally
+										</FormLabel>
+										<Switch
+											id="is-local"
+											colorScheme="orange"
+											isChecked={tempIsLocal}
+											onChange={(e) =>
+												setTempIsLocal(e.target.checked)
+											}
+										/>
+									</HStack>
+									<Text
+										mt="2"
+										fontSize="small"
+										color="gray.500"
+									>
+										{tempIsLocal
+											? "Requests will be sent directly from the client."
+											: "Turning off will require a server proxy URL."}
+									</Text>
+								</FormControl>
+
+								{!tempIsLocal && (
+									<FormControl id="proxy-url" mt="4">
+										{" "}
+										{/*Removed negative margin*/}
+										<FormLabel
+											htmlFor="server-proxy-url"
+											fontWeight="bold"
+											fontSize="md"
+										>
+											Server Proxy URL
+										</FormLabel>
+										<Text
+											mt="2"
+											fontSize="small"
+											color="gray.500"
+										>
+											Enter the URL of your server proxy.
+										</Text>
+										<Input
+											id="server-proxy-url"
+											placeholder="Enter your Server Proxy URL"
+											value={tempServerUrl}
+											onChange={(e) =>
+												setTempServerUrl(e.target.value)
+											}
+										/>
+									</FormControl>
+								)}
+							</>
+						) : (
+							<></>
+						)}
 					</VStack>
 				</ModalBody>
 				<ModalFooter>
@@ -300,7 +384,7 @@ const ModelSettingsModal = () => {
 							variant="ghost"
 							colorScheme="red"
 							onClick={handleClose}
-							fontFamily={"Space Grotesk"}
+							fontFamily="Space Grotesk"
 						>
 							Cancel
 						</Button>
@@ -308,7 +392,7 @@ const ModelSettingsModal = () => {
 							colorScheme="orange"
 							onClick={saveSettings}
 							isDisabled={!isValid}
-							fontFamily={"Space Grotesk"}
+							fontFamily="Space Grotesk"
 						>
 							Save
 						</Button>
