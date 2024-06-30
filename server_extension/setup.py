@@ -14,7 +14,7 @@ long_description = long_description.replace('public/', 'thread/static/')
 
 setup(
     name="thread-dev",
-    version="0.1.20",
+    version="0.1.21",
     packages=find_packages(),
     include_package_data=True,
     install_requires=[

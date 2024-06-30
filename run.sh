@@ -7,8 +7,22 @@ if [ ! -d "./server_extension/thread/static" ]; then
   mkdir -p ./server_extension/thread/static
 fi
 
+# Check if source directory ./out exists
+if [ ! -d "./out" ]; then
+  echo "Source directory ./out does not exist. Aborting."
+  exit 1
+fi
+
 # Move files from ./out to server_extension/thread/static
 cp -r ./out/* ./server_extension/thread/static/
+
+# Verify that files have been copied
+if [[ "$(ls -A ./server_extension/thread/static)" ]]; then
+  echo "Files successfully copied to ./server_extension/thread/static"
+else
+  echo "No files were copied to ./server_extension/thread/static. Aborting."
+  exit 1
+fi
 
 # Uninstall and reinstall thread package
 pip uninstall -y thread-dev
@@ -21,4 +35,4 @@ jupyter server extension enable thread
 rm -f jupyter_server.log
 
 # Start the Jupyter server with specified configurations
-jupyter thread
+jupyter thread --Application.log_level=0

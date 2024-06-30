@@ -92,7 +92,7 @@ class ThreadApp(ExtensionApp):
         return HERE
 
     def initialize_handlers(self):
-        self.log.info("Initializing HecksApp handlers")
+        self.log.info("Initializing ThreadApp handlers")
         self.log.info(
             f"self.display_url: {str(self.serverapp.display_url)}")
 

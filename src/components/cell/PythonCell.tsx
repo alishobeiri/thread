@@ -192,28 +192,45 @@ const CellExecutionContainer = ({
 	isExecuting: boolean;
 	executionCount?: ExecutionCount;
 }) => {
-	let iconElement;
 	const [hasExecuted, setHasExecuted] = useState(false);
 	const [isHovering, setIsHovering] = useState(false);
+	const [executionTime, setExecutionTime] = useState(0);
+	const timerRef = useRef<number | null>(null);
 	const hoverRef = useRef<HTMLDivElement>(null);
 	const actionColor = useColorModeValue("orange.500", "orange.400");
 	const stopColor = useColorModeValue("red.300", "red.400");
 
 	executionCount = executionCount ?? null;
 
-	// If the user has executed a cell, when the execution completes, do not show the play button again
-	// this is to make it clear that the cell has completed execution
+	const clearTimer = () => {
+		if (timerRef.current) {
+			clearInterval(timerRef.current);
+			timerRef.current = null;
+		}
+	};
+
 	useEffect(() => {
 		if (isExecuting) {
-			setHasExecuted(isExecuting && active);
-		} else if (!active) {
-			setHasExecuted(false);
+			setHasExecuted(true);
+			setExecutionTime(0); // Reset execution time
+
+			// Start the timer
+			const startTime = Date.now();
+			timerRef.current = window.setInterval(() => {
+				setExecutionTime(Date.now() - startTime);
+			}, 100); // Update every 100 milliseconds
+
+			// Cleanup the timer when the component unmounts or when isExecuting changes
+			return () => {
+				clearTimer();
+			};
+		} else {
+			clearTimer();
 		}
-	}, [isExecuting, active]);
+	}, [isExecuting]);
 
 	useEffect(() => {
 		const checkIfHoveredOutside = (e: MouseEvent) => {
-			// Check if hoverRef.current exists and does not contain the event target
 			if (
 				hoverRef.current &&
 				!hoverRef.current.contains(e.target as Node)
@@ -227,7 +244,7 @@ const CellExecutionContainer = ({
 		return () => {
 			document.removeEventListener("mousemove", checkIfHoveredOutside);
 		};
-	}, [hoverRef]);
+	}, []);
 
 	const handleRunCell = async () => {
 		const { executeCell } = useNotebookStore.getState();
@@ -235,6 +252,7 @@ const CellExecutionContainer = ({
 		await executeCell(cell.id as string);
 	};
 
+	let iconElement;
 	if (isExecuting) {
 		iconElement = (
 			<CircularProgress
@@ -281,7 +299,15 @@ const CellExecutionContainer = ({
 			onMouseLeave={() => setIsHovering(false)}
 		>
 			<Flex />
-			<Box mr={1}>{iconElement}</Box>
+			<VStack width="100%" height="100%" alignItems={"flex-end"} flex={1}>
+				<Box height={"22px"}>{iconElement}</Box>
+
+				{hasExecuted && (executionTime / 1000).toFixed(1) != "0.0" && (
+					<Text fontSize="xs">
+						{(executionTime / 1000).toFixed(1)}s
+					</Text>
+				)}
+			</VStack>
 		</HStack>
 	);
 };
