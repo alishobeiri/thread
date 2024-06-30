@@ -1,4 +1,5 @@
 // codeUtils.ts
+import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
 import { CoreTool, StreamingTextResponse, streamObject, streamText } from "ai";
 import { z } from "zod";
@@ -84,10 +85,13 @@ export async function handleCodeGeneration(data: {
 	if (modelType === "openai" || modelType === "ollama") {
 		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
 		client = openai(model);
+	} else if (modelType === "anthropic"){
+		const anthropic = createAnthropic({ apiKey: apiKey, baseURL: baseURL})
+		client = anthropic(model)
 	} else {
-		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
-		client = openai(model);
+		throw new Error("Model type not supported");
 	}
+
 	const messages = formatMessages(systemPrompt, actionState, 20e3);
 
 	const { trace, generation } = createTraceAndGeneration(

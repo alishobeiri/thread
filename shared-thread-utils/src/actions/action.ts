@@ -1,3 +1,4 @@
+import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
 import { captureException } from "@sentry/nextjs";
 import { CoreTool, generateText } from "ai";
@@ -181,9 +182,11 @@ export const processActionRequest = async (
 	if (modelType === "openai" || modelType === "ollama") {
 		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
 		client = openai(model);
+	} else if (modelType === "anthropic"){
+		const anthropic = createAnthropic({ apiKey: apiKey, baseURL: baseURL})
+		client = anthropic(model)
 	} else {
-		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
-		client = openai(model);
+		throw new Error("Model type not supported");
 	}
 
 	try {
@@ -194,7 +197,7 @@ export const processActionRequest = async (
 			model,
 			uniqueId,
 		);
-
+	
 		const response = await generateText({
 			model: client,
 			messages: messages,
@@ -227,6 +230,7 @@ export const processActionRequest = async (
 			return { type: ActionType.Code };
 		}
 	} catch (error) {
+		console.error(error);
 		captureException(error);
 		throw new Error("Error calling LLM API");
 	}

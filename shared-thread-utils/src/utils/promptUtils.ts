@@ -52,37 +52,73 @@ export const limitMessages = (
 	userMessage: MessageType,
 	messagesAfterQuery: MessageType[],
 	maxCharCount: number = 40000,
-) => {
-	// Construct initial messages array with the required format
+) => {	
+	const combineAdjacentMessages = (messages: MessageType[]): MessageType[] => {
+		return messages.reduce((acc: MessageType[], curr: MessageType) => {
+			if (acc.length === 0 || acc[acc.length - 1].role !== curr.role) {
+				acc.push(curr);
+			} else {
+				acc[acc.length - 1].content += '\n\n' + curr.content;
+			}
+			return acc;
+		}, []);
+	};
+
+	// Combine adjacent messages for anthropic support
+	let combinedPrevMessages = combineAdjacentMessages(prevMessages);
+	let combinedMessagesAfterQuery = combineAdjacentMessages(messagesAfterQuery);
+
 	let messages = [
-		...prevMessages,
+		...combinedPrevMessages,
 		userMessage,
-		...messagesAfterQuery,
+		...combinedMessagesAfterQuery,
 	];
 
 	// Calculate the total character count of messages
 	let totalCharacters = JSON.stringify(messages).length + systemMessage.length;
 
 	// Trim prevMessages first until totalCharacters is under maxCharCount
-	while (totalCharacters > maxCharCount && prevMessages.length > 0) {
-		prevMessages.shift();
+	while (totalCharacters > maxCharCount && combinedPrevMessages.length > 0) {
+		combinedPrevMessages.shift();
 		messages = [
-			...prevMessages,
+			...combinedPrevMessages,
 			userMessage,
-			...messagesAfterQuery,
+			...combinedMessagesAfterQuery,
 		];
 		totalCharacters = JSON.stringify(messages).length + systemMessage.length;
 	}
 
-	// If still over maxCharCount, trim messagesAfterQuery
-	while (totalCharacters > maxCharCount && messagesAfterQuery.length > 0) {
-		messagesAfterQuery.shift();
+	// If still over maxCharCount, trim combinedMessagesAfterQuery
+	while (totalCharacters > maxCharCount && combinedMessagesAfterQuery.length > 0) {
+		combinedMessagesAfterQuery.shift();
 		messages = [
-			...prevMessages,
+			...combinedPrevMessages,
 			userMessage,
-			...messagesAfterQuery,
+			...combinedMessagesAfterQuery,
 		];
 		totalCharacters = JSON.stringify(messages).length + systemMessage.length;
+	}
+
+	// For anthropic, messages should start with a user role
+	if (messages[0].role !== "user") {
+		let firstQuery: MessageType = {
+			role: "user",
+			content: "-->",
+		}
+
+		messages = [
+			firstQuery,
+			...messages,
+		];
+	}
+	
+	// For openai, messages should end with a user role
+	if (messages[messages.length - 1].role !== "user") {
+		let lastQuary: MessageType = {
+			role: "user",
+			content: "<--",
+		}
+		messages.push(lastQuary);	
 	}
 
 	return messages;

@@ -17,13 +17,14 @@ import {
 	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
+	Select,
 	Switch,
 	Text,
 	VStack,
 	useToast,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { OllamaIcon, OpenAIIcon } from "../../../assets/icons";
+import { AnthropicIcon, OllamaIcon, OpenAIIcon } from "../../../assets/icons";
 import { useSettingsStore } from "../../settings/SettingsStore";
 import { API_URL } from "../../../utils/constants/constants";
 
@@ -41,20 +42,26 @@ const ModelSettingsModal = () => {
 		modelType,
 		ollamaUrl,
 		ollamaModel,
+		anthropicKey,
+		anthropicModel,
+		anthropicBaseUrl,
 		isLocal,
 		setSettings,
 		setModelType,
 		fetchSettings,
 	} = useSettingsStore.getState();
 
-	const [show, setShow] = useState(false);
-	const [tempOpenAIKey, setTempOpenAIKey] = useState("");
-	const [tempServerUrl, setTempServerUrl] = useState("");
-	const [tempBaseOpenAIUrl, setTempBaseOpenAIUrl] = useState("");
-	const [isValid, setIsValid] = useState(true);
-	const [tempModelType, setTempModelType] = useState(modelType);
-	const [tempOllamaUrl, setTempOllamaUrl] = useState("");
-	const [tempOllamaModel, setTempOllamaModel] = useState("");
+    const [show, setShow] = useState(false);
+    const [tempOpenAIKey, setTempOpenAIKey] = useState("");
+    const [tempServerUrl, setTempServerUrl] = useState("");
+    const [tempOpenAIBaseUrl, setTempOpenAIBaseUrl] = useState("");
+    const [isValid, setIsValid] = useState(true);
+    const [tempModelType, setTempModelType] = useState(modelType);
+    const [tempOllamaUrl, setTempOllamaUrl] = useState("");
+    const [tempOllamaModel, setTempOllamaModel] = useState("");
+	const [tempAnthropicKey, setTempAnthropicKey] = useState("");
+	const [tempAnthropicModel, setTempAnthropicModel] = useState("");
+	const [tempAnthropicBaseUrl, setTempAnthropicBaseUrl] = useState("");
 	const [tempIsLocal, setTempIsLocal] = useState(false);
 	const toast = useToast();
 
@@ -68,53 +75,71 @@ const ModelSettingsModal = () => {
 		}
 	}, [isOpen]);
 
-	useEffect(() => {
-		validate();
-	}, [tempOpenAIKey, tempServerUrl, tempBaseOpenAIUrl, tempIsLocal]);
+    useEffect(() => {
+        validate();
+    }, [tempOpenAIKey,
+		tempOpenAIBaseUrl,
+		tempOllamaModel,
+		tempOllamaUrl,
+		tempAnthropicKey,
+		tempAnthropicModel,
+		tempAnthropicBaseUrl,
+		tempIsLocal,
+		tempServerUrl,
+		tempModelType
+	]);
 
 	useEffect(() => {
 		setTempModelType(modelType);
 	}, [modelType]);
 
-	const loadSettings = () => {
-		setTempOpenAIKey(openAIKey || "");
-		setTempServerUrl(serverProxyUrl || API_URL);
-		setTempBaseOpenAIUrl(openAIBaseUrl || "");
-		setTempOllamaUrl(ollamaUrl || "");
-		setTempOllamaModel(ollamaModel || "");
-		setTempModelType(modelType || "openai");
+    const loadSettings = () => {
+        setTempOpenAIKey(openAIKey || "");
+        setTempServerUrl(serverProxyUrl || API_URL);
+        setTempOpenAIBaseUrl(openAIBaseUrl || "");
+        setTempOllamaUrl(ollamaUrl || "");
+        setTempOllamaModel(ollamaModel || "");
+		setTempAnthropicKey(anthropicKey || "");
+		setTempAnthropicModel(anthropicModel || "")
+		setTempAnthropicBaseUrl(anthropicBaseUrl || "");
+        setTempModelType(modelType || "openai");
 		setTempIsLocal(isLocal || modelType === "ollama" || false);
 	};
 
-	const validate = () => {
-		if (
-			(tempBaseOpenAIUrl && !tempOpenAIKey) ||
+    const validate = () => {
+        if (
+			(tempModelType === "openai" && ((!tempOpenAIBaseUrl && tempIsLocal) || (!tempOpenAIKey && tempIsLocal))) ||
+			(tempModelType === "anthropic" && ((!tempAnthropicBaseUrl && tempIsLocal) || (!tempAnthropicKey && tempIsLocal))) ||
+			(tempModelType === "ollama" && (!tempOllamaModel || !tempOllamaUrl)) || 
 			(!tempIsLocal && !tempServerUrl)
-		) {
-			setIsValid(false);
-		} else {
-			setIsValid(true);
-		}
-	};
+		){
+            setIsValid(false);
+        } else {
+            setIsValid(true);
+        }
+    };
 
-	const saveSettings = async () => {
-		if (!isValid) {
-			toast({
-				title: "Error",
-				description: "Please check your settings and try again.",
-				status: "error",
-				duration: 4000,
-				isClosable: true,
-			});
-			return;
-		}
-
-		await setSettings({
-			openAIBaseUrl: tempBaseOpenAIUrl,
-			openAIKey: tempOpenAIKey,
-			serverProxyUrl: !tempIsLocal ? tempServerUrl : "",
-			ollamaUrl: tempOllamaUrl,
-			ollamaModel: tempOllamaModel,
+    const saveSettings = async () => {
+        if (!isValid) {
+            toast({
+                title: "Error",
+                description: "Please check your settings and try again.",
+                status: "error",
+                duration: 4000,
+                isClosable: true,
+            });
+            return;
+        }
+		
+        await setSettings({
+            openAIBaseUrl: tempOpenAIBaseUrl,
+            openAIKey: tempOpenAIKey,
+            serverProxyUrl: !tempIsLocal ? tempServerUrl : "",
+            ollamaUrl: tempOllamaUrl,
+            ollamaModel: tempOllamaModel,
+			anthropicKey: tempAnthropicKey,
+			anthropicModel: tempAnthropicModel,
+			anthropicBaseUrl: tempAnthropicBaseUrl,
 			isLocal: tempIsLocal || tempModelType === "ollama",
 			modelType: tempModelType,
 		});
@@ -124,75 +149,209 @@ const ModelSettingsModal = () => {
 
 	const toggleShowKey = () => setShow(!show);
 
-	return (
-		<Modal isOpen={isOpen} onClose={handleClose} size={["sm", "md", "lg"]}>
-			<ModalOverlay />
-			<ModalContent>
-				<ModalHeader>Settings</ModalHeader>
-				<ModalCloseButton />
-				<ModalBody>
-					<VStack spacing={6} fontFamily="Space Grotesk">
-						<ButtonGroup
-							colorScheme="orange"
-							width="100%"
-							isAttached
-							fontFamily="Space Grotesk"
-						>
+    return (
+        <Modal isOpen={isOpen} onClose={handleClose} size={["sm", "md", "lg"]}>
+            <ModalOverlay />
+            <ModalContent>
+                <ModalHeader>Settings</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                    <VStack spacing={6} fontFamily="Space Grotesk">
+                        <ButtonGroup
+                            colorScheme="orange"
+                            width="100%"
+                            isAttached
+                            fontFamily="Space Grotesk"
+                        >
+                            <Button
+                                width="33.33%"
+                                variant={tempModelType === "openai" ? "solid" : "outline"}
+                                leftIcon={<OpenAIIcon />}
+                                onClick={() => setTempModelType("openai")}
+                            >
+                                OpenAI
+                            </Button>
+                            <Button
+                                width="33.33%"
+                                variant={tempModelType === "ollama" ? "solid" : "outline"}
+                                leftIcon={<OllamaIcon />}
+                                onClick={() => setTempModelType("ollama")}
+                                rightIcon={
+                                    <Badge
+                                        fontSize="smaller"
+                                        colorScheme="blue"
+                                        _dark={{ background: "blue.100" }}
+                                    >
+                                        Beta
+                                    </Badge>
+                                }
+                            >
+                                Ollama
+                            </Button>
 							<Button
-								width="50%"
-								variant={
-									tempModelType === "openai"
-										? "solid"
-										: "outline"
-								}
-								leftIcon={<OpenAIIcon />}
-								onClick={() => setTempModelType("openai")}
-							>
-								OpenAI
-							</Button>
-							<Button
-								width="50%"
-								variant={
-									tempModelType === "ollama"
-										? "solid"
-										: "outline"
-								}
-								leftIcon={<OllamaIcon />}
-								onClick={() => setTempModelType("ollama")}
-								rightIcon={
-									<Badge
-										fontSize="smaller"
-										colorScheme="blue"
-										_dark={{ background: "blue.100" }}
-									>
-										Beta
-									</Badge>
-								}
-							>
-								Ollama
-							</Button>
-						</ButtonGroup>
+                                width="33.33%"
+                                variant={tempModelType === "anthropic" ? "solid" : "outline"}
+                                leftIcon={<AnthropicIcon />}
+                                onClick={() => setTempModelType("anthropic")}
+                                rightIcon={
+                                    <Badge
+                                        fontSize="smaller"
+                                        colorScheme="blue"
+                                        _dark={{ background: "blue.100" }}
+                                    >
+                                        Beta
+                                    </Badge>
+                                }
+                            >
+                                Anthropic
+                            </Button>
+                        </ButtonGroup>
 
-						{tempModelType === "openai" ? (
-							<>
+                        {tempModelType === "openai" && (
+                            <>
+                                <FormControl
+                                    id="api-key"
+                                >
+                                    <FormLabel fontWeight="bold" fontSize="lg">
+                                        OpenAI API Key
+                                    </FormLabel>
+                                    <InputGroup>
+                                        <Input
+                                            pr="4.5rem"
+                                            type={show ? "text" : "password"}
+                                            placeholder="Enter your OpenAI API Key"
+                                            value={tempOpenAIKey}
+                                            onChange={(e) => setTempOpenAIKey(e.target.value)}
+                                        />
+                                        <InputRightElement width="4.5rem">
+                                            <Button
+                                                colorScheme="orange"
+                                                h="1.75rem"
+                                                size="sm"
+                                                onClick={toggleShowKey}
+                                            >
+                                                {show ? "Hide" : "Show"}
+                                            </Button>
+                                        </InputRightElement>
+                                    </InputGroup>
+									{!tempOpenAIKey && tempIsLocal && tempModelType === "openai" && (
+										<Text
+											mt="2"
+											fontSize="small"
+											color="red.500"
+										>
+											API key must be set when using local API calls.
+										</Text>
+									)}
+									<Text
+										mt="2"
+										fontSize="small"
+										color="gray.500"
+									>
+										For unlimited usage of Thread&apos;s AI
+										features, enter your OpenAI API key
+										above.
+									</Text>
+                                </FormControl>
+                                <FormControl id="base-openai-url">
+                                    <FormLabel fontWeight="bold" fontSize="lg">
+                                        OpenAI Base URL
+                                    </FormLabel>
+                                    <Input
+                                        placeholder="Enter your OpenAI Base URL"
+                                        value={tempOpenAIBaseUrl}
+                                        onChange={(e) => setTempOpenAIBaseUrl(e.target.value)}
+                                    />
+									{!tempOpenAIBaseUrl && tempIsLocal && tempModelType === "openai" && (
+										<Text
+											mt="2"
+											fontSize="small"
+											color="red.500"
+										>
+											API endpoint must be set when using local API calls.
+										</Text>
+									)}
+                                    <Text mt="2" fontSize="small" color="gray.500">
+                                        Enter the base URL for OpenAI.
+                                    </Text>
+                                </FormControl>
+                            </>
+                        )}
+
+						{ tempModelType === "ollama" && (
+                            <>
+                                <FormControl id="ollama-url">
+                                    <FormLabel fontWeight="bold" fontSize="lg">
+                                        Ollama URL
+                                    </FormLabel>
+                                    <Input
+                                        placeholder="Enter your Ollama URL"
+                                        value={tempOllamaUrl}
+                                        onChange={(e) => setTempOllamaUrl(e.target.value)}
+                                    />
+									{!tempOllamaUrl && tempModelType === "ollama" && (
+										<Text
+											mt="2"
+											fontSize="small"
+											color="red.500"
+										>
+											You need to add the ollama endpoint URL.
+										</Text>
+									)}
+                                    <Text mt="2" fontSize="small" color="gray.500">
+                                        The URL of your Ollama model, e.g. http://localhost:11434/v1. If localhost doesn&apos;t work, try 0.0.0.0
+                                    </Text>
+                                </FormControl>
+                                <FormControl id="ollama-model">
+                                    <FormLabel fontWeight="bold" fontSize="lg">
+                                        Ollama Model Name
+                                    </FormLabel>
+                                    <Input
+                                        placeholder="Enter your Ollama Model Name"
+                                        value={tempOllamaModel}
+                                        onChange={(e) => setTempOllamaModel(e.target.value)}
+                                    />
+									{!tempOllamaModel && tempModelType === "ollama" && (
+										<Text
+											mt="2"
+											fontSize="small"
+											color="red.500"
+										>
+											You need to add the ollama model name.
+										</Text>
+									)}
+                                    <Text mt="2" fontSize="small" color="gray.500">
+                                        The name of the Ollama model being served, e.g. llama3 or codestral. For current purposes,{" "}
+                                        <Text
+                                            as={Link}
+                                            href="https://ollama.com/library/codestral"
+                                            target="_blank"
+                                            cursor="pointer"
+                                            color="blue.500"
+                                        >
+                                            codestral
+                                        </Text>{" "}
+                                        is recommended.
+                                    </Text>
+                                </FormControl>
+                            </>
+                        )}
+
+						{ tempModelType === "anthropic" && (
+                            <>
 								<FormControl
 									id="api-key"
-									isInvalid={Boolean(
-										tempBaseOpenAIUrl && !tempOpenAIKey,
-									)}
 								>
 									<FormLabel fontWeight="bold" fontSize="lg">
-										OpenAI API Key
+										Anthropic API Key
 									</FormLabel>
 									<InputGroup>
 										<Input
 											pr="4.5rem"
 											type={show ? "text" : "password"}
-											placeholder="Enter your OpenAI API Key"
-											value={tempOpenAIKey}
-											onChange={(e) =>
-												setTempOpenAIKey(e.target.value)
-											}
+											placeholder="Enter your Anthropic API Key"
+											value={tempAnthropicKey}
+											onChange={(e) => setTempAnthropicKey(e.target.value)}
 										/>
 										<InputRightElement width="4.5rem">
 											<Button
@@ -205,14 +364,13 @@ const ModelSettingsModal = () => {
 											</Button>
 										</InputRightElement>
 									</InputGroup>
-									{!isValid && tempBaseOpenAIUrl && (
+									{!tempAnthropicKey && tempIsLocal && tempModelType === "anthropic" && (
 										<Text
 											mt="2"
 											fontSize="small"
 											color="red.500"
 										>
-											API key must be set if base URL or
-											proxy server URL is provided.
+											API key must be set if using local API calls.
 										</Text>
 									)}
 									<Text
@@ -221,86 +379,48 @@ const ModelSettingsModal = () => {
 										color="gray.500"
 									>
 										For unlimited usage of Thread&apos;s AI
-										features, enter your OpenAI API key
+										features, enter your Anthropic API key
 										above.
 									</Text>
 								</FormControl>
-								<FormControl id="base-openai-url">
+								<FormControl id="base-anthropic-model">
 									<FormLabel fontWeight="bold" fontSize="lg">
-										OpenAI Base URL
+										Anthropic Model
 									</FormLabel>
-									<Input
-										placeholder="Enter your OpenAI Base URL"
-										value={tempBaseOpenAIUrl}
-										onChange={(e) =>
-											setTempBaseOpenAIUrl(e.target.value)
-										}
-									/>
-									<Text
-										mt="2"
-										fontSize="small"
-										color="gray.500"
-									>
-										Optional: Enter the base URL for OpenAI.
+									<Select value={tempAnthropicModel} placeholder={"Choose a model"} onChange={(e) => setTempAnthropicModel(e.target.value)}>
+										<option value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet</option>
+										<option value="claude-3-opus-20240307">Claude 3.0 Opus</option>
+										<option value="claude-3-sonnet-20240307">Claude 3.0 Sonnet</option>
+										<option value="claude-3-haiku-20240307">Claude 3.0 Haiku</option>
+									</Select>
+									<Text mt="2" fontSize="small" color="gray.500">
+										Select the Anthropic model.
 									</Text>
 								</FormControl>
-							</>
-						) : (
-							<>
-								<FormControl id="ollama-url">
+								<FormControl id="base-anthropic-url">
 									<FormLabel fontWeight="bold" fontSize="lg">
-										Ollama URL
+										Anthropic Base URL
 									</FormLabel>
 									<Input
-										placeholder="Enter your Ollama URL"
-										value={tempOllamaUrl}
-										onChange={(e) =>
-											setTempOllamaUrl(e.target.value)
-										}
+										placeholder="Enter your Anthropic Base URL"
+										value={tempAnthropicBaseUrl}
+										onChange={(e) => setTempAnthropicBaseUrl(e.target.value)}
 									/>
-									<Text
-										mt="2"
-										fontSize="small"
-										color="gray.500"
-									>
-										The URL of your Ollama model, e.g.
-										http://localhost:11434/v1. If localhost
-										doesn&apos;t work, try 0.0.0.0
-									</Text>
-								</FormControl>
-								<FormControl id="ollama-model">
-									<FormLabel fontWeight="bold" fontSize="lg">
-										Ollama Model Name
-									</FormLabel>
-									<Input
-										placeholder="Enter your Ollama Model Name"
-										value={tempOllamaModel}
-										onChange={(e) =>
-											setTempOllamaModel(e.target.value)
-										}
-									/>
-									<Text
-										mt="2"
-										fontSize="small"
-										color="gray.500"
-									>
-										The name of the Ollama model being
-										served, e.g. llama3 or codestral. For
-										current purposes,{" "}
+									{!tempAnthropicBaseUrl && tempIsLocal && tempModelType === "anthropic" && (
 										<Text
-											as={Link}
-											href="https://ollama.com/library/codestral"
-											target="_blank"
-											cursor="pointer"
-											color="blue.500"
+											mt="2"
+											fontSize="small"
+											color="red.500"
 										>
-											codestral
-										</Text>{" "}
-										is recommended.
+											API endpoint must be set when using local API calls.
+										</Text>
+									)}
+									<Text mt="2" fontSize="small" color="gray.500">
+										Enter the base URL for Anthropic.
 									</Text>
 								</FormControl>
 							</>
-						)}
+                        )}
 
 						{tempModelType !== "ollama" ? (
 							<>

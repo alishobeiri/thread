@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import {
+	AnthropicIcon,
 	OllamaIcon,
 	OpenAIIcon,
 	PlayIcon,
@@ -98,7 +99,11 @@ function ModelTypeSwitcher() {
 				aria-label="Open modal to select model"
 				size="sm"
 				leftIcon={
-					modelType === "openai" ? <OpenAIIcon /> : <OllamaIcon />
+					<>
+						{modelType === "openai" && <OpenAIIcon />}
+						{modelType === "ollama" && <OllamaIcon />}
+						{modelType === "anthropic" && <AnthropicIcon />}
+					</>
 				}
 				colorScheme="orange"
 				fontFamily={"Space Grotesk"}
@@ -119,7 +124,9 @@ function ModelTypeSwitcher() {
 				backgroundColor="var(--chakra-colors-chakra-body-bg)"
 				variant="outline"
 			>
-				{modelType === "openai" ? "OpenAI" : "Ollama"}
+				{modelType === "openai" && "OpenAI"}
+				{modelType === "ollama" && "Ollama"}
+				{modelType === "anthropic" && "Anthropic"}
 			</Button>
 		</Tooltip>
 	);

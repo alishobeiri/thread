@@ -7,6 +7,7 @@
 		"build": "if [ -d dist ]; then rm -r dist; fi && if [ -d node_modules ]; then rm -r node_modules; fi && yarn install && tsc"
 	},
 	"dependencies": {
+		"@ai-sdk/anthropic": "^0.0.27",
 		"@ai-sdk/openai": "^0.0.33",
 		"@sentry/nextjs": "^8.10.0",
 		"ai": "^3.2.5",

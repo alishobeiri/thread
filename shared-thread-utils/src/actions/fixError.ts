@@ -1,3 +1,4 @@
+import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
 import { CoreTool, StreamingTextResponse, streamObject, streamText } from "ai";
 import { z } from "zod";
@@ -53,10 +54,13 @@ export async function handleFixError(data: {
 	if (modelType === "openai" || modelType === "ollama") {
 		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
 		client = openai(model);
+	} else if (modelType === "anthropic"){
+		const anthropic = createAnthropic({ apiKey: apiKey, baseURL: baseURL})
+		client = anthropic(model)
 	} else {
-		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
-		client = openai(model);
+		throw new Error("Model type not supported");
 	}
+
 	if (isBrowser()) {
 		systemPrompt += `- Do not generate any explanation other than the Python code
 - Only return the Python code and no other preamble

@@ -29,11 +29,6 @@ export type ActionState = {
 	prevActions: any[];
 };
 
-export type NoterousMessage = {
-	role: "system" | "user" | "assistant";
-	content: string;
-};
-
 export type UserType = "assistant" | "user";
 
 export type MessageType = CoreMessage;

@@ -18,10 +18,13 @@ const saveDefaultSettingsFile = async () => {
 			content: JSON.stringify(
 				{
 					openAIKey: "",
-					openAIBaseUrl: "",
+					openAIBaseUrl: "https://api.openai.com/v1",
 					serverProxyUrl: "",
 					ollamaUrl: "http://127.0.0.1:11434/v1",
 					ollamaModel: "",
+					anthropicKey: "",
+					anthropicModel: "claude-3-5-sonnet-20240620",
+					anthropicBaseUrl: "https://api.anthropic.com/v1",
 					modelType: "openai",
 					isLocal: false,
 					autoExecuteGeneratedCode: false,
@@ -60,7 +63,7 @@ const ensureSettingsExists = async () => {
 	}
 };
 
-type ModelType = "openai" | "ollama";
+type ModelType = "openai" | "ollama" | "anthropic";
 
 interface SettingsState {
 	showModelSettingsModal: boolean;
@@ -69,6 +72,9 @@ interface SettingsState {
 	serverProxyUrl: string;
 	ollamaUrl: string;
 	ollamaModel: string;
+	anthropicKey: string;
+	anthropicModel: string;
+	anthropicBaseUrl: string;
 	isLocal: boolean;
 	modelType: ModelType;
 	autoExecuteGeneratedCode: boolean;
@@ -79,6 +85,9 @@ interface SettingsState {
 	getServerProxyUrl: () => string;
 	setOllamaUrl: (url: string) => void;
 	setOllamaModel: (model: string) => void;
+	setAnthropicKey: (key: string) => void;
+	setAnthropicModel: (model: string) => void;
+	setAnthropicBaseUrl: (url: string) => void;
 	setModelType: (type: ModelType) => void;
 	fetchSettings: () => Promise<void>;
 	setSettings: (settings: Partial<SettingsState>) => Promise<void>;
@@ -88,6 +97,9 @@ interface SettingsState {
 			openAIBaseUrl?: string;
 			ollamaUrl?: string;
 			ollamaModel?: string;
+			anthropicKey?: string;
+			anthropicModel?: string;
+			anthropicBaseUrl?: string;
 			isLocal?: boolean;
 			modelType?: string;
 		};
@@ -101,10 +113,13 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 	showModelSettingsModal: false,
 	autoExecuteGeneratedCode: false,
 	openAIKey: "",
-	openAIBaseUrl: "",
+	openAIBaseUrl: "https://api.openai.com/v1",
 	serverProxyUrl: "",
 	ollamaUrl: "",
 	ollamaModel: "",
+	anthropicKey: "",
+	anthropicModel: "claude-3-5-sonnet-20240620",
+	anthropicBaseUrl: "https://api.anthropic.com/v1",
 	isLocal: false,
 	modelType: "openai",
 	setShowModelSettingsModal: (show) => set({ showModelSettingsModal: show }),
@@ -135,6 +150,18 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 		set({ ollamaModel: model });
 		get().saveSettings({ ollamaModel: model });
 	},
+	setAnthropicKey: (key: string) => {
+		set({ anthropicKey: key });
+		get().saveSettings({ anthropicKey: key });
+	},
+	setAnthropicModel: (model: string) => {
+		set({ anthropicModel: model });
+		get().saveSettings({ anthropicModel: model });
+	},
+	setAnthropicBaseUrl: (url: string) => {
+		set({ anthropicBaseUrl: url });
+		get().saveSettings({ anthropicBaseUrl: url });
+	},
 	setIsLocal: (isLocal: boolean) => {
 		set({ isLocal });
 		get().saveSettings({ isLocal });
@@ -159,10 +186,13 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 					autoExecuteGeneratedCode:
 						fileContent.autoExecuteGeneratedCode || false,
 					openAIKey: fileContent.openAIKey || "",
-					openAIBaseUrl: fileContent.openAIBaseUrl || "",
+					openAIBaseUrl: fileContent.openAIBaseUrl || "https://api.openai.com/v1",
 					serverProxyUrl: fileContent.serverProxyUrl || "",
 					ollamaUrl: fileContent.ollamaUrl || "",
 					ollamaModel: fileContent.ollamaModel || "",
+					anthropicKey: fileContent.anthropicKey || "",
+					anthropicModel: fileContent.anthropicModel || "",
+					anthropicBaseUrl: fileContent.anthropicBaseUrl || "https://api.anthropic.com/v1",
 					isLocal: fileContent.isLocal || false,
 					modelType: fileContent.modelType || "openai",
 				});
@@ -204,6 +234,9 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 				openAIBaseUrl: get().openAIBaseUrl,
 				ollamaUrl: get().ollamaUrl,
 				ollamaModel: get().ollamaModel,
+				anthropicKey: get().anthropicKey,
+				anthropicModel: get().anthropicModel,
+				anthropicBaseUrl: get().anthropicBaseUrl,
 				isLocal: get().isLocal,
 				modelType: get().modelType,
 			},
@@ -237,6 +270,9 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 				serverProxyUrl: prevSettings.serverProxyUrl || "",
 				ollamaUrl: prevSettings.ollamaUrl || "",
 				ollamaModel: prevSettings.ollamaModel || "",
+				anthropicKey: prevSettings.anthropicKey || "",
+				anthropicModel: prevSettings.anthropicModel || "",
+				anthropicBaseUrl: prevSettings.anthropicBaseUrl || "",
 				isLocal: prevSettings.isLocal || false,
 				modelType: prevSettings.modelType || "openai",
 				autoExecuteGeneratedCode:
