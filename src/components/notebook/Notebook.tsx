@@ -384,6 +384,9 @@ const Cells = () => {
 	const activeCellIndex = useNotebookStore((state) => state.activeCellIndex);
 	const executingCells = useNotebookStore((state) => state.executingCells);
 	const notebookMode = useNotebookStore((state) => state.notebookMode);
+	const currentExecutingCell = useNotebookStore(
+		(state) => state.currentExecutingCell,
+	);
 
 	return (
 		<VStack gap={2} pt={8} pb={"56"} width="100%">
@@ -398,7 +401,8 @@ const Cells = () => {
 						isLastCell={i === cells.length - 1}
 						index={i}
 						active={active}
-						isExecuting={executingCells.has(cellId)}
+						isExecuting={cellId == currentExecutingCell}
+						queuedForExecution={executingCells.has(cellId)}
 						isBeingEdited={notebookMode === "edit" && active}
 					/>
 				);
@@ -425,6 +429,7 @@ const Cell = React.memo(function ({
 	index,
 	active,
 	isExecuting,
+	queuedForExecution,
 	isBeingEdited,
 	isLastCell,
 }: {
@@ -432,6 +437,7 @@ const Cell = React.memo(function ({
 	index: number;
 	active: boolean;
 	isExecuting: boolean;
+	queuedForExecution: boolean;
 	isBeingEdited: boolean;
 	isLastCell: boolean;
 }) {
@@ -445,6 +451,7 @@ const Cell = React.memo(function ({
 						cell={cell}
 						index={index}
 						isExecuting={isExecuting}
+						queuedForExecution={queuedForExecution}
 						isBeingEdited={isBeingEdited}
 					/>
 				</>

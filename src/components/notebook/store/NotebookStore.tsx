@@ -149,10 +149,12 @@ export interface INotebookStore {
 	isSaving: boolean;
 	lastSaveTime: number;
 
+	currentExecutingCell: string;
 	executingCells: Set<string>;
 	addExecutingCell: (cellId: string) => void;
 	removeExecutingCell: (cellId: string) => void;
 	setExecutingCells: (cellIds: string[]) => void;
+	setCurrentlyExecutingCell: (cellId: string | undefined) => void;
 }
 
 export const useNotebookStore = create<INotebookStore>()(
@@ -1023,6 +1025,11 @@ export const useNotebookStore = create<INotebookStore>()(
 					}
 					set({
 						activeCellIndex: activeCellIndex + 1,
+					});
+				},
+				setCurrentlyExecutingCell: (cellId: string | undefined) => {
+					set({
+						currentExecutingCell: cellId,
 					});
 				},
 				setRouter: (router: NextRouter) => {

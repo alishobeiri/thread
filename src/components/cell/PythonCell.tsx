@@ -33,6 +33,7 @@ interface CellContainerProps {
 	index: number;
 	active: boolean;
 	cell: ICell;
+	queuedForExecution: boolean;
 	isExecuting: boolean;
 	isBeingEdited: boolean;
 }
@@ -185,11 +186,13 @@ const CellExecutionContainer = ({
 	index,
 	active,
 	isExecuting,
+	queuedForExecution,
 	executionCount,
 }: {
 	index: number;
 	active: boolean;
 	isExecuting: boolean;
+	queuedForExecution: boolean;
 	executionCount?: ExecutionCount;
 }) => {
 	const [hasExecuted, setHasExecuted] = useState(false);
@@ -212,7 +215,7 @@ const CellExecutionContainer = ({
 	useEffect(() => {
 		if (isExecuting) {
 			setHasExecuted(true);
-			setExecutionTime(0); // Reset execution time
+			setExecutionTime(0);
 
 			// Start the timer
 			const startTime = Date.now();
@@ -253,7 +256,7 @@ const CellExecutionContainer = ({
 	};
 
 	let iconElement;
-	if (isExecuting) {
+	if (queuedForExecution) {
 		iconElement = (
 			<CircularProgress
 				isIndeterminate
@@ -316,6 +319,7 @@ const PythonCellContainer: React.FC<CellContainerProps> = ({
 	active,
 	cell,
 	index,
+	queuedForExecution,
 	isExecuting,
 	isBeingEdited,
 }) => {
@@ -351,6 +355,7 @@ const PythonCellContainer: React.FC<CellContainerProps> = ({
 					index={index}
 					active={active}
 					isExecuting={isExecuting}
+					queuedForExecution={queuedForExecution}
 					executionCount={execution_count as ExecutionCount}
 				/>
 				<PythonCell

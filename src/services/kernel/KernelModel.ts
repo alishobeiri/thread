@@ -110,7 +110,8 @@ export class KernelModel {
 		}
 
 		for (const cellId of cellIds) {
-			const { cells, getCellIndexById } = useNotebookStore.getState();
+			const { cells, getCellIndexById, setCurrentlyExecutingCell } =
+				useNotebookStore.getState();
 			const index = getCellIndexById(cellId);
 			const cell = cells[index];
 			if (!cell || !cell.source) continue;
@@ -134,6 +135,7 @@ export class KernelModel {
 				// Set the currently processing cell to be able to edit it's outputs in the listener
 				this.cell = cell;
 				this.cellId = cell.id as string;
+				setCurrentlyExecutingCell(cellId);
 
 				this.preProcessCellExecutionOperations(code);
 
@@ -149,6 +151,8 @@ export class KernelModel {
 				} catch (error) {
 					captureException(error);
 					console.error(error);
+				} finally {
+					setCurrentlyExecutingCell(undefined);
 				}
 			});
 		}
