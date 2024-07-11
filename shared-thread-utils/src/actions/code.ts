@@ -70,6 +70,7 @@ export async function handleCodeGeneration(data: {
 
 	if (isBrowser()) {
 		systemPrompt += `
+- You should only produce the JSON formatted **string** for the Python code like {"cell_type": "code", "source": "import pandas as pd\nimport numpy as np"}.
 - Do not generate any explanation other than the Python code
 - Only return the Python code and no other preamble
 - Only return one Python cell at a time

@@ -83,7 +83,7 @@ export async function* sharedLocalAction<P>({
 
 		// Check for JSON objects with 'cell_type' and 'source'
 		const jsonMatch = data.match(
-			/\{.*"cell_type"\s*:\s*".*?",\s*"source"\s*:\s*".*?".*\}/,
+			/\{[\s\S]*?"cell_type"\s*:\s*".*?",\s*"source"\s*:\s*"((?:\\.|[\s\S])*?)"[\s\S]*?\}/
 		);
 		if (jsonMatch) {
 			try {
