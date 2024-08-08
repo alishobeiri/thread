@@ -87,9 +87,9 @@ These are some of the features we are hoping to launch in the next few month. If
 -   [x] Add support for Jupyter Widgets
 -   [ ] Add file preview for all file types
 
-# Thread.dev Cloud
+# Cloud
 
-Eventually we hope to integrate Thread into a cloud platform that can support collaboration features as well hosting of notebooks as web application. If this sounds interesting to you, we are looking for enterprise design partners to partner with and customize the solution for. If you're interested, please reach out to us [via email](mailto:ali@vizlylabs.com) or [join our waitlist](https://waitlist.thread.dev).
+Eventually we hope to integrate Vizly Notebook into a cloud platform that can support collaboration features as well hosting of notebooks as web application. If this sounds interesting to you, we are looking for enterprise design partners to partner with and customize the solution for. If you're interested, please reach out to us [via email](mailto:ali@vizlylabs.com) or [join our waitlist](https://waitlist.thread.dev).
 
 # Development instructions
 
