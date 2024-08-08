@@ -22,7 +22,7 @@ AI-powered Jupyter Notebook
 
 [Vizly Notebook](https://www.vizly.fyi/thread) is a Jupyter alternative that integrates an AI copilot into your Jupyter Notebook editing experience.
 
-Best of all, Thread runs locally and can be used for free with [Ollama](https://github.com/ollama/ollama) or your own API key. To start:
+Best of all, Vizly Notebook runs locally and can be used for free with [Ollama](https://github.com/ollama/ollama) or your own API key. To start:
 
 ```
 pip install vizly-notebook
@@ -113,7 +113,7 @@ And in another, run:
 yarn dev
 ```
 
-Navigate to `localhost:3000/vizly-notebook` and you should see your local version of Thread running.
+Navigate to `localhost:3000/vizly-notebook` and you should see your local version of Vizly Notebook running.
 
 If you would like to develop with the AI features, navigate to the `proxy` folder and run:
 
