@@ -946,7 +946,7 @@ export const LevelUpIcon = createIcon({
 	),
 });
 
-export const ThreadIcon = (props: IconProps) => {
+export const VizlyNotebookIcon = (props: IconProps) => {
 	const { colorMode } = useColorMode();
 	const fillColor = colorMode === "dark" ? "white" : "black";
 
@@ -1404,10 +1404,17 @@ export const SlackIcon = createIcon({
 	viewBox: "0 0 640 512",
 	path: (
 		<>
-		<path d="M126.12,315.1A47.06,47.06,0,1,1,79.06,268h47.06Z"/><path d="M149.84,315.1a47.06,47.06,0,0,1,94.12,0V432.94a47.06,47.06,0,1,1-94.12,0Z"/><path d="M196.9,126.12A47.06,47.06,0,1,1,244,79.06v47.06Z"/><path d="M196.9,149.84a47.06,47.06,0,0,1,0,94.12H79.06a47.06,47.06,0,0,1,0-94.12Z"/><path d="M385.88,196.9A47.06,47.06,0,1,1,432.94,244H385.88Z"/><path d="M362.16,196.9a47.06,47.06,0,0,1-94.12,0V79.06a47.06,47.06,0,1,1,94.12,0Z"/><path d="M315.1,385.88A47.06,47.06,0,1,1,268,432.94V385.88Z"/><path d="M315.1,362.16a47.06,47.06,0,0,1,0-94.12H432.94a47.06,47.06,0,1,1,0,94.12Z"/>
+			<path d="M126.12,315.1A47.06,47.06,0,1,1,79.06,268h47.06Z" />
+			<path d="M149.84,315.1a47.06,47.06,0,0,1,94.12,0V432.94a47.06,47.06,0,1,1-94.12,0Z" />
+			<path d="M196.9,126.12A47.06,47.06,0,1,1,244,79.06v47.06Z" />
+			<path d="M196.9,149.84a47.06,47.06,0,0,1,0,94.12H79.06a47.06,47.06,0,0,1,0-94.12Z" />
+			<path d="M385.88,196.9A47.06,47.06,0,1,1,432.94,244H385.88Z" />
+			<path d="M362.16,196.9a47.06,47.06,0,0,1-94.12,0V79.06a47.06,47.06,0,1,1,94.12,0Z" />
+			<path d="M315.1,385.88A47.06,47.06,0,1,1,268,432.94V385.88Z" />
+			<path d="M315.1,362.16a47.06,47.06,0,0,1,0-94.12H432.94a47.06,47.06,0,1,1,0,94.12Z" />
 		</>
 	),
-});	
+});
 
 export const InsertCellAboveIcon = createIcon({
 	displayName: "InsertCellAboveIcon",
@@ -1416,21 +1423,21 @@ export const InsertCellAboveIcon = createIcon({
 		<>
 			<g
 				xmlns="http://www.w3.org/2000/svg"
-				clip-path="url(#clip0_137_19492)"
+				clipPath="url(#clip0_137_19492)"
 			>
 				<path
 					className="jp-icon3"
 					d="M4.75 4.93066H6.625V6.80566C6.625 7.01191 6.79375 7.18066 7 7.18066C7.20625 7.18066 7.375 7.01191 7.375 6.80566V4.93066H9.25C9.45625 4.93066 9.625 4.76191 9.625 4.55566C9.625 4.34941 9.45625 4.18066 9.25 4.18066H7.375V2.30566C7.375 2.09941 7.20625 1.93066 7 1.93066C6.79375 1.93066 6.625 2.09941 6.625 2.30566V4.18066H4.75C4.54375 4.18066 4.375 4.34941 4.375 4.55566C4.375 4.76191 4.54375 4.93066 4.75 4.93066Z"
 					fill="currentColor"
 					stroke="currentColor"
-					stroke-width="0.7"
+					strokeWidth="0.7"
 				></path>
 			</g>
 			<path
 				xmlns="http://www.w3.org/2000/svg"
 				className="jp-icon3"
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				d="M11.5 9.5V11.5L2.5 11.5V9.5L11.5 9.5ZM12 8C12.5523 8 13 8.44772 13 9V12C13 12.5523 12.5523 13 12 13L2 13C1.44772 13 1 12.5523 1 12V9C1 8.44772 1.44771 8 2 8L12 8Z"
 				fill="currentColor"
 			></path>
@@ -1464,14 +1471,14 @@ export const InsertCellBelowIcon = createIcon({
 					d="M9.25 10.0693L7.375 10.0693L7.375 8.19434C7.375 7.98809 7.20625 7.81934 7 7.81934C6.79375 7.81934 6.625 7.98809 6.625 8.19434L6.625 10.0693L4.75 10.0693C4.54375 10.0693 4.375 10.2381 4.375 10.4443C4.375 10.6506 4.54375 10.8193 4.75 10.8193L6.625 10.8193L6.625 12.6943C6.625 12.9006 6.79375 13.0693 7 13.0693C7.20625 13.0693 7.375 12.9006 7.375 12.6943L7.375 10.8193L9.25 10.8193C9.45625 10.8193 9.625 10.6506 9.625 10.4443C9.625 10.2381 9.45625 10.0693 9.25 10.0693Z"
 					fill="currentColor"
 					stroke="currentColor"
-					stroke-width="0.7"
+					strokeWidth="0.7"
 				></path>
 			</g>
 			<path
 				xmlns="http://www.w3.org/2000/svg"
 				className="jp-icon3"
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 				d="M2.5 5.5L2.5 3.5L11.5 3.5L11.5 5.5L2.5 5.5ZM2 7C1.44772 7 1 6.55228 1 6L1 3C1 2.44772 1.44772 2 2 2L12 2C12.5523 2 13 2.44772 13 3L13 6C13 6.55229 12.5523 7 12 7L2 7Z"
 				fill="currentColor"
 			></path>
@@ -1489,4 +1496,3 @@ export const InsertCellBelowIcon = createIcon({
 		</>
 	),
 });
-

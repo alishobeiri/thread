@@ -1,4 +1,4 @@
-import { handleFixError } from "shared-thread-utils";
+import { handleFixError } from "shared-vizly-notebook-utils";
 import { useSettingsStore } from "../../../components/settings/SettingsStore";
 import { ActionState } from "../magicQuery";
 import { sharedAction, sharedLocalAction } from "./shared/utils";

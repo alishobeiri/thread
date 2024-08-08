@@ -1,8 +1,8 @@
 import { captureException } from "@sentry/nextjs";
 import { v4 as uuidv4 } from "uuid";
 import { useInvalidConnectionModalStore } from "../components/modals/invalid-connection/InvalidConnectionStore";
-import { ThreadCell } from "../types/code.types";
-import { ThreadFile } from "../types/file.types";
+import { VizlyNotebookCell } from "../types/code.types";
+import { VizlyNotebookFile } from "../types/file.types";
 import { trackEventData } from "./posthog";
 
 export function getTimePartition(date: string): string {
@@ -23,10 +23,10 @@ export function getTimePartition(date: string): string {
 }
 
 export const partitionChatItems = (
-	items: ThreadFile[],
-): Record<string, ThreadFile[]> => {
+	items: VizlyNotebookFile[],
+): Record<string, VizlyNotebookFile[]> => {
 	return items.reduce(
-		(acc: Record<string, ThreadFile[]>, item: ThreadFile) => {
+		(acc: Record<string, VizlyNotebookFile[]>, item: VizlyNotebookFile) => {
 			const partition = getTimePartition(item.last_modified.toString());
 			if (!acc[partition]) {
 				acc[partition] = [];
@@ -98,7 +98,7 @@ export const capitalizeFirstLetter = (str: string) => {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-export const getFileName = (file?: ThreadFile) => {
+export const getFileName = (file?: VizlyNotebookFile) => {
 	if (!file) return "";
 	const isFile = "updated_at" in file || "type" in file;
 	if (isFile) {
@@ -108,12 +108,12 @@ export const getFileName = (file?: ThreadFile) => {
 	}
 };
 
-export const getFileId = (file?: ThreadFile) => {
+export const getFileId = (file?: VizlyNotebookFile) => {
 	if (!file) return "";
 	return file.name;
 };
 
-export const getDateFromFile = (file?: ThreadFile) => {
+export const getDateFromFile = (file?: VizlyNotebookFile) => {
 	if (!file) return "";
 	return file.last_modified;
 };
@@ -136,12 +136,8 @@ export function convertPythonListStringToArray(inputString: string) {
 		.map((element) => element.replace(/(^')|('$)/g, ""));
 }
 
-export async function threadFetch(
-	url: string,
-	body: any,
-	signal?: AbortSignal,
-) {
-	trackEventData("threadFetch", { url });
+export async function vizlyFetch(url: string, body: any, signal?: AbortSignal) {
+	trackEventData("vizlyFetch", { url });
 	const response: any = await fetch(url, { ...body, signal }).then((res) => {
 		if (res.status == 401) {
 			useInvalidConnectionModalStore
@@ -162,16 +158,18 @@ export const makeUrlSafe = (title: string) => {
 	return title.replace(/[^a-zA-Z0-9-_ .]+/g, "-");
 };
 
-export const getThreadCellMetadata = (cell: ThreadCell) => {
+export const getVizlyNotebookCellMetadata = (
+	cell: VizlyNotebookCell,
+): Record<string, any> => {
 	if (!cell.metadata) {
 		cell.metadata = {};
 	}
 
-	if (!cell.metadata.thread) {
-		cell.metadata.thread = {};
+	if (!cell.metadata.vizlyNotebook) {
+		cell.metadata.vizlyNotebook = {};
 	}
 
-	return cell.metadata.thread;
+	return cell.metadata.vizlyNotebook as Record<string, any>;
 };
 
 export const removeAnsiEscapeSequences = (text: string) => {

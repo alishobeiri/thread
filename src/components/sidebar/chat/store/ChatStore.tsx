@@ -13,8 +13,11 @@ import {
 import { useSettingsStore } from "../../../settings/SettingsStore";
 import { useNotebookStore } from "../../../notebook/store/NotebookStore";
 import { useSidebarStore } from "../../store/SidebarStore";
-import { getMessagesPayload, handleChatRequest } from "shared-thread-utils";
-import { ThreadCell } from "../../../../types/code.types";
+import {
+	getMessagesPayload,
+	handleChatRequest,
+} from "shared-vizly-notebook-utils";
+import { VizlyNotebookCell } from "../../../../types/code.types";
 export type UserType = "assistant" | "user";
 
 export interface ChatMessage {
@@ -165,7 +168,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 				activeCellSource,
 				mostRelevantContextualCellsForQuery:
 					mostRelevantCellsWithFormattedOutputs.map(
-						(cell: ThreadCell) => JSON.stringify(cell),
+						(cell: VizlyNotebookCell) => JSON.stringify(cell),
 					),
 			});
 

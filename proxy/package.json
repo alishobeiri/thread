@@ -1,11 +1,11 @@
 {
-	"name": "thread-proxy",
+	"name": "vizly-notebook-proxy",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "cd ../shared-thread-utils && npm run build && cd ../proxy && if [ -d dist ]; then rm -r dist; fi && if [ -d node_modules ]; then rm -r node_modules; fi && if [ -d .next ]; then rm -r .next; fi && yarn install && next dev",
+		"dev": "cd ../shared-vizly-notebook-utils && npm run build && cd ../proxy && if [ -d dist ]; then rm -r dist; fi && if [ -d node_modules ]; then rm -r node_modules; fi && if [ -d .next ]; then rm -r .next; fi && yarn install && next dev",
 		"clean": "rimraf node_modules lib dist build tsconfig.tsbuildinfo",
-		"build:prod": "cd ../shared-thread-utils && npm run build && cd ../proxy && if [ -d dist ]; then rm -r dist; fi && if [ -d node_modules ]; then rm -r node_modules; fi && if [ -d .next ]; then rm -r .next; fi && yarn install && next build",
+		"build:prod": "cd ../shared-vizly-notebook-utils && npm run build && cd ../proxy && if [ -d dist ]; then rm -r dist; fi && if [ -d node_modules ]; then rm -r node_modules; fi && if [ -d .next ]; then rm -r .next; fi && yarn install && next build",
 		"start": "next start",
 		"lint": "next lint",
 		"format": "npx prettier --write \"src/**/*\"",
@@ -27,7 +27,7 @@
 		"postcss": ">=8.4.31",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
-		"shared-thread-utils": "file:../shared-thread-utils",
+		"shared-vizly-notebook-utils": "file:../shared-vizly-notebook-utils",
 		"socket.io": ">=2.4.0",
 		"socket.io-parser": ">=3.3.3",
 		"uuid": "^9.0.1",

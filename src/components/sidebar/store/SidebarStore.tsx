@@ -5,8 +5,8 @@ import {
 } from "../../../utils/constants/constants";
 import { useChatStore } from "../chat/store/ChatStore";
 
-const SIDEBAR_WIDTH_KEY = "threadSidebarWidth";
-const SIDEBAR_EXPANDED_KEY = "threadSidebarExpanded";
+const SIDEBAR_WIDTH_KEY = "vizlyNotebookSidebarWidth";
+const SIDEBAR_EXPANDED_KEY = "vizlyNotebookSidebarExpanded";
 const DEFAULT_SIDEBAR_WIDTH = 350;
 export const MIN_SIDEBAR_WIDTH = 200;
 export const MAX_SIDEBAR_WIDTH = 600;

@@ -30,7 +30,7 @@ export const FIX_FUNCTION: CoreTool = {
 	}),
 };
 
-let systemPrompt: string = `You are Thread, a helpful Python code fixing assistant that operates as part of an ensemble of agents and is tasked with the subtask of fixing Python code that encountered syntax, runtime or other errors.
+let systemPrompt: string = `You are VizlyNotebook, a helpful Python code fixing assistant that operates as part of an ensemble of agents and is tasked with the subtask of fixing Python code that encountered syntax, runtime or other errors.
 - The Python code you generate will be executed in the same Jupyter Notebook environment where the other error occurred.
 Your instructions:
 - The Python code you generate should be valid JSON format.
@@ -54,9 +54,9 @@ export async function handleFixError(data: {
 	if (modelType === "openai" || modelType === "ollama") {
 		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
 		client = openai(model);
-	} else if (modelType === "anthropic"){
-		const anthropic = createAnthropic({ apiKey: apiKey, baseURL: baseURL})
-		client = anthropic(model)
+	} else if (modelType === "anthropic") {
+		const anthropic = createAnthropic({ apiKey: apiKey, baseURL: baseURL });
+		client = anthropic(model);
 	} else {
 		throw new Error("Model type not supported");
 	}

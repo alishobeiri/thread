@@ -1,7 +1,10 @@
 import { captureException } from "@sentry/nextjs";
 import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
-import { ModelInformation, handleChatRequest } from "shared-thread-utils";
+import {
+	ModelInformation,
+	handleChatRequest,
+} from "shared-vizly-notebook-utils";
 import { MessageType } from "../../../types/messages";
 
 /* This is required to use OpenAIStream. */

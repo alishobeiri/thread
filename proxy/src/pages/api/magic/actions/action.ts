@@ -1,5 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { ModelInformation, processActionRequest } from "shared-thread-utils";
+import {
+	ModelInformation,
+	processActionRequest,
+} from "shared-vizly-notebook-utils";
 import { ActionState } from "../../../../types/messages";
 
 export default async function handler(

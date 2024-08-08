@@ -7,17 +7,17 @@ export NODE_ENV=production
 # Run the yarn build:prod command
 yarn build:prod
 
-# Check if ./server_extension/thread/static exists, create it if not
-if [ -d "./thread/static" ]; then
-    rm -r ./thread/static
+# Check if ./server_extension/vizly-notebook/static exists, create it if not
+if [ -d "./vizly-notebook/static" ]; then
+    rm -r ./vizly-notebook/static
 fi
 
-if [ ! -d "./thread/static" ]; then
-    mkdir -p ./thread/static
+if [ ! -d "./vizly-notebook/static" ]; then
+    mkdir -p ./vizly-notebook/static
 fi
 
-# Move files from ./out to server_extension/thread/static
-cp -r ../out/* ./thread/static/
+# Move files from ./out to server_extension/vizly-notebook/static
+cp -r ../out/* ./vizly-notebook/static/
 
 # Remove existing dist and build directories if they exist
 if [ -d "./dist" ]; then

@@ -3,8 +3,8 @@ const path = require("path");
 const withTM = require("next-transpile-modules")(["@jupyter-widgets/base"]);
 
 const nextConfig = {
-	basePath: "/thread",
-	assetPrefix: process.env.NODE_ENV === "production" ? "/thread/" : "",
+	basePath: "/vizly-notebook",
+	assetPrefix: process.env.NODE_ENV === "production" ? "/vizly-notebook/" : "",
 	output: "export",
 	images: {
 		unoptimized: true,
@@ -48,7 +48,7 @@ module.exports = withSentryConfig(
 		// Suppresses source map uploading logs during build
 		silent: true,
 		org: "squaredtechnologiesinc",
-		project: "Thread",
+		project: "VizlyNotebook",
 	},
 	{
 		// For all available options, see:

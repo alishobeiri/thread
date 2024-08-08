@@ -54,6 +54,7 @@ jupyter_server.log
 */dist
 
 .thread-dev/
+.vizly-notebook/
 .virtual_documents/
 .ipynb_checkpoints/
 

@@ -1,8 +1,8 @@
-from .threadapp import ThreadApp
+from .vizly_notebook_app import VizlyNotebookApp
 
 
 def _jupyter_server_extension_paths():
-    return [{"module": "thread"}]
+    return [{"module": "vizly_notebook"}]
 
 
 def _jupyter_server_extension_points():
@@ -10,8 +10,8 @@ def _jupyter_server_extension_points():
     Returns a list of dictionaries with metadata describing
     the extension.
     """
-    return [{"module": "thread", "app": ThreadApp}]
+    return [{"module": "vizly_notebook", "app": VizlyNotebookApp}]
 
 
 def launch_instance():
-    ThreadApp.launch_instance()
+    VizlyNotebookApp.launch_instance()

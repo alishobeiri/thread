@@ -30,7 +30,11 @@ const Custom404: NextPage = () => {
 						textAlign={"center"}
 					>
 						This page cannot be found.{" "}
-						<Text href="/thread" color="orange.300" as={Link}>
+						<Text
+							href="/vizly-notebook"
+							color="orange.300"
+							as={Link}
+						>
 							Return to the launcher.
 						</Text>
 					</Heading>

@@ -1,18 +1,18 @@
-import { handleCellEdit } from "shared-thread-utils";
+import { handleCellEdit } from "shared-vizly-notebook-utils";
 import useCellStore, {
 	CellStatus,
 } from "../../components/cell/store/CellStore";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
 import { useSettingsStore } from "../../components/settings/SettingsStore";
 import ConnectionManager from "../../services/connection/connectionManager";
-import { ThreadCell } from "../../types/code.types";
+import { VizlyNotebookCell } from "../../types/code.types";
 import { mostRelevantCellsForQuery } from "../embeddings";
 import { makeStreamingJsonRequest, parseStreamWrapper } from "../streaming";
 import { getAppTheme, multilineStringToString } from "../utils";
 
 const { getServerProxyUrl } = useSettingsStore.getState();
 
-export const editCell = async (cell: ThreadCell, query: string) => {
+export const editCell = async (cell: VizlyNotebookCell, query: string) => {
 	const setPreviousQuery = useCellStore.getState().setPreviousQuery;
 	const setProposedSource = useCellStore.getState().setProposedSource;
 	const setCellStatus = useCellStore.getState().setCellStatus;

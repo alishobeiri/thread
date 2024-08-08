@@ -55,22 +55,22 @@ class UniqueIdHandler(tornado.web.RequestHandler):
         return ":".join(mac[i:i+2] for i in range(0, 12, 2))
 
 
-class ThreadApp(ExtensionApp):
+class VizlyNotebookApp(ExtensionApp):
     version = app_version
-    extension_url = "/thread"
-    name = "thread"
-    app_name = "Thread"
+    extension_url = "/vizly-notebook"
+    name = "vizly-notebook"
+    app_name = "VizlyNotebook"
     app_version = app_version
     load_other_extensions = False
 
-    default_url = Unicode("/thread", config=True,
+    default_url = Unicode("/vizly-notebook", config=True,
                           help="The default URL redirecting to `/`")
     app_dir = Unicode(None, config=True,
                       help="The app directory to launch the app from.")
     static_dir = Unicode(
         None, config=True, help="Directory with static files for this extension.")
     static_url_prefix = Unicode(
-        "/static/thread/", config=True, help="URL prefix for static files.")
+        "/static/vizly-notebook/", config=True, help="URL prefix for static files.")
     templates_dir = Unicode(
         None, config=True, help="Templates directory for the extension.")
 
@@ -92,7 +92,7 @@ class ThreadApp(ExtensionApp):
         return HERE
 
     def initialize_handlers(self):
-        self.log.info("Initializing ThreadApp handlers")
+        self.log.info("Initializing VizlyNotebookApp handlers")
         self.log.info(
             f"self.display_url: {str(self.serverapp.display_url)}")
 
@@ -101,10 +101,10 @@ class ThreadApp(ExtensionApp):
 
         handlers = [
             (url_path_join(self.serverapp.base_url,
-             "/thread/uniqueId"), UniqueIdHandler, {"display_url": self.serverapp.display_url}),
+             "/vizly-notebook/uniqueId"), UniqueIdHandler, {"display_url": self.serverapp.display_url}),
             (url_path_join(self.serverapp.base_url, "/favicon.ico"), RedirectHandler,
-             {"url": self.serverapp.base_url + "thread/favicon.ico"}),
-            (url_path_join(self.serverapp.base_url, "/thread/?(.*)"),
+             {"url": self.serverapp.base_url + "vizly-notebook/favicon.ico"}),
+            (url_path_join(self.serverapp.base_url, "/vizly-notebook/?(.*)"),
              StaticIndexHandler, {"path": static_path}),
         ]
         self.handlers.extend(handlers)
@@ -116,7 +116,7 @@ class ThreadApp(ExtensionApp):
 
 
 # Entry point to launch the extension app
-main = ThreadApp.launch_instance
+main = VizlyNotebookApp.launch_instance
 
 if __name__ == "__main__":
     main()

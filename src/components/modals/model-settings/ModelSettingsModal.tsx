@@ -292,9 +292,9 @@ const ModelSettingsModal = () => {
 										fontSize="small"
 										color="gray.500"
 									>
-										For unlimited usage of Thread&apos;s AI
-										features, enter your OpenAI API key
-										above.
+										For unlimited usage of Vizly
+										Notebook&apos;s AI features, enter your
+										OpenAI API key above.
 									</Text>
 								</FormControl>
 								<FormControl id="base-openai-url">
@@ -456,9 +456,9 @@ const ModelSettingsModal = () => {
 										fontSize="small"
 										color="gray.500"
 									>
-										For unlimited usage of Thread&apos;s AI
-										features, enter your Anthropic API key
-										above.
+										For unlimited usage of Vizly
+										Notebook&apos;s AI features, enter your
+										Anthropic API key above.
 									</Text>
 								</FormControl>
 								<FormControl id="base-anthropic-model">

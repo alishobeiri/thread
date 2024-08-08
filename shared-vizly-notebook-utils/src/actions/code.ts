@@ -31,7 +31,7 @@ export const CODE_FUNCTION: CoreTool = {
 	}),
 };
 
-let systemPrompt: string = `You are Thread, a helpful Python code generating assistant that operates as part of an ensemble of agents and is tasked with the subtask of generating syntactically correct Python code.
+let systemPrompt: string = `You are VizlyNotebook, a helpful Python code generating assistant that operates as part of an ensemble of agents and is tasked with the subtask of generating syntactically correct Python code.
 - The Python code you generate will be executed in order in a Jupyter Notebook environment.
 - You are able to do anything that is possible in a Python environment, that means installing packages, visualizing data, making external web requests, training machine learning models and much more.
 - If the next cell should also be a Python cell, you can continue generating, however, if the next cell is a different type of cell, please complete your generation to allow them to take over.
@@ -86,9 +86,9 @@ export async function handleCodeGeneration(data: {
 	if (modelType === "openai" || modelType === "ollama") {
 		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
 		client = openai(model);
-	} else if (modelType === "anthropic"){
-		const anthropic = createAnthropic({ apiKey: apiKey, baseURL: baseURL})
-		client = anthropic(model)
+	} else if (modelType === "anthropic") {
+		const anthropic = createAnthropic({ apiKey: apiKey, baseURL: baseURL });
+		client = anthropic(model);
 	} else {
 		throw new Error("Model type not supported");
 	}

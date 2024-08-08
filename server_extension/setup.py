@@ -9,22 +9,26 @@ parent_directory = os.path.abspath(os.path.join(this_directory, os.pardir))
 with open(os.path.join(parent_directory, "README.md"), "r") as fh:
     long_description = fh.read()
 
-# Replace all mentions of 'public/' with 'thread/static/'
-long_description = long_description.replace('public/', 'thread/static/')
+# Replace all mentions of 'public/' with 'vizly-notebook/static/'
+long_description = long_description.replace(
+    'public/', 'vizly-notebook/static/')
 
 setup(
-    name="thread-dev",
-    version="0.1.23",
+    name="vizly_notebook",
+    version="0.1.25",
     packages=find_packages(),
     include_package_data=True,
+    package_data={"vizly_notebook": ["static/**/*"]},
     install_requires=[
         "jupyter-server>=2.0",
         "jupyter",
     ],
     entry_points={
         "console_scripts": [
-            "jupyter-thread = thread:launch_instance",
-            "thread = thread:launch_instance",
+            "jupyter-vizly-notebook = vizly_notebook:launch_instance",
+            "jupyter-thread = vizly_notebook:launch_instance",
+            "thread = vizly_notebook:launch_instance",
+            "vizly-notebook = vizly_notebook:launch_instance",
         ]
     },
     long_description=long_description,

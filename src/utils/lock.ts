@@ -1,4 +1,4 @@
-export class ThreadLockManager {
+export class VizlyNotebookLockManager {
 	private promises: Map<string, Promise<void>>;
 	private resolvers: Map<string, () => void>;
 

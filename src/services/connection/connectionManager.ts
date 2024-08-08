@@ -137,7 +137,7 @@ class ConnectionManager {
 		try {
 			// Generate a unique ID for the user
 			const response = await fetch(
-				`${serverUrl}/thread/uniqueId?token=${token}`,
+				`${serverUrl}/vizly-notebook/uniqueId?token=${token}`,
 				{
 					method: "GET",
 				},

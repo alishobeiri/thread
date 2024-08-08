@@ -3,7 +3,7 @@ import { parse } from "best-effort-json-parser";
 import { useCallback, useEffect, useState } from "react";
 import { useSettingsStore } from "../components/settings/SettingsStore";
 import { standaloneToast } from "../theme";
-import { threadFetch } from "./utils";
+import { vizlyFetch } from "./utils";
 
 const { getAdditionalRequestMetadata } = useSettingsStore.getState();
 
@@ -85,7 +85,7 @@ export async function* makeStreamingRequest({
 	shouldCancel = () => false,
 }: MakeStreamingRequestParams) {
 	try {
-		const res = await threadFetch(url, {
+		const res = await vizlyFetch(url, {
 			method: method,
 			headers: {
 				"Content-Type": "application/json",

@@ -1,6 +1,6 @@
-import { ThreadCell } from "./code.types";
+import { VizlyNotebookCell } from "./code.types";
 
-export interface ThreadFile extends File {
+export interface VizlyNotebookFile extends File {
 	type: string;
 	name: string;
 	last_modified: string;
@@ -12,7 +12,7 @@ export interface ThreadFile extends File {
 }
 
 export type NotebookMetadata = {
-	thread: {
+	vizlyNotebook: {
 		id: string;
 		sessionId?: string;
 		kernelId?: string;
@@ -20,7 +20,7 @@ export type NotebookMetadata = {
 } & Record<string, any>;
 
 export type NotebookFile = {
-	cells: ThreadCell[];
+	cells: VizlyNotebookCell[];
 	metadata: NotebookMetadata;
 	nbformat: number;
 	nbformat_minor: number;

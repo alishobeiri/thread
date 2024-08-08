@@ -18,7 +18,7 @@ import {
 	ToggleSidebar,
 } from "../../../../assets/icons";
 import ConnectionManager from "../../../../services/connection/connectionManager";
-import { ThreadFile } from "../../../../types/file.types";
+import { VizlyNotebookFile } from "../../../../types/file.types";
 import { isPlatformMac } from "../../../../utils/utils";
 import Spinner from "../../../misc/Spinner";
 import { useNotebookStore } from "../../../notebook/store/NotebookStore";
@@ -30,7 +30,7 @@ const FilesPanel = ({
 	handleDeleteItem,
 	navigateToPath,
 }: {
-	handleDeleteItem: (file: ThreadFile) => Promise<void>;
+	handleDeleteItem: (file: VizlyNotebookFile) => Promise<void>;
 	navigateToPath: (path: string) => void;
 }) => {
 	const router = useRouter();
@@ -154,8 +154,8 @@ const FilesPanel = ({
 						mt="4"
 					/>
 				) : (
-					(files as ThreadFile[]).map(
-						(file: ThreadFile, i: number) => (
+					(files as VizlyNotebookFile[]).map(
+						(file: VizlyNotebookFile, i: number) => (
 							<FileRow
 								key={`${file.name}-${i}`}
 								file={file}
@@ -177,7 +177,7 @@ export const FileSystemContent = ({
 	const { path, navigateToPath } = useNotebookStore.getState();
 	const connectionManager = ConnectionManager.getInstance();
 
-	const deleteItem = async (file: ThreadFile) => {
+	const deleteItem = async (file: VizlyNotebookFile) => {
 		try {
 			await connectionManager.serviceManager!.contents.delete(file.path);
 		} catch (error) {

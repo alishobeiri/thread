@@ -15,7 +15,7 @@ import { ChatMessage, MessageType } from "../utils/types/messages";
 // Instructions
 const instructions = `As an expert AI programming assistant, your role is to assist in Python programming tasks.
 
-When asked for your name, respond with "Thread".
+When asked for your name, respond with "VizlyNotebook".
 
 If asked to create code, consider the variables provided in the provided execution namespace.
 
@@ -97,9 +97,9 @@ export const handleChatRequest = async (params: {
 	if (modelType === "openai" || modelType === "ollama") {
 		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
 		client = openai(model);
-	} else if (modelType === "anthropic"){
-		const anthropic = createAnthropic({ apiKey: apiKey, baseURL: baseURL})
-		client = anthropic(model)
+	} else if (modelType === "anthropic") {
+		const anthropic = createAnthropic({ apiKey: apiKey, baseURL: baseURL });
+		client = anthropic(model);
 	} else {
 		throw new Error("Model type not supported");
 	}

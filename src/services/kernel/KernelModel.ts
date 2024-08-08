@@ -17,7 +17,7 @@ import {
 	IPYWIDGET_VIEW_MIMETYPE,
 } from "../../components/cell/output/mimeTypes";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
-import { ThreadCell } from "../../types/code.types";
+import { VizlyNotebookCell } from "../../types/code.types";
 import { multilineStringToString } from "../../utils/utils";
 import TextEmbeddingModel from "../embedding/TextEmbedder";
 
@@ -65,11 +65,11 @@ export class KernelModel {
 		return this._currentlyProcessingCellId ?? "";
 	}
 
-	set cell(cell: ThreadCell) {
+	set cell(cell: VizlyNotebookCell) {
 		this._currentlyProcessingCell = cell;
 	}
 
-	get cell(): ThreadCell | null | undefined {
+	get cell(): VizlyNotebookCell | null | undefined {
 		return this._currentlyProcessingCell;
 	}
 
@@ -90,10 +90,10 @@ export class KernelModel {
 			this.cell.metadata = {};
 		}
 
-		if (!this.cell.metadata["thread"]) {
-			this.cell.metadata["thread"] = {};
+		if (!this.cell.metadata["vizlyNotebook"]) {
+			this.cell.metadata["vizlyNotebook"] = {};
 		}
-		return this.cell.metadata["thread"] as PartialJSONObject;
+		return this.cell.metadata["vizlyNotebook"] as PartialJSONObject;
 	}
 
 	clearQueue(): void {
@@ -164,7 +164,7 @@ export class KernelModel {
 	preProcessCellExecutionOperations(code: string): void {}
 
 	async postCellExecutionOperations(
-		cell: ThreadCell,
+		cell: VizlyNotebookCell,
 	): Promise<(IFuture<IExecuteRequestMsg, IExecuteReplyMsg> | null)[]> {
 		// Used to capture the current variables in the execution state
 		if (!this.kernel) {
@@ -363,7 +363,7 @@ export class KernelModel {
 	};
 
 	// Currently processing cell
-	private _currentlyProcessingCell: ThreadCell | null | undefined;
+	private _currentlyProcessingCell: VizlyNotebookCell | null | undefined;
 	private _currentlyProcessingCellId: string | undefined;
 	private _output: IOutput | null = null;
 	private session: ISessionConnection;

@@ -71,7 +71,7 @@ export const NEW_NOTEBOOK: () => NotebookFile = () => {
 	return {
 		cells: [],
 		metadata: {
-			thread: {
+			vizlyNotebook: {
 				id: id,
 				preferredLanguage: "",
 			},

@@ -305,7 +305,7 @@ const CellExecutionContainer = ({
 			<VStack width="100%" height="100%" alignItems={"flex-end"} flex={1}>
 				<Box height={"22px"}>{iconElement}</Box>
 
-				{hasExecuted && (executionTime / 1000).toFixed(1) != "0.0" && (
+				{hasExecuted && (executionTime / 1000).toFixed(1) !== "0.0" && (
 					<Text fontSize="xs">
 						{(executionTime / 1000).toFixed(1)}s
 					</Text>

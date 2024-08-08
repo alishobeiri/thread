@@ -21,7 +21,7 @@
 		],
 		"paths": {
 			"react": ["./node_modules/@types/react"],
-			"shared-thread-utils": ["./shared-thread-utils"]
+			"shared-vizly-notebook-utils": ["./shared-vizly-notebook-utils"]
 		}
 	},
 	"include": [

@@ -6,7 +6,7 @@ import ConnectionManager, {
 import { API_URL } from "../../utils/constants/constants";
 
 const SETTINGS_FILE_NAME = "settings.json";
-const SETTINGS_DIR_PATH = ".thread-dev";
+const SETTINGS_DIR_PATH = ".vizly-notebook";
 const SETTINGS_FILE_PATH = `${SETTINGS_DIR_PATH}/${SETTINGS_FILE_NAME}`;
 
 const saveDefaultSettingsFile = async () => {
@@ -186,13 +186,17 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 					autoExecuteGeneratedCode:
 						fileContent.autoExecuteGeneratedCode || false,
 					openAIKey: fileContent.openAIKey || "",
-					openAIBaseUrl: fileContent.openAIBaseUrl || "https://api.openai.com/v1",
+					openAIBaseUrl:
+						fileContent.openAIBaseUrl ||
+						"https://api.openai.com/v1",
 					serverProxyUrl: fileContent.serverProxyUrl || "",
 					ollamaUrl: fileContent.ollamaUrl || "",
 					ollamaModel: fileContent.ollamaModel || "",
 					anthropicKey: fileContent.anthropicKey || "",
 					anthropicModel: fileContent.anthropicModel || "",
-					anthropicBaseUrl: fileContent.anthropicBaseUrl || "https://api.anthropic.com/v1",
+					anthropicBaseUrl:
+						fileContent.anthropicBaseUrl ||
+						"https://api.anthropic.com/v1",
 					isLocal: fileContent.isLocal || false,
 					modelType: fileContent.modelType || "openai",
 				});
@@ -286,5 +290,5 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 		} catch (error) {
 			console.error("Error saving settings: ", error);
 		}
-	}
+	},
 }));

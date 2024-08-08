@@ -1,5 +1,5 @@
 import { captureException } from "@sentry/nextjs";
-import { processActionRequest } from "shared-thread-utils";
+import { processActionRequest } from "shared-vizly-notebook-utils";
 import useCellStore from "../../components/cell/store/CellStore";
 import {
 	MagicInputSelections,
@@ -13,16 +13,16 @@ import { MESSAGES_LOOKBACK_WINDOW } from "../constants/constants";
 import { trackEventData } from "../posthog";
 import {
 	getAppTheme,
-	getThreadCellMetadata,
+	getVizlyNotebookCellMetadata,
 	newUuid,
-	threadFetch,
+	vizlyFetch,
 } from "../utils";
 import { getAction, getActionInfo } from "./actionUtils";
 import { codeAction } from "./actions/code";
 import { fixErrorAction } from "./actions/fixError";
 import { editCell } from "./edit";
 import {
-	ThreadMessage,
+	VizlyNotebookMessage,
 	formatCellsAsMessages,
 	getLastNMessages,
 } from "./messages";
@@ -30,8 +30,8 @@ import {
 // Keeps track of all the action states that
 export type ActionState = {
 	userRequest: string;
-	prevMessages: ThreadMessage[];
-	messagesAfterQuery: ThreadMessage[];
+	prevMessages: VizlyNotebookMessage[];
+	messagesAfterQuery: VizlyNotebookMessage[];
 	firstQuery: boolean;
 
 	// The index where cell generation has begun
@@ -177,7 +177,7 @@ export const processStream = async (
 				// For existing cells, update the source content
 				const cell = cells[cellEditIndex];
 				const id = cell.id as string;
-				const metadata = getThreadCellMetadata(cell);
+				const metadata = getVizlyNotebookCellMetadata(cell);
 				if (metadata.group != group) {
 					// Processing a cell that belongs to a new group, add a new cell to extend the current group instead
 					addCellAtIndex(
@@ -344,7 +344,7 @@ const generateCells = async (query: string, followUpRetries: number) => {
 					metadata.modelInformation,
 					metadata.uniqueId,
 			  )
-			: await threadFetch(
+			: await vizlyFetch(
 					`${getServerProxyUrl()}/api/magic/actions/action`,
 					{
 						method: "POST",
