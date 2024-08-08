@@ -127,7 +127,7 @@ Then:
 yarn dev --port 5001
 ```
 
-# Using Thread with Ollama
+# Using Vizly Notebook with Ollama
 
 You can use [Ollama](https://github.com/ollama/ollama) for a fully offline AI experience. To begin, install and run vizly-notebook using the commands above.
 
