@@ -1,10 +1,10 @@
 <!-- DOCTOC SKIP -->
 
 <h1 align="center">
- <a href="https://www.vizly.fyi/thread-dev">
+ <a href="https://www.vizly.fyi/notebook">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://www.vizly.fyi/favicon.png"/>
-    <img height="40" src="https://www.vizly.fyi/vizly-notebook"/>
+    <img height="40" src="https://www.vizly.fyi/notebook"/>
   </picture>
  </a>
 </h1>
