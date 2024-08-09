@@ -12,7 +12,7 @@
 AI-powered Jupyter Notebook
 </p>
 <p align="center">
-  <a href="https://www.vizly.fyi/thread-dev"><img src="https://img.shields.io/badge/Website-blue?logo=googlechrome&logoColor=orange"/></a>
+  <a href="https://www.vizly.fyi/notebook"><img src="https://img.shields.io/badge/Website-blue?logo=googlechrome&logoColor=orange"/></a>
   <a href="https://cal.com/ali-shobeiri/30min"><img src="https://img.shields.io/badge/Book%20a%20Call-blue" /></a>
   <a href="mailto:ali@vizlylabs.com"><img src="https://img.shields.io/badge/Email%20Us-brightgreen" /></a>
   <a href="https://discord.gg/ZuHq9hDs2y"><img src="https://img.shields.io/badge/Join%20Discord-7289DA?logo=discord&logoColor=white" /></a>
@@ -20,7 +20,7 @@ AI-powered Jupyter Notebook
   <a href="https://github.com/squaredtechnologies/vizly-notebook"><img src="https://img.shields.io/github/stars/squaredtechnologies/vizly-notebook" /></a>
 </p>
 
-[Vizly Notebook](https://www.vizly.fyi/thread) is a Jupyter alternative that integrates an AI copilot into your Jupyter Notebook editing experience.
+[Vizly Notebook](https://www.vizly.fyi/notebook) is a Jupyter alternative that integrates an AI copilot into your Jupyter Notebook editing experience.
 
 Best of all, Vizly Notebook runs locally and can be used for free with [Ollama](https://github.com/ollama/ollama) or your own API key. To start:
 
