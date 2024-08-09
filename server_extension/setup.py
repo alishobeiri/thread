@@ -11,11 +11,11 @@ with open(os.path.join(parent_directory, "README.md"), "r") as fh:
 
 # Replace all mentions of 'public/' with 'vizly-notebook/static/'
 long_description = long_description.replace(
-    'public/', 'vizly-notebook/static/')
+    'public/', 'vizly_notebook/static/')
 
 setup(
     name="vizly_notebook",
-    version="0.1.25",
+    version="0.1.26",
     packages=find_packages(),
     include_package_data=True,
     package_data={"vizly_notebook": ["static/**/*"]},
