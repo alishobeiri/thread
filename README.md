@@ -4,7 +4,7 @@
  <a href="https://www.vizly.fyi/notebook">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://www.vizly.fyi/favicon.png"/>
-    <img height="40" src="https://www.vizly.fyi/notebook"/>
+    <img height="64" src="https://www.vizly.fyi/favicon.png"/>
   </picture>
  </a>
 </h1>
