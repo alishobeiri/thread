@@ -1063,7 +1063,7 @@ export const useNotebookStore = create<INotebookStore>()(
 							);
 
 						router.push({
-							pathname: router.pathname,
+							pathname: window.location.pathname,
 							query: {
 								...router.query,
 								path: newNotebook.path,
@@ -1109,7 +1109,7 @@ export const useNotebookStore = create<INotebookStore>()(
 						const { kernelSelection, ...updatedQuery } =
 							router.query;
 						router.push({
-							pathname: router.pathname,
+							pathname: window.location.pathname,
 							query: updatedQuery,
 						});
 					}
@@ -1131,7 +1131,7 @@ export const useNotebookStore = create<INotebookStore>()(
 						.kernelSelection as string;
 					if (routerPath !== path) {
 						router.push({
-							pathname: router.pathname,
+							pathname: window.location.pathname,
 							query: {
 								...router.query,
 								path: path,

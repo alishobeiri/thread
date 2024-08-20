@@ -51,6 +51,7 @@ export const mostRelevantCellsForQuery = async (
 			.slice(0, k);
 		return mostRelevantCells;
 	} catch (e) {
+		console.error(e);
 		return [];
 	}
 };

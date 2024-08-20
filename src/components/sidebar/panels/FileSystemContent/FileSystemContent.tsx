@@ -74,7 +74,7 @@ const FilesPanel = ({
 									const { path, ...remainingQueries } =
 										router.query;
 									router.push({
-										pathname: router.pathname,
+										pathname: window.location.pathname,
 										query: remainingQueries,
 									});
 								}}

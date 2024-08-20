@@ -120,7 +120,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 	anthropicKey: "",
 	anthropicModel: "claude-3-5-sonnet-20240620",
 	anthropicBaseUrl: "https://api.anthropic.com/v1",
-	isLocal: false,
+	isLocal: true,
 	modelType: "openai",
 	setShowModelSettingsModal: (show) => set({ showModelSettingsModal: show }),
 	setOpenAIKey: (key) => {

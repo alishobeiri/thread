@@ -51,7 +51,7 @@ export const FileRow = ({
 	const onClick = () => {
 		if (file.type == "notebook") {
 			router.push({
-				pathname: router.pathname,
+				pathname: window.location.pathname,
 				query: {
 					...router.query,
 					path: file.path,
