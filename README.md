@@ -10,7 +10,7 @@ AI-powered Jupyter Notebook
   <a href="https://github.com/squaredtechnologies/vizly-notebook"><img src="https://img.shields.io/github/stars/squaredtechnologies/vizly-notebook" /></a>
 </p>
 
-[Vizly Notebook](https://www.vizly.fyi/notebook) is a Jupyter alternative that integrates an AI copilot into your Jupyter Notebook editing experience.
+Vizly Notebook is a Jupyter alternative that integrates an AI copilot into your Jupyter Notebook editing experience.
 
 Best of all, Vizly Notebook runs locally and can be used for free with [Ollama](https://github.com/ollama/ollama) or your own API key. To start:
 
