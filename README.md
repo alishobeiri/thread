@@ -138,7 +138,3 @@ Navigate to Ollama and enter your model details:
 ![image](https://github.com/squaredtechnologies/vizly-notebook/assets/18422723/8b5cc906-d261-409d-b843-068be69ed410)
 
 Use Ctrl / Cmd + K and try running a query to see how it looks!
-
-# Why we built Vizly Notebook
-
-We initially got the idea when building [Vizly](https://vizly.fyi/) a tool that lets non-technical users ask questions from their data. While Vizly is powerful at performing data transformations, as engineers, we often felt that natural language didn't give us enough freedom to edit the code that was generated or to explore the data further for ourselves. That is what gave us the inspiration to start Thread.
