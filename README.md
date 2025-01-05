@@ -138,3 +138,4 @@ Navigate to Ollama and enter your model details:
 ![image](https://github.com/squaredtechnologies/vizly-notebook/assets/18422723/8b5cc906-d261-409d-b843-068be69ed410)
 
 Use Ctrl / Cmd + K and try running a query to see how it looks!
+# decimal
