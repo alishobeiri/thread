@@ -1,5 +1,5 @@
 import { ActionState } from "../../../utils/magic/magicQuery";
-import { NoterousMessage } from "../../../utils/magic/messages";
+import { ThreadNotebookMessage } from "../../../utils/magic/messages";
 import { limitMessages } from "./promptUtils";
 
 export const formatMessages = (
@@ -7,7 +7,7 @@ export const formatMessages = (
 	actionState: ActionState,
 	characterLimit: number,
 ) => {
-	const systemMessage: NoterousMessage = {
+	const systemMessage: ThreadNotebookMessage = {
 		role: "system",
 		content: systemPrompt,
 	};
@@ -16,7 +16,7 @@ export const formatMessages = (
 	const userMessage = {
 		role: "user",
 		content: actionState.userRequest,
-	} as NoterousMessage;
+	} as ThreadNotebookMessage;
 
 	return limitMessages(
 		prevMessages,

@@ -81,13 +81,13 @@ export const createTraceAndGeneration = (
 	actionState: ActionState,
 	messages: any[],
 	model: string,
+	uniqueId?: string,
 ) => {
 	const trace = LangfuseClient.getInstance().trace({
-		id: actionState.groupUuid,
+		id: actionState.group,
 		name: `${traceLabel}`,
 		input: actionState,
-		userId: actionState.userId,
-		sessionId: actionState.conversationId,
+		userId: uniqueId,
 	});
 	const generation = trace.generation({
 		name: `${traceLabel}`,

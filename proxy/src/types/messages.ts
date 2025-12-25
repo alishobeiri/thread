@@ -29,7 +29,7 @@ export type ActionState = {
 	prevActions: any[];
 };
 
-export type NoterousMessage = {
+export type ThreadNotebookMessage = {
 	role: "system" | "user" | "assistant";
 	content: string;
 };

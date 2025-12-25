@@ -1,5 +1,5 @@
-import { UserSettings } from "../../../components/modals/settings/SettingsModalStore";
-import { NoterousMessage } from "../../../utils/magic/messages";
+import { UserSettings } from "shared-thread-notebook-utils";
+import { ThreadNotebookMessage } from "../../../utils/magic/messages";
 
 const themeBackgroundColors = {
 	dark: "#111",
@@ -72,8 +72,8 @@ export const getChatContextPrompt = (chatContext: string[]) => {
 };
 
 export const limitPrevMessages = (
-	prevMessages: NoterousMessage[],
-	systemMessage: NoterousMessage,
+	prevMessages: ThreadNotebookMessage[],
+	systemMessage: ThreadNotebookMessage,
 	maxCharCount: number = 40000,
 ) => {
 	let messages = [systemMessage, ...prevMessages];
@@ -100,10 +100,10 @@ export const limitPrevMessages = (
 };
 
 export const limitMessages = (
-	prevMessages: NoterousMessage[],
-	systemMessage: NoterousMessage,
-	userMessage: NoterousMessage,
-	messagesAfterQuery: NoterousMessage[],
+	prevMessages: ThreadNotebookMessage[],
+	systemMessage: ThreadNotebookMessage,
+	userMessage: ThreadNotebookMessage,
+	messagesAfterQuery: ThreadNotebookMessage[],
 	maxCharCount: number = 40000,
 ) => {
 	// Construct initial messages array with the required format
