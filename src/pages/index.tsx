@@ -4,7 +4,7 @@ import AppLayout from "../components/AppLayout";
 import Notebook from "../components/notebook/Notebook";
 import { useNotebookStore } from "../components/notebook/store/NotebookStore";
 
-const DEFAULT_TITLE_TAG = "Vizly Notebook";
+const DEFAULT_TITLE_TAG = "Thread Notebook";
 
 const DynamicHeadTag = () => {
 	const fileContents = useNotebookStore((state) => state.fileContents);
@@ -15,7 +15,7 @@ const DynamicHeadTag = () => {
 		if (fileContents) {
 			const name = getNotebookName();
 			if (name) {
-				setTitleTag(`${name} | VizlyNotebook`);
+				setTitleTag(`${name} | ThreadNotebook`);
 			} else {
 				setTitleTag(DEFAULT_TITLE_TAG);
 			}

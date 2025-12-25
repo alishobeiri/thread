@@ -5,7 +5,7 @@ import {
 	ActionState,
 	ModelInformation,
 	handleCodeGeneration,
-} from "shared-vizly-notebook-utils";
+} from "shared-thread-notebook-utils";
 
 /* This is required to use OpenAIStream. */
 export const runtime = "edge";

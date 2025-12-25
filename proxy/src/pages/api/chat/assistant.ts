@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import {
 	ModelInformation,
 	handleChatRequest,
-} from "shared-vizly-notebook-utils";
+} from "shared-thread-notebook-utils";
 import { MessageType } from "../../../types/messages";
 
 /* This is required to use OpenAIStream. */

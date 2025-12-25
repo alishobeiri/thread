@@ -4,7 +4,7 @@ jest.mock("../../components/notebook/store/NotebookStore", () => ({
 	})),
 }));
 
-import { VizlyNotebookCell } from "../../types/code.types";
+import { ThreadNotebookCell } from "../../types/code.types";
 import {
 	MAX_OUTPUT_LENGTH,
 	MESSAGES_LOOKBACK_WINDOW,
@@ -15,7 +15,7 @@ const notebooks = require("../../../__tests__/__mocks__/notebooks.json");
 
 describe("should parse outputs correctly", () => {
 	it("output under limit should be captured correctly", () => {
-		const mockCells = notebooks.loadDataframe.cells as VizlyNotebookCell[];
+		const mockCells = notebooks.loadDataframe.cells as ThreadNotebookCell[];
 		const messages = formatCellsAsMessages(
 			mockCells,
 			MESSAGES_LOOKBACK_WINDOW,
@@ -31,7 +31,7 @@ describe("should parse outputs correctly", () => {
 
 	it("output over limit should be truncated correctly", () => {
 		const mockCells = notebooks.largeOutputStream
-			.cells as VizlyNotebookCell[];
+			.cells as ThreadNotebookCell[];
 		const messages = formatCellsAsMessages(
 			mockCells,
 			MESSAGES_LOOKBACK_WINDOW,
@@ -48,7 +48,7 @@ describe("should parse outputs correctly", () => {
 	});
 
 	it("should limit successive outputs correctly", () => {
-		const mockCells = notebooks.manyTables.cells as VizlyNotebookCell[];
+		const mockCells = notebooks.manyTables.cells as ThreadNotebookCell[];
 		const messages = formatCellsAsMessages(
 			mockCells,
 			MESSAGES_LOOKBACK_WINDOW,
@@ -70,7 +70,7 @@ describe("should parse outputs correctly", () => {
 
 	it("should limit successive outputs and error correctly", () => {
 		const mockCells = notebooks.mixedTableErrorOutput
-			.cells as VizlyNotebookCell[];
+			.cells as ThreadNotebookCell[];
 		const messages = formatCellsAsMessages(
 			mockCells,
 			MESSAGES_LOOKBACK_WINDOW,
@@ -88,7 +88,7 @@ describe("should parse outputs correctly", () => {
 	});
 
 	it("should filter out successive error cells if the last one is not an error", () => {
-		const mockCells = notebooks.errorFiltering.cells as VizlyNotebookCell[];
+		const mockCells = notebooks.errorFiltering.cells as ThreadNotebookCell[];
 
 		expect(mockCells.length).toBe(6);
 		const messages = formatCellsAsMessages(
@@ -105,7 +105,7 @@ describe("should parse outputs correctly", () => {
 	});
 
 	it("should parse errors correctly", () => {
-		const mockCells = notebooks.errorParsing.cells as VizlyNotebookCell[];
+		const mockCells = notebooks.errorParsing.cells as ThreadNotebookCell[];
 		const messages = formatCellsAsMessages(
 			mockCells,
 			// Fetch all the errors
@@ -175,7 +175,7 @@ describe("should parse outputs correctly", () => {
 
 	it("should say graph was displayed correctly", () => {
 		const mockCells = notebooks.plotlyGraphRendered
-			.cells as VizlyNotebookCell[];
+			.cells as ThreadNotebookCell[];
 		const messages = formatCellsAsMessages(
 			mockCells,
 			// Fetch all the errors

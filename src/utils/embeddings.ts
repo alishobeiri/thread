@@ -7,10 +7,10 @@ import { CONTEXT_WINDOW_SIZE } from "./constants/constants";
 export const getCellEmbedding = (cell: ICell) => {
 	if (
 		cell.metadata &&
-		cell.metadata["vizlyNotebook"] &&
-		(cell.metadata["vizlyNotebook"] as PartialJSONObject)["embedding"]
+		cell.metadata["threadNotebook"] &&
+		(cell.metadata["threadNotebook"] as PartialJSONObject)["embedding"]
 	) {
-		return (cell.metadata["vizlyNotebook"] as PartialJSONObject)[
+		return (cell.metadata["threadNotebook"] as PartialJSONObject)[
 			"embedding"
 		] as PartialJSONArray;
 	}

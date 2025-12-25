@@ -40,7 +40,7 @@ class IPyWidgetErrorBoundary extends Component<
 						<Text
 							as={Link}
 							href={
-								"https://github.com/squaredtechnologies/vizly-notebook/issues"
+								"https://github.com/alishobeiri/thread/issues"
 							}
 							target={"_blank"}
 							cursor={"pointer"}

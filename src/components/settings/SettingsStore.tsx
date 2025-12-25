@@ -6,7 +6,7 @@ import ConnectionManager, {
 import { API_URL } from "../../utils/constants/constants";
 
 const SETTINGS_FILE_NAME = "settings.json";
-const SETTINGS_DIR_PATH = ".vizly-notebook";
+const SETTINGS_DIR_PATH = ".thread-notebook";
 const SETTINGS_FILE_PATH = `${SETTINGS_DIR_PATH}/${SETTINGS_FILE_NAME}`;
 
 const saveDefaultSettingsFile = async () => {

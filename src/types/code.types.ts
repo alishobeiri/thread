@@ -5,8 +5,8 @@ export type CodeLine = {
 	l: number;
 };
 
-export type VizlyNotebookCell = ICell & {
+export type ThreadNotebookCell = ICell & {
 	metadata: {
-		vizlyNotebook?: Record<string, any>;
+		threadNotebook?: Record<string, any>;
 	};
 };

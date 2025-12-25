@@ -1,4 +1,4 @@
-import { handleCodeGeneration } from "shared-vizly-notebook-utils";
+import { handleCodeGeneration } from "shared-thread-notebook-utils";
 import { useSettingsStore } from "../../../components/settings/SettingsStore";
 import { ActionState } from "../magicQuery";
 import { sharedAction, sharedLocalAction } from "./shared/utils";

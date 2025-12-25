@@ -1,22 +1,44 @@
-import { handleCellEdit } from "shared-vizly-notebook-utils";
+import { handleCellEdit } from "shared-thread-notebook-utils";
 import useCellStore, {
 	CellStatus,
 } from "../../components/cell/store/CellStore";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
 import { useSettingsStore } from "../../components/settings/SettingsStore";
 import ConnectionManager from "../../services/connection/connectionManager";
-import { VizlyNotebookCell } from "../../types/code.types";
+import { ThreadNotebookCell } from "../../types/code.types";
 import { mostRelevantCellsForQuery } from "../embeddings";
 import { makeStreamingJsonRequest, parseStreamWrapper } from "../streaming";
 import { getAppTheme, multilineStringToString } from "../utils";
 
 const { getServerProxyUrl } = useSettingsStore.getState();
 
-export const editCell = async (cell: VizlyNotebookCell, query: string) => {
-	const setPreviousQuery = useCellStore.getState().setPreviousQuery;
-	const setProposedSource = useCellStore.getState().setProposedSource;
-	const setCellStatus = useCellStore.getState().setCellStatus;
-	setCellStatus(cell.id as string, CellStatus.Generating);
+function extractSource(data: unknown): string | null {
+	if (typeof data === "object" && data !== null && "source" in data) {
+		return String(data.source);
+	}
+	if (typeof data === "string") {
+		// Extract code from fenced code blocks
+		const codeMatch = data.match(/```(?:\w+)?\s*([\s\S]*?)\s*```/);
+		if (codeMatch?.[1]) {
+			return codeMatch[1].trim();
+		}
+		const trimmed = data.trim();
+		return trimmed || null;
+	}
+	return null;
+}
+
+function resetCellState(cellId: string) {
+	const { setProposedSource, setCellStatus } = useCellStore.getState();
+	setProposedSource(cellId, "");
+	setCellStatus(cellId, CellStatus.Initial);
+}
+
+export const editCell = async (cell: ThreadNotebookCell, query: string) => {
+	const cellId = cell.id as string;
+	const { setPreviousQuery, setProposedSource, setCellStatus } =
+		useCellStore.getState();
+	setCellStatus(cellId, CellStatus.Generating);
 
 	const isLocal = useSettingsStore.getState().isLocal;
 	const payload = {
@@ -42,24 +64,24 @@ export const editCell = async (cell: VizlyNotebookCell, query: string) => {
 						.signal.aborted,
 		  });
 
-	for await (let data of stream) {
-		if (data) {
-			if (typeof data === "object" && "source" in data) {
-				setProposedSource(cell.id as string, data.source);
-			} else if (typeof data === "string") {
-				// Improved regex to capture any fenced code block optionally with a language specifier
-				const codeMatch = data.match(/```(?:\w+)?\s*([\s\S]*?)\s*```/);
-				if (codeMatch && codeMatch[1]) {
-					// Use captured group and trim any leading/trailing whitespace
-					const cleanedCode = codeMatch[1].trim();
-					setProposedSource(cell.id as string, cleanedCode);
-				} else {
-					setProposedSource(cell.id as string, data.trim());
-				}
+	let proposedSource: string | null = null;
+	try {
+		for await (const data of stream) {
+			const source = extractSource(data);
+			if (source) {
+				proposedSource = source;
+				setProposedSource(cellId, source);
 			}
 		}
-	}
 
-	setPreviousQuery(cell.id as string, query);
-	setCellStatus(cell.id as string, CellStatus.FollowUp);
+		if (proposedSource) {
+			setPreviousQuery(cellId, query);
+			setCellStatus(cellId, CellStatus.FollowUp);
+		} else {
+			resetCellState(cellId);
+		}
+	} catch (error) {
+		console.error("Error during edit cell stream:", error);
+		resetCellState(cellId);
+	}
 };

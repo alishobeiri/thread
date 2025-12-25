@@ -3,12 +3,12 @@
 # Clean up log file
 rm -f jupyter_server.log
 
-# Uninstall and reinstall vizly-notebook package
-pip uninstall -y vizly-notebook
+# Uninstall and reinstall thread-notebook package
+pip uninstall -y thread-notebook
 pip install -e ./server_extension --no-cache-dir
 
-# Enable Jupyter server extension for vizly-notebook
-jupyter server extension enable vizly-notebook
+# Enable Jupyter server extension for thread-notebook
+jupyter server extension enable thread-notebook
 
 # Start the Jupyter server with specified configurations
 jupyter server --ServerApp.allow_origin_pat="^(http://localhost:3000)$" \

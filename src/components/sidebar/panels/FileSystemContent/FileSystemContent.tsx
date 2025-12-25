@@ -18,7 +18,7 @@ import {
 	ToggleSidebar,
 } from "../../../../assets/icons";
 import ConnectionManager from "../../../../services/connection/connectionManager";
-import { VizlyNotebookFile } from "../../../../types/file.types";
+import { ThreadNotebookFile } from "../../../../types/file.types";
 import { isPlatformMac } from "../../../../utils/utils";
 import Spinner from "../../../misc/Spinner";
 import { useNotebookStore } from "../../../notebook/store/NotebookStore";
@@ -30,7 +30,7 @@ const FilesPanel = ({
 	handleDeleteItem,
 	navigateToPath,
 }: {
-	handleDeleteItem: (file: VizlyNotebookFile) => Promise<void>;
+	handleDeleteItem: (file: ThreadNotebookFile) => Promise<void>;
 	navigateToPath: (path: string) => void;
 }) => {
 	const router = useRouter();
@@ -71,12 +71,12 @@ const FilesPanel = ({
 									useNotebookStore
 										.getState()
 										.setFileContents(undefined);
-									const { path, ...remainingQueries } =
-										router.query;
-									router.push({
-										pathname: window.location.pathname,
-										query: remainingQueries,
-									});
+								const { path, ...remainingQueries } =
+									router.query;
+								router.push({
+									pathname: router.pathname,
+									query: remainingQueries,
+								});
 								}}
 							>
 								New
@@ -154,8 +154,8 @@ const FilesPanel = ({
 						mt="4"
 					/>
 				) : (
-					(files as VizlyNotebookFile[]).map(
-						(file: VizlyNotebookFile, i: number) => (
+					(files as ThreadNotebookFile[]).map(
+						(file: ThreadNotebookFile, i: number) => (
 							<FileRow
 								key={`${file.name}-${i}`}
 								file={file}
@@ -177,7 +177,7 @@ export const FileSystemContent = ({
 	const { path, navigateToPath } = useNotebookStore.getState();
 	const connectionManager = ConnectionManager.getInstance();
 
-	const deleteItem = async (file: VizlyNotebookFile) => {
+	const deleteItem = async (file: ThreadNotebookFile) => {
 		try {
 			await connectionManager.serviceManager!.contents.delete(file.path);
 		} catch (error) {

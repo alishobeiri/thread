@@ -15,7 +15,7 @@ import {
 } from "../../utils/constants/constants";
 import { getCustomMarkdownComponents } from "../../utils/markdown";
 import {
-	getVizlyNotebookCellMetadata,
+	getThreadNotebookCellMetadata,
 	multilineStringToString,
 } from "../../utils/utils";
 import {
@@ -189,8 +189,8 @@ const MarkdownCellContainer: React.FC<CellContainerProps> = ({
 	index,
 	isBeingEdited,
 }) => {
-	const vizlyNotebookMetadata = getVizlyNotebookCellMetadata(cell);
-	const isUserMessage = vizlyNotebookMetadata?.user === "user";
+	const threadNotebookMetadata = getThreadNotebookCellMetadata(cell);
+	const isUserMessage = threadNotebookMetadata?.user === "user";
 
 	return (
 		<VStack

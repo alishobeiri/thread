@@ -13,6 +13,12 @@ import {
 } from "../utils/model";
 import { ActionState } from "../utils/types/messages";
 
+// Type helper for function tools (not provider-defined tools)
+type FunctionTool = CoreTool<any, any> & {
+	type?: undefined | "function";
+	description?: string;
+};
+
 // Action Types
 export enum ActionType {
 	Code = "code",
@@ -52,10 +58,10 @@ export const ACTION_FUNCTION: CoreTool = {
 };
 
 const filterActionByType = (
-	actionFunction: CoreTool,
+	actionFunction: FunctionTool,
 	actionType: ActionType,
-): CoreTool => {
-	const clonedFunction = {
+): FunctionTool => {
+	const clonedFunction: FunctionTool = {
 		description: actionFunction.description,
 		parameters: cloneZodSchema(actionFunction.parameters),
 	};
@@ -111,9 +117,9 @@ function cloneZodSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
 	}
 }
 
-const maskActions = (actionState: ActionState) => {
+const maskActions = (actionState: ActionState): FunctionTool => {
 	// Replace cloneDeep with deepClone
-	const clonedActionFunction = {
+	const clonedActionFunction: FunctionTool = {
 		description: ACTION_FUNCTION.description,
 		parameters: cloneZodSchema(ACTION_FUNCTION.parameters),
 	};
@@ -145,7 +151,7 @@ const maskActions = (actionState: ActionState) => {
 	return maskedActionFunction;
 };
 
-const getAvailableActions = (actionFunction: CoreTool): ActionType[] => {
+const getAvailableActions = (actionFunction: FunctionTool): ActionType[] => {
 	const schema = actionFunction.parameters as z.ZodObject<any>;
 	const actionSchema = schema.shape.action as z.ZodDiscriminatedUnion<
 		"type",
@@ -182,9 +188,9 @@ export const processActionRequest = async (
 	if (modelType === "openai" || modelType === "ollama") {
 		const openai = createOpenAI({ apiKey: apiKey, baseURL: baseURL });
 		client = openai(model);
-	} else if (modelType === "anthropic"){
-		const anthropic = createAnthropic({ apiKey: apiKey, baseURL: baseURL})
-		client = anthropic(model)
+	} else if (modelType === "anthropic") {
+		const anthropic = createAnthropic({ apiKey: apiKey, baseURL: baseURL });
+		client = anthropic(model);
 	} else {
 		throw new Error("Model type not supported");
 	}
@@ -197,7 +203,7 @@ export const processActionRequest = async (
 			model,
 			uniqueId,
 		);
-	
+
 		const response = await generateText({
 			model: client,
 			messages: messages,

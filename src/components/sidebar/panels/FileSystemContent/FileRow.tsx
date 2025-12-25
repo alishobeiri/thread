@@ -19,7 +19,7 @@ import {
 	ThreeDotsVerticalIcon,
 	TrashCanIcon,
 } from "../../../../assets/icons";
-import { VizlyNotebookFile } from "../../../../types/file.types";
+import { ThreadNotebookFile } from "../../../../types/file.types";
 import { getFileName } from "../../../../utils/utils";
 import { useRouter } from "next/router";
 import { useNotebookStore } from "../../../notebook/store/NotebookStore";
@@ -29,8 +29,8 @@ export const FileRow = ({
 	file,
 	deleteItem,
 }: {
-	file: VizlyNotebookFile;
-	deleteItem: (file: VizlyNotebookFile) => Promise<void>;
+	file: ThreadNotebookFile;
+	deleteItem: (file: ThreadNotebookFile) => Promise<void>;
 }) => {
 	const router = useRouter();
 	const { navigateToPath } = useNotebookStore.getState();
@@ -39,7 +39,7 @@ export const FileRow = ({
 	const fileName = getFileName(file);
 	const fileSelected = fileName == router.query.path;
 
-	const fetchIcon = (file: VizlyNotebookFile) => {
+	const fetchIcon = (file: ThreadNotebookFile) => {
 		if (file.type === "directory") {
 			return <Icon as={FolderIcon} color="orange.300" />;
 		} else if (file.type === "notebook") {
@@ -51,7 +51,7 @@ export const FileRow = ({
 	const onClick = () => {
 		if (file.type == "notebook") {
 			router.push({
-				pathname: window.location.pathname,
+				pathname: router.pathname,
 				query: {
 					...router.query,
 					path: file.path,
@@ -101,8 +101,8 @@ const MoreOptionsMenu = ({
 	file,
 	deleteItem,
 }: {
-	file: VizlyNotebookFile;
-	deleteItem: (file: VizlyNotebookFile) => void;
+	file: ThreadNotebookFile;
+	deleteItem: (file: ThreadNotebookFile) => void;
 }) => {
 	return (
 		<Menu>

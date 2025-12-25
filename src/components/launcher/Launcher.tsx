@@ -13,6 +13,36 @@ import { useNotebookStore } from "../notebook/store/NotebookStore";
 
 const { createNewNotebook } = useNotebookStore.getState();
 
+// Component to handle kernel logo with fallback
+const KernelLogo = ({
+	logoUrl,
+	alt,
+	fallback,
+}: {
+	logoUrl: string | undefined | null;
+	alt: string;
+	fallback: JSX.Element;
+}) => {
+	const [hasError, setHasError] = useState(false);
+
+	if (!logoUrl || hasError) {
+		return fallback;
+	}
+
+	return (
+		<img
+			src={logoUrl}
+			alt={alt}
+			height="36px"
+			width="36px"
+			onError={() => {
+				console.warn(`Failed to load logo: ${logoUrl}`);
+				setHasError(true);
+			}}
+		/>
+	);
+};
+
 const Section = ({
 	title,
 	icon: SectionIcon,
@@ -118,30 +148,44 @@ const Launcher = () => {
 					?.kernelspecs.specs;
 
 				if (kernelSpecs) {
+					// Debug: Print kernelspecs structure
+					console.log("Kernelspecs data:", kernelSpecs);
+					console.log("Kernelspecs keys:", Object.keys(kernelSpecs.kernelspecs));
+					
+					// Get the Jupyter server URL from ConnectionManager
+					const serverUrl = connectionManager.serverUrl || "http://127.0.0.1:8888";
+					const urlParams = new URLSearchParams(window.location.search);
+					const token = urlParams.get("token") || "123";
+					
 					const newItems = Object.keys(kernelSpecs.kernelspecs)
 						.filter(
 							(key) => kernelSpecs.kernelspecs[key]?.display_name,
 						)
 						.map((key) => {
+							const kernel = kernelSpecs.kernelspecs[key];
+							// Debug: Print each kernel's data
+							console.log(`Kernel ${key}:`, {
+								display_name: kernel?.display_name,
+								resources: kernel?.resources,
+								logo_svg: kernel?.resources?.["logo-svg"],
+							});
+							
+							let logoUrl = kernel?.resources?.["logo-svg"];
+							
+							// Transform relative logo URLs to absolute URLs using the Jupyter server URL
+							// Convert /kernelspecs/... to http://127.0.0.1:8888/kernelspecs/...
+							if (logoUrl && logoUrl.startsWith("/")) {
+								logoUrl = `${serverUrl}${logoUrl}?token=${token}`;
+							}
+							
 							return {
-								label: kernelSpecs.kernelspecs[key]!
-									.display_name,
-								icon: kernelSpecs.kernelspecs[key]
-									?.resources ? (
-									<img
-										src={
-											kernelSpecs.kernelspecs[key]
-												?.resources["logo-svg"]
-										}
-										alt={
-											kernelSpecs.kernelspecs[key]!
-												.display_name
-										}
-										height="36px"
-										width="36px"
+								label: kernel!.display_name,
+								icon: (
+									<KernelLogo
+										logoUrl={logoUrl}
+										alt={kernel!.display_name}
+										fallback={<PythonIcon boxSize={"36px"} />}
 									/>
-								) : (
-									<PythonIcon boxSize={"36px"} />
 								),
 								actionHandler: () => {
 									createNewNotebook(key);
@@ -193,7 +237,7 @@ const Launcher = () => {
 					icon: <GithubIcon boxSize={"36px"} />,
 					actionHandler: () =>
 						window.open(
-							"https://github.com/squaredtechnologies/vizly-notebook",
+							"https://github.com/alishobeiri/thread",
 							"_blank",
 						),
 				},

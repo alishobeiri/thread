@@ -98,13 +98,24 @@ export const Notebook = () => {
 	}, [router.query.renamed]);
 
 	useEffect(() => {
-		const { path, refreshFiles, handleNotebookClick } =
-			useNotebookStore.getState();
+		const {
+			path,
+			refreshFiles,
+			handleNotebookClick,
+			isLoadingNotebook,
+			getNotebookPath,
+		} = useNotebookStore.getState();
 
-		const { path: routerPath } = router.query;
+		const routerPath = router.query.path as string | undefined;
 
 		// Return if routerPath is undefined or empty
 		if (!routerPath) {
+			return;
+		}
+
+		// Prevent redundant calls if notebook is already loading or already selected
+		const currentNotebookPath = getNotebookPath();
+		if (isLoadingNotebook || currentNotebookPath === routerPath) {
 			return;
 		}
 
@@ -113,10 +124,12 @@ export const Notebook = () => {
 			const existingNotebook =
 				files && files.find((notebook) => notebook.path === routerPath);
 
-			if (existingNotebook) {
-				// If notebook exists, handle the click directly
+			// Double-check loading state before calling handleNotebookClick to avoid race conditions
+			const { isLoadingNotebook: stillLoading } =
+				useNotebookStore.getState();
+			if (existingNotebook && !stillLoading) {
 				handleNotebookClick(existingNotebook);
-			} else {
+			} else if (!existingNotebook) {
 				// Refresh notebooks only if the notebook isn't found
 				console.error("Could not find notebook to select");
 			}

@@ -1,7 +1,7 @@
 import { captureException } from "@sentry/nextjs";
 import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
-import { ModelInformation, handleFixError } from "shared-vizly-notebook-utils";
+import { ModelInformation, handleFixError } from "shared-thread-notebook-utils";
 import { ActionState } from "../../../../types/messages";
 
 /* This is required to use OpenAIStream. */

@@ -10,11 +10,11 @@ import ConnectionManager, {
 	useConnectionManagerStore,
 } from "../../../services/connection/connectionManager";
 import { standaloneToast } from "../../../theme";
-import { VizlyNotebookCell } from "../../../types/code.types";
+import { ThreadNotebookCell } from "../../../types/code.types";
 import {
 	NotebookFile,
 	NotebookMetadata,
-	VizlyNotebookFile,
+	ThreadNotebookFile,
 } from "../../../types/file.types";
 import { magicQuery } from "../../../utils/magic/magicQuery";
 import { trackEventData } from "../../../utils/posthog";
@@ -45,7 +45,7 @@ const debounceFn = debounce(async (fn: () => Promise<void>) => {
 }, 2000);
 
 export interface INotebookStore {
-	files: VizlyNotebookFile[];
+	files: ThreadNotebookFile[];
 
 	path: string;
 	setPath: (path: string) => void;
@@ -56,17 +56,20 @@ export interface INotebookStore {
 	selectedNotebook: NotebookFile | undefined;
 	isFetchingNotebooks: boolean;
 	isFetchingFiles: boolean;
-	filesBeingUploaded: VizlyNotebookFile[];
+	filesBeingUploaded: ThreadNotebookFile[];
 	setIsFetchingNotebooks: (isFetching: boolean) => void;
 	setIsFetchingFiles: (isFetching: boolean) => void;
-	setNotebooks: (notebooks: VizlyNotebookFile[]) => void;
+	setNotebooks: (notebooks: ThreadNotebookFile[]) => void;
 	refreshFiles: (
 		path?: string,
 		silent?: boolean,
-	) => Promise<VizlyNotebookFile[]>;
-	deleteFile: (file: VizlyNotebookFile, router?: NextRouter) => Promise<void>;
-	downloadFile: (file: VizlyNotebookFile) => Promise<void>;
-	setFiles: (files: VizlyNotebookFile[]) => void;
+	) => Promise<ThreadNotebookFile[]>;
+	deleteFile: (
+		file: ThreadNotebookFile,
+		router?: NextRouter,
+	) => Promise<void>;
+	downloadFile: (file: ThreadNotebookFile) => Promise<void>;
+	setFiles: (files: ThreadNotebookFile[]) => void;
 	setSelectedNotebook: (notebook: NotebookFile | undefined) => void;
 
 	fileContents: NotebookFile | undefined;
@@ -89,7 +92,7 @@ export interface INotebookStore {
 	setKernelId: (id: string) => void;
 	getKernelId: () => string | undefined;
 
-	cells: VizlyNotebookCell[];
+	cells: ThreadNotebookCell[];
 	metadata: NotebookMetadata;
 
 	// Cell related functions
@@ -146,7 +149,7 @@ export interface INotebookStore {
 		notebook: NotebookFile,
 		kernelSelection?: string,
 	) => NotebookFile;
-	handleNotebookClick: (notebook: VizlyNotebookFile) => Promise<void>;
+	handleNotebookClick: (notebook: ThreadNotebookFile) => Promise<void>;
 	navigateToPath: (path: string) => void;
 	handleSave: () => void;
 	isSaving: boolean;
@@ -166,7 +169,7 @@ export const useNotebookStore = create<INotebookStore>()(
 			({
 				path: "/",
 				notebooks: [] as NotebookFile[],
-				files: [] as VizlyNotebookFile[],
+				files: [] as ThreadNotebookFile[],
 				selectedNotebook: undefined,
 				isFetchingNotebooks: false,
 				isGeneratingCells: false,
@@ -183,7 +186,7 @@ export const useNotebookStore = create<INotebookStore>()(
 						.then((contents) => {
 							setPath(path);
 							if (!contents) {
-								return [] as VizlyNotebookFile[];
+								return [] as ThreadNotebookFile[];
 							}
 							if (!contents.sort) {
 								console.log(contents);
@@ -202,7 +205,7 @@ export const useNotebookStore = create<INotebookStore>()(
 								return a.name.localeCompare(b.name);
 							});
 
-							setFiles(sortedContent as VizlyNotebookFile[]);
+							setFiles(sortedContent as ThreadNotebookFile[]);
 
 							return sortedContent;
 						})
@@ -212,7 +215,7 @@ export const useNotebookStore = create<INotebookStore>()(
 								"Ran into error while navigating to path: ",
 								error,
 							);
-							return [] as VizlyNotebookFile[];
+							return [] as ThreadNotebookFile[];
 						})
 						.finally(() => {
 							if (!silent) {
@@ -220,7 +223,7 @@ export const useNotebookStore = create<INotebookStore>()(
 							}
 						});
 				},
-				deleteFile: async (file: VizlyNotebookFile) => {
+				deleteFile: async (file: ThreadNotebookFile) => {
 					const { path } = get();
 
 					const isFile = "last_modified" in file;
@@ -252,7 +255,8 @@ export const useNotebookStore = create<INotebookStore>()(
 						get().refreshFiles(path, true);
 					}
 				},
-				setFiles: (files: VizlyNotebookFile[]) => set({ files: files }),
+				setFiles: (files: ThreadNotebookFile[]) =>
+					set({ files: files }),
 				setSelectedNotebook: (notebook?: NotebookFile) =>
 					set({
 						selectedNotebook: notebook,
@@ -311,9 +315,9 @@ export const useNotebookStore = create<INotebookStore>()(
 									id: cell.id ?? newUuid(),
 									metadata: {
 										...cell.metadata,
-										vizlyNotebook: {
+										threadNotebook: {
 											...(cell.metadata
-												.vizlyNotebook as PartialJSONObject),
+												.threadNotebook as PartialJSONObject),
 											ran: false,
 											user: user,
 										},
@@ -358,7 +362,7 @@ export const useNotebookStore = create<INotebookStore>()(
 							...updatedCells[index],
 							metadata: {
 								...updatedCells[index],
-								vizlyNotebook: {
+								threadNotebook: {
 									group,
 								},
 							},
@@ -395,15 +399,15 @@ export const useNotebookStore = create<INotebookStore>()(
 				},
 				setNotebookId: (notebookId: string) => {
 					const metadata = get().metadata;
-					if (!metadata || !metadata.vizlyNotebook) {
+					if (!metadata || !metadata.threadNotebook) {
 						return;
 					}
 
 					set((state) => ({
 						metadata: {
 							...state.metadata,
-							vizlyNotebook: {
-								...metadata.vizlyNotebook,
+							threadNotebook: {
+								...metadata.threadNotebook,
 								id: notebookId,
 							},
 						},
@@ -417,8 +421,8 @@ export const useNotebookStore = create<INotebookStore>()(
 					set({
 						metadata: {
 							...metadata,
-							vizlyNotebook: {
-								...metadata.vizlyNotebook,
+							threadNotebook: {
+								...metadata.threadNotebook,
 								sessionId: id,
 							},
 						},
@@ -427,8 +431,8 @@ export const useNotebookStore = create<INotebookStore>()(
 				getSessionId: () => {
 					let sessionId;
 					const { metadata } = get().metadata;
-					if (metadata && metadata.vizlyNotebook) {
-						sessionId = metadata.vizlyNotebook.sessionId;
+					if (metadata && metadata.threadNotebook) {
+						sessionId = metadata.threadNotebook.sessionId;
 					}
 					return sessionId;
 				},
@@ -437,8 +441,8 @@ export const useNotebookStore = create<INotebookStore>()(
 					set({
 						metadata: {
 							...metadata,
-							vizlyNotebook: {
-								...metadata.vizlyNotebook,
+							threadNotebook: {
+								...metadata.threadNotebook,
 								kernelId: id,
 							},
 						},
@@ -447,8 +451,8 @@ export const useNotebookStore = create<INotebookStore>()(
 				getKernelId: () => {
 					let kernelId;
 					const { metadata } = get().metadata;
-					if (metadata && metadata.vizlyNotebook) {
-						kernelId = metadata.vizlyNotebook.kernelId;
+					if (metadata && metadata.threadNotebook) {
+						kernelId = metadata.threadNotebook.kernelId;
 					}
 					return kernelId;
 				},
@@ -468,7 +472,7 @@ export const useNotebookStore = create<INotebookStore>()(
 				getCellIndexById: (id: string) => {
 					const { cells } = get();
 					const cellIndex = cells.findIndex((cell) => cell.id === id);
-					return cellIndex === -1 ? 0 : cellIndex;
+					return cellIndex;
 				},
 
 				userAbortedMagicQueryController: new AbortController(),
@@ -542,9 +546,9 @@ export const useNotebookStore = create<INotebookStore>()(
 						updatedCells[index] = {
 							...updatedCells[index],
 							metadata: {
-								vizlyNotebook: {
+								threadNotebook: {
 									...updatedCells[index].metadata
-										.vizlyNotebook,
+										.threadNotebook,
 									user,
 								},
 							},
@@ -755,6 +759,12 @@ export const useNotebookStore = create<INotebookStore>()(
 				setActiveCell: (cellId: string) => {
 					set((state) => {
 						const indexToSet = state.getCellIndexById(cellId);
+						if (indexToSet < 0) {
+							console.warn(
+								`Could not find cell with id: ${cellId}. Active cell index not updated.`,
+							);
+							return {};
+						}
 						return {
 							activeCellIndex: indexToSet,
 						};
@@ -892,7 +902,7 @@ export const useNotebookStore = create<INotebookStore>()(
 						source: source || "",
 						cell_type: type || "code",
 						metadata: {
-							vizlyNotebook: {
+							threadNotebook: {
 								group: group || undefined,
 								user,
 								action: action,
@@ -1063,7 +1073,7 @@ export const useNotebookStore = create<INotebookStore>()(
 							);
 
 						router.push({
-							pathname: window.location.pathname,
+							pathname: router.pathname,
 							query: {
 								...router.query,
 								path: newNotebook.path,
@@ -1099,7 +1109,7 @@ export const useNotebookStore = create<INotebookStore>()(
 
 					ConnectionManager.getInstance().connectToKernelForNotebook({
 						kernelSelection,
-						sessionId: notebook.metadata?.vizlyNotebook?.sessionId,
+						sessionId: notebook.metadata?.threadNotebook?.sessionId,
 					});
 
 					const router = get().router;
@@ -1109,7 +1119,7 @@ export const useNotebookStore = create<INotebookStore>()(
 						const { kernelSelection, ...updatedQuery } =
 							router.query;
 						router.push({
-							pathname: window.location.pathname,
+							pathname: router.pathname,
 							query: updatedQuery,
 						});
 					}
@@ -1117,7 +1127,7 @@ export const useNotebookStore = create<INotebookStore>()(
 					return notebook;
 				},
 				handleNotebookClick: async (
-					notebookFile: VizlyNotebookFile,
+					notebookFile: ThreadNotebookFile,
 				) => {
 					const { selectNotebook, router } = get();
 
@@ -1131,7 +1141,7 @@ export const useNotebookStore = create<INotebookStore>()(
 						.kernelSelection as string;
 					if (routerPath !== path) {
 						router.push({
-							pathname: window.location.pathname,
+							pathname: router.pathname,
 							query: {
 								...router.query,
 								path: path,
@@ -1191,12 +1201,20 @@ export const useNotebookStore = create<INotebookStore>()(
 										content: {
 											...get().fileContents,
 											cells: get().cells.map((cell) => {
+												// Create a deep copy of the cell to avoid mutating the in-memory cells
+												const cellCopy: ICell = {
+													...cell,
+													metadata: {
+														...cell.metadata,
+													},
+												};
 												if (
-													cell.cell_type == "markdown"
+													cellCopy.cell_type ==
+													"markdown"
 												) {
-													delete cell.id;
+													delete cellCopy.id;
 												}
-												return cell;
+												return cellCopy;
 											}),
 											metadata: get().metadata,
 										},

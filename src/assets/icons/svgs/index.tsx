@@ -223,6 +223,17 @@ export const HelpIcon = createIcon({
 	),
 });
 
+export const HomeIcon = createIcon({
+	displayName: "HomeIcon",
+	viewBox: "0 0 24 24",
+	path: (
+		<path
+			fill="currentColor"
+			d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"
+		></path>
+	),
+});
+
 export const ChatIcon = createIcon({
 	displayName: "ChatIcon",
 	viewBox: "0 0 24 24",
@@ -946,7 +957,7 @@ export const LevelUpIcon = createIcon({
 	),
 });
 
-export const VizlyNotebookIcon = (props: IconProps) => {
+export const ThreadNotebookIcon = (props: IconProps) => {
 	const { colorMode } = useColorMode();
 	const fillColor = colorMode === "dark" ? "white" : "black";
 

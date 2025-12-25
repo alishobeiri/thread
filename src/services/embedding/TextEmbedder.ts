@@ -21,7 +21,7 @@ export default class TextEmbeddingModel {
 
 	private async createEmbedder() {
 		const textFiles = await FilesetResolver.forTextTasks(
-			"./vizly-notebook/mediapipe/tasks-text/",
+			"./thread-notebook/mediapipe/tasks-text/",
 		);
 		this.textEmbedder = await TextEmbedder.createFromOptions(textFiles, {
 			baseOptions: {

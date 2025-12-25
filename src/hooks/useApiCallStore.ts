@@ -15,7 +15,7 @@ const useApiCallStore = create<ApiCallState>((set) => ({
 	apiCallCount:
 		typeof window !== "undefined"
 			? parseInt(
-					localStorage.getItem("vizlyNotebookApiCallCount") || "0",
+					localStorage.getItem("threadNotebookApiCallCount") || "0",
 					10,
 			  )
 			: 0,
@@ -23,14 +23,14 @@ const useApiCallStore = create<ApiCallState>((set) => ({
 		set((state) => {
 			const newCount = state.apiCallCount + 1;
 			localStorage.setItem(
-				"vizlyNotebookApiCallCount",
+				"threadNotebookApiCallCount",
 				newCount.toString(),
 			);
 			return { apiCallCount: newCount };
 		}),
 	resetApiCallCount: () =>
 		set(() => {
-			localStorage.setItem("vizlyNotebookApiCallCount", "0");
+			localStorage.setItem("threadNotebookApiCallCount", "0");
 			return { apiCallCount: 0 };
 		}),
 	checkAndIncrementApiCallCount: () => {

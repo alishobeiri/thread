@@ -1,8 +1,8 @@
 import { captureException } from "@sentry/nextjs";
 import { v4 as uuidv4 } from "uuid";
 import { useInvalidConnectionModalStore } from "../components/modals/invalid-connection/InvalidConnectionStore";
-import { VizlyNotebookCell } from "../types/code.types";
-import { VizlyNotebookFile } from "../types/file.types";
+import { ThreadNotebookCell } from "../types/code.types";
+import { ThreadNotebookFile } from "../types/file.types";
 import { trackEventData } from "./posthog";
 
 export function getTimePartition(date: string): string {
@@ -23,10 +23,10 @@ export function getTimePartition(date: string): string {
 }
 
 export const partitionChatItems = (
-	items: VizlyNotebookFile[],
-): Record<string, VizlyNotebookFile[]> => {
+	items: ThreadNotebookFile[],
+): Record<string, ThreadNotebookFile[]> => {
 	return items.reduce(
-		(acc: Record<string, VizlyNotebookFile[]>, item: VizlyNotebookFile) => {
+		(acc: Record<string, ThreadNotebookFile[]>, item: ThreadNotebookFile) => {
 			const partition = getTimePartition(item.last_modified.toString());
 			if (!acc[partition]) {
 				acc[partition] = [];
@@ -98,7 +98,7 @@ export const capitalizeFirstLetter = (str: string) => {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-export const getFileName = (file?: VizlyNotebookFile) => {
+export const getFileName = (file?: ThreadNotebookFile) => {
 	if (!file) return "";
 	const isFile = "updated_at" in file || "type" in file;
 	if (isFile) {
@@ -108,12 +108,12 @@ export const getFileName = (file?: VizlyNotebookFile) => {
 	}
 };
 
-export const getFileId = (file?: VizlyNotebookFile) => {
+export const getFileId = (file?: ThreadNotebookFile) => {
 	if (!file) return "";
 	return file.name;
 };
 
-export const getDateFromFile = (file?: VizlyNotebookFile) => {
+export const getDateFromFile = (file?: ThreadNotebookFile) => {
 	if (!file) return "";
 	return file.last_modified;
 };
@@ -158,18 +158,18 @@ export const makeUrlSafe = (title: string) => {
 	return title.replace(/[^a-zA-Z0-9-_ .]+/g, "-");
 };
 
-export const getVizlyNotebookCellMetadata = (
-	cell: VizlyNotebookCell,
+export const getThreadNotebookCellMetadata = (
+	cell: ThreadNotebookCell,
 ): Record<string, any> => {
 	if (!cell.metadata) {
 		cell.metadata = {};
 	}
 
-	if (!cell.metadata.vizlyNotebook) {
-		cell.metadata.vizlyNotebook = {};
+	if (!cell.metadata.threadNotebook) {
+		cell.metadata.threadNotebook = {};
 	}
 
-	return cell.metadata.vizlyNotebook as Record<string, any>;
+	return cell.metadata.threadNotebook as Record<string, any>;
 };
 
 export const removeAnsiEscapeSequences = (text: string) => {

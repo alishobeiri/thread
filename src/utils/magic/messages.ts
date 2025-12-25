@@ -2,18 +2,18 @@ import { IError, IOutput, IStream } from "@jupyterlab/nbformat";
 import { captureException } from "@sentry/nextjs";
 import { useNotebookStore } from "../../components/notebook/store/NotebookStore";
 import ConnectionManager from "../../services/connection/connectionManager";
-import { VizlyNotebookCell } from "../../types/code.types";
+import { ThreadNotebookCell } from "../../types/code.types";
 import { MAX_OUTPUT_LENGTH } from "../constants/constants";
 import {
 	extractErrorLineWithRegex,
-	getVizlyNotebookCellMetadata,
+	getThreadNotebookCellMetadata,
 	limitStringLength,
 	multilineStringToString,
 	removeAnsiEscapeSequences,
 	stringifyWithoutStringValues,
 } from "../utils";
 
-export type VizlyNotebookMessage = {
+export type ThreadNotebookMessage = {
 	role: "system" | "user" | "assistant";
 	content: string;
 };
@@ -126,7 +126,7 @@ const preprocessCellOutputs = (outputs: IOutput[]): IOutput[] => {
 	return combinedOutputs;
 };
 
-export const formatCellOutputs = (cell: VizlyNotebookCell) => {
+export const formatCellOutputs = (cell: ThreadNotebookCell) => {
 	const cellOutputs: IOutput[] = preprocessCellOutputs(
 		cell.outputs as IOutput[],
 	);
@@ -190,25 +190,25 @@ const sanitizeOutput = (output: any): any => {
 };
 
 const postProcessMessages = (
-	messages: VizlyNotebookMessage[],
-): VizlyNotebookMessage[] => {
+	messages: ThreadNotebookMessage[],
+): ThreadNotebookMessage[] => {
 	// Filter out empty messages
 	return messages.filter((message) => message.content.trim() !== "");
 };
 
 export const formatCellsAsMessages = (
-	cells: VizlyNotebookCell[],
+	cells: ThreadNotebookCell[],
 	n: number,
 	limitChars = false,
 	startIndex?: number,
 	asExchanges = false,
-): VizlyNotebookMessage[] => {
+): ThreadNotebookMessage[] => {
 	let messagesRemaining = n;
 	let prevCell = null;
 	let previousCellExecutedCorrectly = false;
 
 	const connectionManager = ConnectionManager.getInstance();
-	const messages: VizlyNotebookMessage[] = [];
+	const messages: ThreadNotebookMessage[] = [];
 	const initialIndex =
 		startIndex !== undefined
 			? Math.min(startIndex, cells.length - 1)
@@ -219,7 +219,7 @@ export const formatCellsAsMessages = (
 			const cell = cells[i];
 			const type = cell.cell_type;
 			const source = multilineStringToString(cell.source);
-			const vizlyNotebookMetadata = getVizlyNotebookCellMetadata(cell);
+			const threadNotebookMetadata = getThreadNotebookCellMetadata(cell);
 
 			const sameAsPrevCell = prevCell && prevCell.source === source;
 			if (sameAsPrevCell) {
@@ -227,7 +227,7 @@ export const formatCellsAsMessages = (
 				continue;
 			}
 
-			if (type === "markdown" && vizlyNotebookMetadata.user === "user") {
+			if (type === "markdown" && threadNotebookMetadata.user === "user") {
 				// Reset the error tracking for markdown cells
 				previousCellExecutedCorrectly = false;
 				messages.unshift({

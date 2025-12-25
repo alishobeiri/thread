@@ -1,7 +1,7 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
 import { captureException } from "@sentry/nextjs";
-import { CoreTool, StreamingResponse, streamText } from "ai";
+import { CoreTool, StreamingTextResponse, streamText } from "ai";
 import { z } from "zod";
 import { createTraceAndGeneration } from "../utils/langfuse";
 import { formatMessages } from "../utils/message";
@@ -12,6 +12,15 @@ import {
 	getModelForRequest,
 } from "../utils/model";
 import { ActionState } from "../utils/types/messages";
+
+// Type helper for function tools (not provider-defined tools)
+type FunctionTool = CoreTool<any, any> & {
+	type?: undefined | "function";
+	description?: string;
+};
+
+// Check if we're in development mode
+const isDevelopment = process.env.NODE_ENV !== "production";
 
 // Action Types
 export enum ActionType {
@@ -69,10 +78,10 @@ export const ACTION_FUNCTION: CoreTool = {
 };
 
 const filterActionByType = (
-	actionFunction: CoreTool,
+	actionFunction: FunctionTool,
 	actionType: ActionType,
-): CoreTool => {
-	const clonedFunction = {
+): FunctionTool => {
+	const clonedFunction: FunctionTool = {
 		description: actionFunction.description,
 		parameters: cloneZodSchema(actionFunction.parameters),
 	};
@@ -128,9 +137,9 @@ function cloneZodSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
 	return schema.constructor();
 }
 
-const maskActions = (actionState: ActionState) => {
+const maskActions = (actionState: ActionState): FunctionTool => {
 	// Replace cloneDeep with deepClone
-	const clonedActionFunction = {
+	const clonedActionFunction: FunctionTool = {
 		description: ACTION_FUNCTION.description,
 		parameters: cloneZodSchema(ACTION_FUNCTION.parameters),
 	};
@@ -162,7 +171,7 @@ const maskActions = (actionState: ActionState) => {
 	return maskedActionFunction;
 };
 
-const getAvailableActions = (actionFunction: CoreTool): ActionType[] => {
+const getAvailableActions = (actionFunction: FunctionTool): ActionType[] => {
 	const schema = actionFunction.parameters as z.ZodObject<any>;
 	const actionSchema = schema.shape.action as z.ZodDiscriminatedUnion<
 		"type",
@@ -179,7 +188,7 @@ export const processActionRequest = async (
 	modelInformation?: ModelInformation,
 	uniqueId?: string,
 	autoExecuteGeneratedCode = false,
-): Promise<StreamingResponse> => {
+): Promise<StreamingTextResponse> => {
 	const systemPrompt = `You are a helpful agent that decides which action needs to be taken in the conversation.
 - Always continue until the user's question is completely answered.
 - Stop the conversation if an agent has asked for more information from the user.
@@ -231,7 +240,7 @@ export const processActionRequest = async (
 			},
 		});
 
-		return new StreamingResponse(response.textStream);
+		return new StreamingTextResponse(response.textStream);
 	} catch (error) {
 		console.error(error);
 		captureException(error);

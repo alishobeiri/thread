@@ -12,13 +12,16 @@ import React, {
 	ReactNode,
 	useEffect,
 } from "react";
+import { useRouter } from "next/router";
 import {
 	ChatIcon,
 	DiscordIcon,
 	FolderIcon,
 	GithubIcon,
+	HomeIcon,
 	SettingsIcon,
 } from "../../assets/icons";
+import { useNotebookStore } from "../notebook/store/NotebookStore";
 import { useResizeWidth } from "../../hooks/useResizeWidth";
 import {
 	CHAT_PANEL_ID,
@@ -105,6 +108,7 @@ const SidebarPanel: React.FC<SidebarPanelProps> = ({
 };
 
 export default function Sidebar() {
+	const router = useRouter();
 	const bgColor = useColorModeValue(
 		"var(--jp-layout-color2)",
 		"var(--jp-layout-color1)",
@@ -121,6 +125,22 @@ export default function Sidebar() {
 	);
 
 	const { setPanelType, setIsExpanded } = useSidebarStore.getState();
+
+	const handleHomeClick = () => {
+		// Clear file contents to show launcher
+		useNotebookStore.getState().setFileContents(undefined);
+		// Remove path from query to go to home
+		const { path, ...remainingQueries } = router.query;
+		router.push({
+			pathname: router.pathname,
+			query: remainingQueries,
+		});
+		// Close sidebar if open
+		if (isExpanded) {
+			setIsExpanded(false);
+			setPanelType("");
+		}
+	};
 
 	useEffect(() => {
 		useSidebarStore.getState().initializeSidebar();
@@ -155,6 +175,11 @@ export default function Sidebar() {
 			>
 				<VStack justifyContent={"space-between"} height="100%">
 					<VStack spacing={2} align="center">
+						<SidebarIcon
+							icon={<HomeIcon />}
+							onClick={handleHomeClick}
+							label="Home"
+						/>
 						<SidebarIcon
 							icon={<FolderIcon />}
 							isSelected={
@@ -192,7 +217,7 @@ export default function Sidebar() {
 							label={"Raise an issue on GitHub"}
 							onClick={() =>
 								window.open(
-									"https://github.com/squaredtechnologies/vizly-notebook/issues",
+									"https://github.com/alishobeiri/thread/issues",
 									"_blank",
 								)
 							}

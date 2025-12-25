@@ -1,7 +1,7 @@
 import { captureException } from "@sentry/nextjs";
 import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
-import { ModelInformation, handleCellEdit } from "shared-vizly-notebook-utils";
+import { ModelInformation, handleCellEdit } from "shared-thread-notebook-utils";
 
 /* This is required to use OpenAIStream. */
 export const runtime = "edge";

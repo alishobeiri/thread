@@ -15,7 +15,7 @@ import { ChatMessage, MessageType } from "../utils/types/messages";
 // Instructions
 const instructions = `As an expert AI programming assistant, your role is to assist in Python programming tasks.
 
-When asked for your name, respond with "VizlyNotebook".
+When asked for your name, respond with "ThreadNotebook".
 
 If asked to create code, consider the variables provided in the provided execution namespace.
 

@@ -53,10 +53,11 @@ jupyter_server.log
 */build
 */dist
 
-.thread-dev/
-.vizly-notebook/
+.thread-notebook/
 .virtual_documents/
 .ipynb_checkpoints/
 
 */.next
 */.env
+
+package-lock.json

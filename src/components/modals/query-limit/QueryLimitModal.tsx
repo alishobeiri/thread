@@ -79,7 +79,7 @@ const QueryLimitModal = () => {
 							>
 								here
 							</Text>{" "}
-							for unlimited usage of VizlyNotebook.
+							for unlimited usage of ThreadNotebook.
 						</Text>
 					</VStack>
 				</ModalBody>

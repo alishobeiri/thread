@@ -31,7 +31,7 @@ const Custom404: NextPage = () => {
 					>
 						This page cannot be found.{" "}
 						<Text
-							href="/vizly-notebook"
+							href="/thread-notebook"
 							color="orange.300"
 							as={Link}
 						>

@@ -1,7 +1,7 @@
 {
 	"ServerApp": {
 		"jpserver_extensions": {
-			"vizly_notebook": true
+			"thread_notebook": true
 		}
 	}
 }
