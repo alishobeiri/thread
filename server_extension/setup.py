@@ -15,7 +15,7 @@ long_description = long_description.replace(
 
 setup(
     name="thread_notebook",
-    version="0.1.26",
+    version="0.1.27",
     packages=find_packages(),
     include_package_data=True,
     package_data={"thread_notebook": ["static/**/*"]},
