@@ -10,7 +10,6 @@ import {
 	Text,
 	VStack,
 } from "@chakra-ui/react";
-import Link from "next/link";
 import { useInvalidConnectionModalStore } from "./InvalidConnectionStore";
 
 const InvalidConnectionModal = () => {
@@ -52,15 +51,6 @@ const InvalidConnectionModal = () => {
 					<VStack width="100%" gap={6} alignItems={"flex-start"}>
 						<Text>
 							Your device was not able to connect to the proxy.
-							Please reach out to{" "}
-							<Text
-								as={Link}
-								href="mailto:ali@vizlylabs.com"
-								color="orange.400"
-							>
-								ali@vizlylabs.com
-							</Text>{" "}
-							for more information.
 						</Text>
 					</VStack>
 				</ModalBody>

@@ -75,7 +75,7 @@ const MarkdownCell = ({
 		} else if (!isBeingEdited) {
 			setMarkdownCellRendered(cellId, true);
 		}
-	}, [active, rendered, isBeingEdited]);
+	}, [active, rendered, isBeingEdited, cellId]);
 
 	const extensions = [
 		markdown(),
@@ -89,7 +89,7 @@ const MarkdownCell = ({
 			showCodeBlockActions: false,
 			router,
 		});
-	}, []);
+	}, [router]);
 
 	return (
 		<Box

@@ -1,4 +1,13 @@
+import { ICell } from "@jupyterlab/nbformat";
 import { NotebookFile } from "../types/file.types";
+
+export const normalizeCell = (cell: ICell): ICell => {
+	if (cell.cell_type === "markdown") {
+		const { execution_count, outputs, ...rest } = cell;
+		return rest;
+	}
+	return cell;
+};
 
 export const getReadableDate = (dateString: string) => {
 	const date = new Date(dateString);

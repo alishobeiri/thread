@@ -136,8 +136,8 @@ export function convertPythonListStringToArray(inputString: string) {
 		.map((element) => element.replace(/(^')|('$)/g, ""));
 }
 
-export async function vizlyFetch(url: string, body: any, signal?: AbortSignal) {
-	trackEventData("vizlyFetch", { url });
+export async function threadNotebookFetch(url: string, body: any, signal?: AbortSignal) {
+	trackEventData("threadNotebookFetch", { url });
 	const response: any = await fetch(url, { ...body, signal }).then((res) => {
 		if (res.status == 401) {
 			useInvalidConnectionModalStore

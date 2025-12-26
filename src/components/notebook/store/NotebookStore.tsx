@@ -1,4 +1,4 @@
-import { ICell, IMarkdownCell, IOutput } from "@jupyterlab/nbformat";
+import { ICell, ICodeCell, IMarkdownCell, IOutput } from "@jupyterlab/nbformat";
 import { PartialJSONObject } from "@lumino/coreutils/types";
 import { captureException } from "@sentry/nextjs";
 import { NextRouter } from "next/router";
@@ -18,6 +18,7 @@ import {
 } from "../../../types/file.types";
 import { magicQuery } from "../../../utils/magic/magicQuery";
 import { trackEventData } from "../../../utils/posthog";
+import { normalizeCell } from "../../../utils/conversions";
 import { newUuid } from "../../../utils/utils";
 import { enableCommandMode } from "../../cell/actions/actions";
 import { refresh } from "../../sidebar/filesystem/FileSystemToolbarUtils";
@@ -31,14 +32,25 @@ export interface MarkdownCell extends IMarkdownCell {
 	cell_type: "markdown";
 }
 
-export const createNewCell = (): ICell => ({
+const createCodeCell = (source: string = ""): ICodeCell & { id: string } => ({
 	id: uuidv4(),
 	cell_type: "code",
-	source: "",
+	source,
 	outputs: [],
 	metadata: {},
 	execution_count: null,
 });
+
+const createMarkdownCell = (
+	source: string = "",
+): IMarkdownCell & { id: string } => ({
+	id: uuidv4(),
+	cell_type: "markdown",
+	source,
+	metadata: {},
+});
+
+export const createNewCell = (): ICell => createCodeCell();
 
 const debounceFn = debounce(async (fn: () => Promise<void>) => {
 	await fn();
@@ -302,21 +314,22 @@ export const useNotebookStore = create<INotebookStore>()(
 						set({
 							fileContents: fileContents,
 							cells: cells.map((cell) => {
+								const normalizedCell = normalizeCell(cell);
 								let user = "assistant";
-								if (cell.cell_type === "markdown") {
+								if (normalizedCell.cell_type === "markdown") {
 									get().setMarkdownCellRendered(
-										cell.id as string,
+										normalizedCell.id as string,
 										true,
 									);
 								}
 
 								return {
-									...cell,
-									id: cell.id ?? newUuid(),
+									...normalizedCell,
+									id: normalizedCell.id ?? newUuid(),
 									metadata: {
-										...cell.metadata,
+										...normalizedCell.metadata,
 										threadNotebook: {
-											...(cell.metadata
+											...(normalizedCell.metadata
 												.threadNotebook as PartialJSONObject),
 											ran: false,
 											user: user,
@@ -645,16 +658,18 @@ export const useNotebookStore = create<INotebookStore>()(
 						// Clone the cells array
 						const updatedCells = [...state.cells];
 
-						if (newType === "markdown") {
-							delete updatedCells[index]["outputs"];
-							delete updatedCells[index]["execution_count"];
-						}
-
 						// Update the code of the cell at the specified index
-						updatedCells[index] = {
-							...updatedCells[index],
-							cell_type: newType,
-						};
+						if (newType === "markdown") {
+							updatedCells[index] = normalizeCell({
+								...updatedCells[index],
+								cell_type: newType,
+							});
+						} else {
+							updatedCells[index] = {
+								...updatedCells[index],
+								cell_type: newType,
+							};
+						}
 
 						// Return the updated state
 						return {
@@ -691,6 +706,10 @@ export const useNotebookStore = create<INotebookStore>()(
 				addCellOutput: (cellId: string, newOutput: IOutput) => {
 					const index = get().getCellIndexById(cellId);
 					if (index === -1) {
+						return;
+					}
+					const cell = get().cells[index];
+					if (cell.cell_type === "markdown") {
 						return;
 					}
 					set((state) => {
@@ -810,25 +829,13 @@ export const useNotebookStore = create<INotebookStore>()(
 					get().handleSave();
 				},
 				addCell: (source?: string, type?: ICellTypes) => {
-					let newCell: ICell | MarkdownCell;
-
-					if (type === "markdown") {
-						newCell = {
-							...createNewCell(),
-							source: source || "",
-							cell_type: "markdown",
-							metadata: {
-								...createNewCell().metadata,
-								rendered: false,
-							},
-						};
-					} else {
-						newCell = {
-							...createNewCell(),
-							source: source || "",
-							cell_type: type || "code",
-						};
-					}
+					const newCell =
+						type === "markdown"
+							? {
+									...createMarkdownCell(source || ""),
+									metadata: { rendered: false },
+							  }
+							: createCodeCell(source || "");
 
 					trackEventData("[NOTEBOOK] Added cell", {
 						cellType: newCell.cell_type,
@@ -897,18 +904,28 @@ export const useNotebookStore = create<INotebookStore>()(
 						type = "markdown";
 					}
 
-					const newCell: ICell = {
-						...createNewCell(),
-						source: source || "",
-						cell_type: type || "code",
-						metadata: {
-							threadNotebook: {
-								group: group || undefined,
-								user,
-								action: action,
-							},
-						},
-					};
+					const newCell: ICell =
+						type === "markdown"
+							? {
+									...createMarkdownCell(source || ""),
+									metadata: {
+										threadNotebook: {
+											group: group || undefined,
+											user,
+											action: action,
+										},
+									},
+							  }
+							: {
+									...createCodeCell(source || ""),
+									metadata: {
+										threadNotebook: {
+											group: group || undefined,
+											user,
+											action: action,
+										},
+									},
+							  };
 
 					// Splice edits the array inplace
 					const newCells = [
@@ -1201,19 +1218,12 @@ export const useNotebookStore = create<INotebookStore>()(
 										content: {
 											...get().fileContents,
 											cells: get().cells.map((cell) => {
-												// Create a deep copy of the cell to avoid mutating the in-memory cells
-												const cellCopy: ICell = {
-													...cell,
+												const cellCopy = {
+													...normalizeCell(cell),
 													metadata: {
 														...cell.metadata,
 													},
 												};
-												if (
-													cellCopy.cell_type ==
-													"markdown"
-												) {
-													delete cellCopy.id;
-												}
 												return cellCopy;
 											}),
 											metadata: get().metadata,

@@ -5,6 +5,7 @@ import {
 	ServiceManager,
 	Session,
 } from "@jupyterlab/services";
+import { normalizeCell } from "../../utils/conversions";
 import { IModel, Status } from "@jupyterlab/services/lib/kernel/kernel";
 import { captureException } from "@sentry/nextjs";
 import { Extension } from "@uiw/react-codemirror";
@@ -356,7 +357,7 @@ class ConnectionManager {
 						if (!cell.metadata) {
 							cell.metadata = {};
 						}
-						return cell;
+						return normalizeCell(cell);
 					},
 				);
 			}

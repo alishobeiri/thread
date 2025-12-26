@@ -14,8 +14,8 @@ long_description = long_description.replace(
     'public/', 'thread_notebook/static/')
 
 setup(
-    name="thread_notebook",
-    version="0.1.27",
+    name="thread-notebook",
+    version="0.1.36",
     packages=find_packages(),
     include_package_data=True,
     package_data={"thread_notebook": ["static/**/*"]},
@@ -25,9 +25,12 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "jupyter-thread = thread_notebook:launch_instance",
+            "thread-notebook = thread_notebook:launch_instance",
             "thread = thread_notebook:launch_instance",
-        ]
+        ],
+        "jupyter_server_extension_points": [
+            "thread-notebook = thread_notebook:ThreadNotebookApp",
+        ],
     },
     long_description=long_description,
     long_description_content_type="text/markdown",

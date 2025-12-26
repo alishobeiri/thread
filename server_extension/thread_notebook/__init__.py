@@ -15,3 +15,7 @@ def _jupyter_server_extension_points():
 
 def launch_instance():
     ThreadNotebookApp.launch_instance()
+
+
+# Export the app class for entry points
+__all__ = ["ThreadNotebookApp", "launch_instance"]

@@ -84,7 +84,7 @@ const CellHeaderActions = ({ cell }: { cell: ICell }) => {
 		return () => {
 			document.removeEventListener("keydown", handleDocumentKeyDown);
 		};
-	}, [cellId]);
+	}, [cellId, cellState?.status]);
 
 	return (
 		<>

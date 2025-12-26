@@ -93,7 +93,7 @@ const InputArea = forwardRef<ReactCodeMirrorRef, InputAreaProps>(
 					cmMergeRef.current?.container?.blur();
 				}
 			}
-		}, [active, isBeingEdited]);
+		}, [active, isBeingEdited, isInitial, cmRef, cmMergeRef]);
 
 		const allExtensions = useExtensionWithDependency(
 			getRefView(),
@@ -135,7 +135,7 @@ const InputArea = forwardRef<ReactCodeMirrorRef, InputAreaProps>(
 				}
 				extensions.push(modKKeymap);
 
-				return extensions;
+				return extensions.filter((ext) => ext != null);
 			},
 			[isBeingEdited],
 		);

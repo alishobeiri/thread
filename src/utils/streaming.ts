@@ -3,7 +3,7 @@ import { parse } from "best-effort-json-parser";
 import { useCallback, useEffect, useState } from "react";
 import { useSettingsStore } from "../components/settings/SettingsStore";
 import { standaloneToast } from "../theme";
-import { vizlyFetch } from "./utils";
+import { threadNotebookFetch } from "./utils";
 
 const { getAdditionalRequestMetadata } = useSettingsStore.getState();
 
@@ -85,7 +85,7 @@ export async function* makeStreamingRequest({
 	shouldCancel = () => false,
 }: MakeStreamingRequestParams) {
 	try {
-		const res = await vizlyFetch(url, {
+		const res = await threadNotebookFetch(url, {
 			method: method,
 			headers: {
 				"Content-Type": "application/json",
@@ -146,30 +146,36 @@ async function* makeStreamingJsonRequest<T>({
 	});
 
 	let errorCount = 0;
-	for await (const chunk of stream) {
-		if (chunk) {
-			try {
-				const parsedChunk = parse(chunk);
-				if (
-					parsedChunk &&
-					typeof parsedChunk === "object" &&
-					parsedChunk.constructor === Object
-				) {
-					yield parsedChunk;
-				} else {
-					throw Error(
-						"Parsed Chunk was not an object: " + typeof parsedChunk,
-					);
-				}
-			} catch (e) {
-				console.error("Error parsing JSON: ", e);
-				errorCount += 1;
-				if (errorCount >= 3) {
-					cancel = true;
-					break;
+	try {
+		for await (const chunk of stream) {
+			if (chunk) {
+				try {
+					const parsedChunk = parse(chunk);
+					if (
+						parsedChunk &&
+						typeof parsedChunk === "object" &&
+						parsedChunk.constructor === Object
+					) {
+						yield parsedChunk;
+					} else {
+						throw Error(
+							"Parsed Chunk was not an object: " +
+								typeof parsedChunk,
+						);
+					}
+				} catch (e) {
+					console.error("Error parsing JSON: ", e);
+					errorCount += 1;
+					if (errorCount >= 3) {
+						cancel = true;
+						break;
+					}
 				}
 			}
 		}
+	} catch (error: unknown) {
+		console.error("Error in streaming request:", error);
+		return;
 	}
 }
 
@@ -187,7 +193,7 @@ const useJsonStreaming = <T>({
 		for await (const chunk of stream) {
 			setData(parse(chunk));
 		}
-	}, [url, payload]);
+	}, [url, method, payload]);
 
 	const run = async (params?: RunManuallyParams) => {
 		const stream = makeStreamingJsonRequest<T>({

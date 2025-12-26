@@ -6,6 +6,7 @@ export default function Document() {
 	return (
 		<Html lang="en" dir="ltr">
 			<Head>
+				<link rel="icon" href="/thread-notebook/favicon.ico" />
 				{/* The require.js dependency required for some visualization embeds. */}
 				<script src="/thread-notebook/require.2.3.4.min.js" async />
 				<script src="/thread-notebook/plotly.js" async />

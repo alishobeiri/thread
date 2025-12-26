@@ -9,7 +9,7 @@ import {
 	ViewUpdate,
 	keymap,
 } from "@uiw/react-codemirror";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useMagicInputStore } from "../../../../input/MagicInputStore";
 
 // Define the type for your change handlers
@@ -69,15 +69,20 @@ export function useExtensionWithDependency(
 	deps: any[],
 ) {
 	const compartment = useMemo(() => new Compartment(), []);
-	const extension = useMemo(() => compartment.of(extensionFactory()), []);
+	const stableExtensionFactory = useCallback(extensionFactory, deps);
+	const extension = useMemo(() => compartment.of(stableExtensionFactory()), [compartment, stableExtensionFactory]);
 
 	useEffect(() => {
-		if (view) {
-			view.dispatch({
-				effects: compartment.reconfigure(extensionFactory()),
-			});
+		if (view && view.dispatch) {
+			try {
+				view.dispatch({
+					effects: compartment.reconfigure(stableExtensionFactory()),
+				});
+			} catch (error) {
+				console.warn("Error reconfiguring CodeMirror extensions:", error);
+			}
 		}
-	}, deps);
+	}, [view, compartment, stableExtensionFactory]);
 
 	return extension;
 }

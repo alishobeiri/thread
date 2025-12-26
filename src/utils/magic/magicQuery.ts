@@ -15,7 +15,7 @@ import {
 	getAppTheme,
 	getThreadNotebookCellMetadata,
 	newUuid,
-	vizlyFetch,
+	threadNotebookFetch,
 } from "../utils";
 import { getAction, getActionInfo } from "./actionUtils";
 import { codeAction } from "./actions/code";
@@ -344,7 +344,7 @@ const generateCells = async (query: string, followUpRetries: number) => {
 					metadata.modelInformation,
 					metadata.uniqueId,
 			  )
-			: await vizlyFetch(
+			: await threadNotebookFetch(
 					`${getServerProxyUrl()}/api/magic/actions/action`,
 					{
 						method: "POST",

@@ -1,10 +1,13 @@
 <!-- DOCTOC SKIP -->
 
 <p align="center">
+  <img src="https://thread.dev/favicon.png" alt="Thread Logo" width="48" height="48">
+</p>
+
+<p align="center">
 AI-powered Jupyter Notebook
 </p>
 <p align="center">
-  <a href="mailto:ali@vizlylabs.com"><img src="https://img.shields.io/badge/Email%20Us-brightgreen" /></a>
   <a href="https://discord.gg/ZuHq9hDs2y"><img src="https://img.shields.io/badge/Join%20Discord-7289DA?logo=discord&logoColor=white" /></a>
   <a href="https://github.com/alishobeiri/thread/blob/main/LICENSE"><img src="https://img.shields.io/github/license/alishobeiri/thread"/></a>
   <a href="https://github.com/alishobeiri/thread"><img src="https://img.shields.io/github/stars/alishobeiri/thread" /></a>
@@ -15,10 +18,16 @@ Thread is a Jupyter alternative that integrates an AI copilot into your Jupyter 
 Thread runs locally and can be used for free with [Ollama](https://github.com/ollama/ollama) or your own API key. To start:
 
 ```
-pip install thread-dev
+pip install thread-notebook
 ```
 
-To start thread, run the following
+To start thread, run any of the following commands:
+
+```
+thread-notebook
+```
+
+or
 
 ```
 thread
@@ -27,7 +36,7 @@ thread
 or
 
 ```
-jupyter thread
+jupyter thread-notebook
 ```
 
 # Key features

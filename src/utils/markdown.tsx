@@ -34,6 +34,8 @@ interface MarkdownComponentProps {
 	node?: ReactNode;
 	href?: string;
 	title?: string;
+	alt?: string;
+	src?: string;
 }
 
 interface HeadingProps extends MarkdownComponentProps {
@@ -191,7 +193,9 @@ export const getCustomMarkdownComponents = ({
 			);
 		},
 
-		img: (props: MarkdownComponentProps) => <Image {...props} />,
+		img: (props: MarkdownComponentProps) => (
+			<Image {...props} alt={props.alt || ""} />
+		),
 
 		inlineCode: (props: MarkdownComponentProps) => (
 			<Code p="6px 8px" {...props} />
